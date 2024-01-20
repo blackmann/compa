@@ -1,0 +1,13 @@
+{
+  "name": "kompanion",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "dev:client": "yarn workspace client dev"
+  },
+  "workspaces": [
+    "client"
+  ]
+}

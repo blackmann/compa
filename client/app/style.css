@@ -1,0 +1,5 @@
+@unocss;
+
+:root {
+  @apply bg-zinc-100;
+}
