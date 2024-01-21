@@ -603,7 +603,14 @@
   resolved "https://registry.yarnpkg.com/@humanwhocodes/object-schema/-/object-schema-2.0.2.tgz#d9fae00a2d5cb40f92cfe64b47ad749fbc38f917"
   integrity sha512-6EwiSjwWYP7pTckG6I5eyFANjPhmPjUX9JRLUSfNPC7FX7zK9gyZAfUEaECL6ALTpGX5AjnBq3C9XmVWPitNpw==
 
-"@iconify/types@^2.0.0":
+"@iconify-json/lucide@^1.1.156":
+  version "1.1.156"
+  resolved "https://registry.yarnpkg.com/@iconify-json/lucide/-/lucide-1.1.156.tgz#4330c346757bce9f2eb8fea39bbb8bcacd5284bb"
+  integrity sha512-1fwiaikvgJMdesyb1nee9bkyCr3bRye+hb+nGFQA44AatrYVTitRQk+Gd/RXLWjGRWBmuBfIo+jEdxWVojLK0w==
+  dependencies:
+    "@iconify/types" "*"
+
+"@iconify/types@*", "@iconify/types@^2.0.0":
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/@iconify/types/-/types-2.0.0.tgz#ab0e9ea681d6c8a1214f30cd741fe3a20cc57f57"
   integrity sha512-+wluvCrRhXrhyOmRDJ3q8mux9JkKy5SJ/v8ol2tu4FVjyYvtEzkc/3pK15ET6RKg4b4w4BmTk1+gsCUhf21Ykg==
@@ -763,6 +770,47 @@
   version "1.0.0-next.24"
   resolved "https://registry.yarnpkg.com/@polka/url/-/url-1.0.0-next.24.tgz#58601079e11784d20f82d0585865bb42305c4df3"
   integrity sha512-2LuNTFBIO0m7kKIQvvPHN6UE63VjpmL9rnEEaOOaiSPbZK+zUOYIzBAWcED+3XYzhYsd/0mD57VdxAEqqV52CQ==
+
+"@prisma/client@^5.8.1":
+  version "5.8.1"
+  resolved "https://registry.yarnpkg.com/@prisma/client/-/client-5.8.1.tgz#7815ec51c0ca2a6de219c02e7846701ae3baf240"
+  integrity sha512-xQtMPfbIwLlbm0VVIVQY2yqQVOxPwRQhvIp7Z3m2900g1bu/zRHKhYZJQWELqmjl6d8YwBy0K2NvMqh47v1ubw==
+
+"@prisma/debug@5.8.1":
+  version "5.8.1"
+  resolved "https://registry.yarnpkg.com/@prisma/debug/-/debug-5.8.1.tgz#704daa36919b0fc4d227260ecebfa1c94b155b07"
+  integrity sha512-tjuw7eA0Us3T42jx9AmAgL58rzwzpFGYc3R7Y4Ip75EBYrKMBA1YihuWMcBC92ILmjlQ/u3p8VxcIE0hr+fZfg==
+
+"@prisma/engines-version@5.8.1-1.78caf6feeaed953168c64e15a249c3e9a033ebe2":
+  version "5.8.1-1.78caf6feeaed953168c64e15a249c3e9a033ebe2"
+  resolved "https://registry.yarnpkg.com/@prisma/engines-version/-/engines-version-5.8.1-1.78caf6feeaed953168c64e15a249c3e9a033ebe2.tgz#f600a45afc4cf0c0356b6ed90add6050fa3f3239"
+  integrity sha512-f5C3JM3l9yhGr3cr4FMqWloFaSCpNpMi58Om22rjD2DOz3owci2mFdFXMgnAGazFPKrCbbEhcxdsRfspEYRoFQ==
+
+"@prisma/engines@5.8.1":
+  version "5.8.1"
+  resolved "https://registry.yarnpkg.com/@prisma/engines/-/engines-5.8.1.tgz#b850751f5bf7d5e570b9fe16cefdc2b1fd2c02c3"
+  integrity sha512-TJgYLRrZr56uhqcXO4GmP5be+zjCIHtLDK20Cnfg+o9d905hsN065QOL+3Z0zQAy6YD31Ol4u2kzSfRmbJv/uA==
+  dependencies:
+    "@prisma/debug" "5.8.1"
+    "@prisma/engines-version" "5.8.1-1.78caf6feeaed953168c64e15a249c3e9a033ebe2"
+    "@prisma/fetch-engine" "5.8.1"
+    "@prisma/get-platform" "5.8.1"
+
+"@prisma/fetch-engine@5.8.1":
+  version "5.8.1"
+  resolved "https://registry.yarnpkg.com/@prisma/fetch-engine/-/fetch-engine-5.8.1.tgz#38bb92f1fbd3669340a3cc49fce403ab4df671dd"
+  integrity sha512-+bgjjoSFa6uYEbAPlklfoVSStOEfcpheOjoBoNsNNSQdSzcwE2nM4Q0prun0+P8/0sCHo18JZ9xqa8gObvgOUw==
+  dependencies:
+    "@prisma/debug" "5.8.1"
+    "@prisma/engines-version" "5.8.1-1.78caf6feeaed953168c64e15a249c3e9a033ebe2"
+    "@prisma/get-platform" "5.8.1"
+
+"@prisma/get-platform@5.8.1":
+  version "5.8.1"
+  resolved "https://registry.yarnpkg.com/@prisma/get-platform/-/get-platform-5.8.1.tgz#8cd450b65a52a5a6ed5b2f52457136a492c0f251"
+  integrity sha512-wnA+6HTFcY+tkykMokix9GiAkaauPC5W/gg0O5JB0J8tCTNWrqpnQ7AsaGRfkYUbeOIioh6woDjQrGTTRf1Zag==
+  dependencies:
+    "@prisma/debug" "5.8.1"
 
 "@remix-run/css-bundle@^2.5.1":
   version "2.5.1"
@@ -1273,7 +1321,7 @@
   dependencies:
     "@unocss/core" "0.58.3"
 
-"@unocss/preset-icons@0.58.3":
+"@unocss/preset-icons@0.58.3", "@unocss/preset-icons@^0.58.3":
   version "0.58.3"
   resolved "https://registry.yarnpkg.com/@unocss/preset-icons/-/preset-icons-0.58.3.tgz#2a62f36dc34c2cdb597121b2b0d26fc022583609"
   integrity sha512-SA4Eu4rOQ9+zUgIyK6RacS01ygm0PJWkqKlD8ccrBqEyZapqiU+vLL+v6X8YVjoZjR+5CVgcMD5Km7zEQgqXQw==
@@ -1333,7 +1381,7 @@
     "@unocss/preset-mini" "0.58.3"
     "@unocss/rule-utils" "0.58.3"
 
-"@unocss/reset@0.58.3":
+"@unocss/reset@0.58.3", "@unocss/reset@^0.58.3":
   version "0.58.3"
   resolved "https://registry.yarnpkg.com/@unocss/reset/-/reset-0.58.3.tgz#5f105583368f1febe4b668aaaa56bc155a751c3d"
   integrity sha512-Q2KiRQlam2iYsTZgKdvnXEfUN4TA2oVpGIVD9Wa0ggs0XlYj5aOo0g0+4Tgqqn+YaviZQeJKnDs/JWE+ygHhZA==
@@ -1933,6 +1981,11 @@ clone@^1.0.2:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/clone/-/clone-1.0.4.tgz#da309cc263df15994c688ca902179ca3c7cd7c7e"
   integrity sha512-JQHZ2QMW6l3aH/j6xCqQThY/9OH4D/9ls34cgkUBiEeocRTU04tHfKPBsUK1PqZCUQM7GiA0IIXJSuXHI64Kbg==
+
+clsx@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/clsx/-/clsx-2.1.0.tgz#e851283bcb5c80ee7608db18487433f7b23f77cb"
+  integrity sha512-m3iNNWpd9rl3jvvcBnu70ylMdrXt8Vlq4HYadnU5fwcOtvkSQWPmj7amUcDT2qYI7risszBjI5AUIUox9D16pg==
 
 color-convert@^1.9.0:
   version "1.9.3"
@@ -4891,6 +4944,13 @@ pretty-ms@^7.0.1:
   integrity sha512-973driJZvxiGOQ5ONsFhOF/DtzPMOMtgC11kCpUrPGMTgqp2q/1gwzCquocrN33is0VZ5GFHXZYMM9l6h67v2Q==
   dependencies:
     parse-ms "^2.1.0"
+
+prisma@^5.8.1:
+  version "5.8.1"
+  resolved "https://registry.yarnpkg.com/prisma/-/prisma-5.8.1.tgz#1f101793a8831c0719dfbed5f85a96ea4888c9d3"
+  integrity sha512-N6CpjzECnUHZ5beeYpDzkt2rYpEdAeqXX2dweu6BoQaeYkNZrC/WJHM+5MO/uidFHTak8QhkPKBWck1o/4MD4A==
+  dependencies:
+    "@prisma/engines" "5.8.1"
 
 proc-log@^3.0.0:
   version "3.0.0"

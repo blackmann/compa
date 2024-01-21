@@ -1,5 +1,18 @@
+@import url('https://fonts.googleapis.com/css2?family=Dosis:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nanum+Gothic+Coding&display=swap');
+
 @unocss;
 
 :root {
-  @apply bg-zinc-100;
+  @apply bg-zinc-50 dark:bg-neutral-900;
+  font-family: 'Dosis', system-ui, sans-serif;
+  color-scheme: light dark;
+}
+
+.text-secondary {
+  @apply text-zinc-500 dark:text-neutral-400;
+}
+
+.font-mono {
+  font-family: 'Nanum Gothic Coding', monospace;
 }

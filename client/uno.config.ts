@@ -1,12 +1,8 @@
-import { defineConfig, presetUno } from 'unocss'
+import { defineConfig, presetIcons, presetUno } from "unocss"
 
 export default defineConfig({
   content: {
-    filesystem: [
-      '**/*.{html,js,ts,tsx}',
-    ],
+    filesystem: ["**/*.{html,js,ts,tsx}"],
   },
-  presets: [
-    presetUno(),
-  ],
+  presets: [presetUno({ dark: "media" }), presetIcons()],
 })
