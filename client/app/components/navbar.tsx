@@ -1,6 +1,6 @@
 function Navbar() {
   return (
-    <header className="py-2 container mx-auto border-b mb-5">
+    <header className="py-2 container mx-auto border-b border-zinc-300 dark:border-neutral-700 mb-5">
       <div className="grid grid-cols-3">
         <div>
           compa{" "}
