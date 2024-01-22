@@ -8,10 +8,20 @@ interface Props extends React.PropsWithChildren {
   options: { label: string; value: string }[]
   newForm: React.ReactNode
   onAdd: (data: FieldValues) => Promise<void>
+  onSelect: (value: string) => void
+  open: boolean
+  onToggle: (open: boolean) => void
 }
 
-function LargeSelect({ children, newForm, onAdd, options }: Props) {
-  const [showModal, setShowModal] = React.useState(false)
+function LargeSelect({
+  children,
+  newForm,
+  onAdd,
+  onSelect,
+  open,
+  onToggle,
+  options,
+}: Props) {
   const [state, setState] = React.useState<"select" | "add">("select")
 
   function showAdd() {
@@ -19,28 +29,44 @@ function LargeSelect({ children, newForm, onAdd, options }: Props) {
   }
 
   function hide() {
-    setShowModal(false)
+    onToggle(false)
   }
+
+  async function handleOnAdd(data: FieldValues) {
+    await onAdd(data)
+    setState("select")
+  }
+
+  React.useEffect(() => {
+    if (!open) {
+      setState("select")
+    }
+  }, [open])
 
   return (
     <>
       <button
         className="bg-zinc-200 dark:bg-neutral-800 px-2 py-1 rounded-lg font-medium flex-1 text-start flex items-center"
         type="button"
-        onClick={() => setShowModal(true)}
+        onClick={() => onToggle(true)}
       >
-        <span className="flex-1">{children}</span>
+        <span className="flex-1 line-clamp-1">{children}</span>
         <div className="i-lucide-mouse-pointer-2 text-secondary"></div>
       </button>
 
-      <Modal onClose={() => setShowModal(false)} show={showModal}>
+      <Modal onClose={() => onToggle(false)} show={open}>
         <div className="w-[24rem] rounded-lg bg-zinc-100 dark:bg-neutral-900 shadow dark:border border-neutral-800 h-[24rem] flex flex-col">
           {state === "select" ? (
-            <SelectState onShowAdd={showAdd} onHide={hide} options={options} />
+            <SelectState
+              onShowAdd={showAdd}
+              onHide={hide}
+              onSelect={onSelect}
+              options={options}
+            />
           ) : (
             <FormState
               form={newForm}
-              onAdd={onAdd}
+              onAdd={handleOnAdd}
               onCancel={() => setState("select")}
             />
           )}
@@ -54,9 +80,10 @@ interface SelectProps {
   onShowAdd: VoidFunction
   onHide: VoidFunction
   options: Props["options"]
+  onSelect: Props["onSelect"]
 }
 
-function SelectState({ onShowAdd, onHide, options }: SelectProps) {
+function SelectState({ onShowAdd, onHide, onSelect, options }: SelectProps) {
   return (
     <>
       <header className="p-2">
@@ -81,10 +108,11 @@ function SelectState({ onShowAdd, onHide, options }: SelectProps) {
 
         {options.map((option) => (
           <li
-            className="px-2 py-1 hover:bg-zinc-200 dark:hover:bg-neutral-800 rounded-lg"
+            className="px-2 py-1 hover:bg-zinc-200 dark:hover:bg-neutral-800 rounded-lg focus-within:bg-zinc-200 dark:focus-within:bg-neutral-800"
             key={option.value}
+            onClick={() => onSelect(option.value)}
           >
-            {option.label}
+            <button className="block w-full text-start">{option.label}</button>
           </li>
         ))}
       </ul>

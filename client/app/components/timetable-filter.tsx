@@ -1,13 +1,39 @@
-import { FieldValues, useFormContext } from "react-hook-form"
+import { FieldValues, useForm, useFormContext } from "react-hook-form"
 import { LargeSelect } from "./large-select"
-import { useAsyncFetcher } from "~/lib/use-async-fetcher";
+import { useAsyncFetcher } from "~/lib/use-async-fetcher"
+import React from "react"
+import { useNavigate } from "@remix-run/react"
 
 interface Props {
   programmes: { name: string; slug: string }[]
+  value?: {
+    programme: string
+    level: string
+    sem: string
+    year: string
+  }
 }
 
-function TimetableFilter({ programmes }: Props) {
+function TimetableFilter({ programmes, value }: Props) {
+  const [programmeSelectOpen, setProgrammeSelectOpen] = React.useState(false)
   const fetcher = useAsyncFetcher()
+  const { watch, register, setValue } = useForm({
+    defaultValues: {
+      ...value,
+    },
+  })
+
+  const navigate = useNavigate()
+
+  const programme = watch("programme")
+  const level = watch("level")
+  const sem = watch("sem")
+  const year = watch("year")
+
+  const selected = React.useMemo(
+    () => programmes.find(({ slug }) => slug === value?.programme),
+    [programmes]
+  )
 
   const programmeOptions = programmes.map(({ name, slug }) => ({
     label: name,
@@ -16,27 +42,49 @@ function TimetableFilter({ programmes }: Props) {
 
   async function handleAdd(data: FieldValues) {
     await fetcher.submit(JSON.stringify(data), {
-      encType: 'application/json',
-      action: '/programmes',
-      method: 'POST'
+      encType: "application/json",
+      action: "/programmes",
+      method: "POST",
     })
   }
+
+  React.useEffect(() => {
+    if (selected) return
+    setValue("programme", programmes[0].slug)
+  }, [selected, setValue])
+
+  React.useEffect(() => {
+    const day = new URLSearchParams(location.search).get("day")
+    navigate(`/timetable/${year}/${programme}/${level}/${sem}?day=${day ?? ''}`)
+  }, [programme, level, sem, year])
 
   return (
     <div className="flex gap-2">
       <LargeSelect
         newForm={<NewForm />}
         onAdd={handleAdd}
+        open={programmeSelectOpen}
+        onToggle={(open) => setProgrammeSelectOpen(open)}
         options={programmeOptions}
+        onSelect={(value) => {
+          setValue("programme", value)
+          setProgrammeSelectOpen(false)
+        }}
       >
-        BSc. Statistics
+        {selected?.name}
       </LargeSelect>
 
-      <select className="bg-zinc-200 dark:bg-neutral-800 px-2 py-1 pe-6 rounded-lg font-medium">
-        <option value="2023/2024">2023/2024</option>
+      <select
+        className="bg-zinc-200 dark:bg-neutral-800 px-2 py-1 pe-6 rounded-lg font-medium"
+        {...register("year")}
+      >
+        <option value="2023-2024">2023/2024</option>
       </select>
 
-      <select className="bg-zinc-200 dark:bg-neutral-800 px-2 py-1 pe-6 rounded-lg font-medium">
+      <select
+        className="bg-zinc-200 dark:bg-neutral-800 px-2 py-1 pe-6 rounded-lg font-medium"
+        {...register("level", { required: true })}
+      >
         <option value="100">L100</option>
         <option value="200">L200</option>
         <option value="300">L300</option>
@@ -45,7 +93,10 @@ function TimetableFilter({ programmes }: Props) {
         <option value="600">L600</option>
       </select>
 
-      <select className="bg-zinc-200 dark:bg-neutral-800 px-2 py-1 pe-6 rounded-lg font-medium">
+      <select
+        className="bg-zinc-200 dark:bg-neutral-800 px-2 py-1 pe-6 rounded-lg font-medium"
+        {...register("sem", { required: true })}
+      >
         <option value="1">Sem 1</option>
         <option value="2">Sem 2</option>
       </select>
