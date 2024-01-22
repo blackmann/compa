@@ -9,7 +9,9 @@ import { prisma } from "~/lib/prisma.server"
 
 export const loader = async ({ params, request }: LoaderFunctionArgs) => {
   const url = new URL(request.url)
-  const day = Number(url.searchParams.get("day")) ?? new Date().getDay()
+  const _day = parseInt(url.searchParams.get("day") || '')
+  const day = isNaN(_day) ? new Date().getDay() : _day
+
   const { year, programme, level, sem } = params
 
   const schedule = await prisma.schedule.findMany({
@@ -22,7 +24,9 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
     },
   })
 
-  return { day, year, programme, level, schedule }
+  const programmes = await prisma.programme.findMany()
+
+  return { day, year, programme, level, schedule, programmes }
 }
 
 export const meta: MetaFunction = () => {
@@ -30,13 +34,14 @@ export const meta: MetaFunction = () => {
 }
 
 export default function TimeTable() {
-  const { day, schedule } = useLoaderData<typeof loader>()
+  const { day, programmes, schedule } = useLoaderData<typeof loader>()
 
   return (
     <div className="container mx-auto">
       <div className="grid grid-cols-1 lg:grid-cols-4 xl:grid-cols-6 gap-4 min-h-[60vh]">
         <div className="col-span-1 lg:col-span-2 lg:col-start-2">
-          <TimetableFilter />
+          <TimetableFilter programmes={programmes} />
+
           <DaysHeader className="mt-2" selectedDay={day} />
 
           <div className="mt-2 flex justify-between">

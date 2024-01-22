@@ -21,10 +21,13 @@
     "isbot": "^4.1.0",
     "prisma": "^5.8.1",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-hook-form": "^7.49.3"
   },
   "devDependencies": {
     "@iconify-json/lucide": "^1.1.156",
+    "@iconify-json/svg-spinners": "^1.1.2",
+    "@julr/unocss-preset-forms": "^0.1.0",
     "@remix-run/dev": "^2.5.1",
     "@types/react": "^18.2.20",
     "@types/react-dom": "^18.2.7",

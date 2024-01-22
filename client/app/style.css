@@ -17,3 +17,11 @@
   font-family: 'Nanum Gothic Coding', monospace;
 }
 
+select {
+  @apply border-0;
+  background-position: right 0.1rem center;
+}
+
+input {
+  @apply !border-0;
+}

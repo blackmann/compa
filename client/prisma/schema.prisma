@@ -39,6 +39,7 @@ model Schedule {
   timeEnd      Int
   timeStart    Int // seconds since midnight
   year         String
+  location     String
 }
 
 model Instructor {
