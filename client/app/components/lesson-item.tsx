@@ -6,7 +6,7 @@ function LessonItem() {
       </header>
       <div className="font-medium">Logic and Set Theorem</div>
       <footer className="text-sm text-secondary flex justify-between">
-        <span>P. A. Kwabi</span>
+        <span>P. A. Kwabi</span> <span>SF11</span>
 
         <button className="rounded-md !text-xs px-2 bg-zinc-200 dark:bg-neutral-900 font-medium group-hover:opacity-100 opacity-0">
           Edit

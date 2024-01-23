@@ -3,6 +3,7 @@ import { LargeSelect } from "./large-select"
 import { useAsyncFetcher } from "~/lib/use-async-fetcher"
 import React from "react"
 import { useNavigate, useParams } from "@remix-run/react"
+import { Input } from "./input"
 
 interface Props {
   programmes: { name: string; slug: string }[]
@@ -53,7 +54,7 @@ function TimetableFilter({ programmes }: Props) {
   }, [selected, setValue])
 
   React.useEffect(() => {
-    const day = params.day
+    const day = params.day ?? "1"
     const to = `/timetable/${year}/${programme}/${level}/${sem}/${day}`
 
     if (location.pathname.startsWith(to)) return
@@ -64,13 +65,14 @@ function TimetableFilter({ programmes }: Props) {
   return (
     <div className="flex gap-2">
       <LargeSelect
+        label="Programme"
         newForm={<NewForm />}
         onAdd={handleAdd}
         open={programmeSelectOpen}
         onToggle={(open) => setProgrammeSelectOpen(open)}
         options={programmeOptions}
         onSelect={(value) => {
-          setValue("programme", value)
+          setValue("programme", value as string)
           setProgrammeSelectOpen(false)
         }}
       >
@@ -112,20 +114,10 @@ function NewForm() {
 
   return (
     <div className="flex-1">
-      <header className="p-2">
-        <div className="text-sm text-secondary flex gap-2 items-center font-medium">
-          <div className="i-lucide-list-plus"></div> Add new
-        </div>
-      </header>
-
       <div className="p-2">
         <label>
           Programme
-          <input
-            className="block w-full rounded-lg bg-zinc-200 dark:bg-neutral-800 px-2 py-1"
-            type="text"
-            {...register("name", { required: true })}
-          />
+          <Input type="text" {...register("name", { required: true })} />
           <small className="text-secondary">
             Example. BSc. Aerospace Engineering, MSc. Mathematics
           </small>

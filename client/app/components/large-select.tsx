@@ -3,23 +3,26 @@ import { Modal } from "./modal"
 import { FieldValues, FormProvider, set, useForm } from "react-hook-form"
 import { RequestState } from "~/lib/request-state"
 import clsx from "clsx"
+import { Input } from "./input"
 
 interface Props extends React.PropsWithChildren {
-  options: { label: string; value: string }[]
+  label: string
   newForm: React.ReactNode
   onAdd: (data: FieldValues) => Promise<void>
-  onSelect: (value: string) => void
-  open: boolean
+  onSelect: (value: string | number) => void
   onToggle: (open: boolean) => void
+  open: boolean
+  options: { label: string; value: string | number }[]
 }
 
 function LargeSelect({
   children,
+  label,
   newForm,
   onAdd,
   onSelect,
-  open,
   onToggle,
+  open,
   options,
 }: Props) {
   const [state, setState] = React.useState<"select" | "add">("select")
@@ -62,10 +65,12 @@ function LargeSelect({
               onHide={hide}
               onSelect={onSelect}
               options={options}
+              label={label}
             />
           ) : (
             <FormState
               form={newForm}
+              label={label}
               onAdd={handleOnAdd}
               onCancel={() => setState("select")}
             />
@@ -81,21 +86,24 @@ interface SelectProps {
   onHide: VoidFunction
   options: Props["options"]
   onSelect: Props["onSelect"]
+  label: Props["label"]
 }
 
-function SelectState({ onShowAdd, onHide, onSelect, options }: SelectProps) {
+function SelectState({
+  label,
+  onHide,
+  onSelect,
+  onShowAdd,
+  options,
+}: SelectProps) {
   return (
     <>
       <header className="p-2">
         <div className="text-sm text-secondary flex gap-2 items-center mb-2 font-medium">
-          <div className="i-lucide-scan-search"></div> Select Programme
+          <div className="i-lucide-scan-search"></div> Select {label}
         </div>
         <div>
-          <input
-            className="block w-full px-2 py-1 bg-zinc-200 dark:bg-neutral-800 rounded-md placeholder:text-zinc-400 dark:placeholder:text-neutral-500"
-            type="text"
-            placeholder="Start typing…"
-          />
+          <Input type="text" placeholder="Start typing…" />
         </div>
       </header>
 
@@ -140,9 +148,10 @@ interface FormStateProps {
   form: Props["newForm"]
   onAdd: Props["onAdd"]
   onCancel: VoidFunction
+  label: Props["label"]
 }
 
-function FormState({ form, onAdd, onCancel }: FormStateProps) {
+function FormState({ form, label, onAdd, onCancel }: FormStateProps) {
   const formMethods = useForm()
   const { handleSubmit } = formMethods
   const [status, setStatus] = React.useState<RequestState>("idle")
@@ -160,6 +169,12 @@ function FormState({ form, onAdd, onCancel }: FormStateProps) {
   return (
     <FormProvider {...formMethods}>
       <form className="flex flex-col h-full" onSubmit={handleSubmit(submit)}>
+        <header className="p-2">
+          <div className="text-sm text-secondary flex gap-2 items-center font-medium">
+            <div className="i-lucide-list-plus"></div> Add new {label}
+          </div>
+        </header>
+
         <div className="flex-1">{form}</div>
 
         <footer className="border-t border-zinc-200 dark:border-neutral-800 flex justify-between p-2">

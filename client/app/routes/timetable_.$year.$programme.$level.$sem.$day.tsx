@@ -69,7 +69,7 @@ export default function TimeTable() {
 
           <ul className="mt-2">
             {schedule.map((lesson) => (
-              <React.Fragment key={lesson.id}>
+              <li key={lesson.id}>
                 <LessonItem />
                 <hr className="border-zinc-300" />
                 <div className="flex justify-end">
@@ -77,8 +77,22 @@ export default function TimeTable() {
                     2 hours apart
                   </div>
                 </div>
-              </React.Fragment>
+              </li>
             ))}
+
+            <li>
+              <LessonItem />
+              <hr className="border-zinc-300 dark:border-neutral-700" />
+              <div className="flex justify-end">
+                <div className="rounded-b-lg bg-zinc-300 dark:bg-neutral-700 dark:text-white text-sm font-medium text-zinc-800 px-2">
+                  2 hours apart
+                </div>
+              </div>
+            </li>
+
+            <li>
+              <LessonItem />
+            </li>
           </ul>
         </div>
 

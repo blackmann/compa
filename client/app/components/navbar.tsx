@@ -13,12 +13,12 @@ function Navbar() {
     <header className="py-2 container mx-auto border-b border-zinc-300 dark:border-neutral-700 mb-5">
       <div className="grid grid-cols-3 gap-4">
         <div className="col-span-2">
-          <div className="flex gap-4">
+          <div className="flex gap-4 items-center">
             <div>
-              compa{" "}
-              <span className="text-sm capitalize bg-lime-600 text-white rounded-md px-2 font-medium rounded-bl-0">
+              <img src="/sym.svg" width={40} className="inline" alt="Compa" />
+              {/* <span className="text-sm capitalize bg-lime-600 text-white rounded-md px-2 font-medium rounded-bl-0">
                 KNUST
-              </span>
+              </span> */}
             </div>
 
             <nav>
@@ -30,7 +30,7 @@ function Navbar() {
                     className={({ isActive }) =>
                       clsx(
                         "px-2 hover:bg-zinc-200 dark:hover:bg-neutral-800 rounded-lg font-medium",
-                        {'!bg-blue-600 !text-white': isActive},
+                        { "!bg-blue-600 !text-white": isActive }
                       )
                     }
                   >
