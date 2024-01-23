@@ -46,7 +46,7 @@ function LargeSelect({
   return (
     <>
       <button
-        className="bg-zinc-200 dark:bg-neutral-800 px-2 py-1 rounded-lg font-medium flex-1 text-start flex items-center"
+        className="bg-zinc-200 dark:bg-neutral-800 px-2 py-1 rounded-lg font-medium flex-1 text-start flex items-center w-full"
         type="button"
         onClick={() => onToggle(true)}
       >
@@ -55,7 +55,7 @@ function LargeSelect({
       </button>
 
       <Modal onClose={() => onToggle(false)} show={open}>
-        <div className="w-[24rem] rounded-lg bg-zinc-100 dark:bg-neutral-900 shadow dark:border border-neutral-800 h-[24rem] flex flex-col">
+        <div className="w-[24rem] rounded-lg bg-zinc-100 dark:bg-neutral-900 dark:border border-neutral-800 h-[24rem] flex flex-col">
           {state === "select" ? (
             <SelectState
               onShowAdd={showAdd}

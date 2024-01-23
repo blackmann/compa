@@ -2,24 +2,23 @@ import { FieldValues, useForm, useFormContext } from "react-hook-form"
 import { LargeSelect } from "./large-select"
 import { useAsyncFetcher } from "~/lib/use-async-fetcher"
 import React from "react"
-import { useNavigate } from "@remix-run/react"
+import { useNavigate, useParams } from "@remix-run/react"
 
 interface Props {
   programmes: { name: string; slug: string }[]
-  value?: {
-    programme: string
-    level: string
-    sem: string
-    year: string
-  }
 }
 
-function TimetableFilter({ programmes, value }: Props) {
+function TimetableFilter({ programmes }: Props) {
+  const params = useParams()
+
   const [programmeSelectOpen, setProgrammeSelectOpen] = React.useState(false)
   const fetcher = useAsyncFetcher()
   const { watch, register, setValue } = useForm({
     defaultValues: {
-      ...value,
+      programme: params.programme,
+      level: params.level,
+      sem: params.sem,
+      year: params.year,
     },
   })
 
@@ -31,7 +30,7 @@ function TimetableFilter({ programmes, value }: Props) {
   const year = watch("year")
 
   const selected = React.useMemo(
-    () => programmes.find(({ slug }) => slug === value?.programme),
+    () => programmes.find(({ slug }) => slug === programme),
     [programmes]
   )
 
@@ -54,8 +53,12 @@ function TimetableFilter({ programmes, value }: Props) {
   }, [selected, setValue])
 
   React.useEffect(() => {
-    const day = new URLSearchParams(location.search).get("day")
-    navigate(`/timetable/${year}/${programme}/${level}/${sem}?day=${day ?? ''}`)
+    const day = params.day
+    const to = `/timetable/${year}/${programme}/${level}/${sem}/${day}`
+
+    if (location.pathname.startsWith(to)) return
+
+    navigate(to)
   }, [programme, level, sem, year])
 
   return (

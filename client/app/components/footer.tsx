@@ -10,7 +10,7 @@ function Footer() {
 
           <div>
             <a
-              className="inline-flex items-center rounded-lg gap-2 py-1 px-2 bg-zinc-200 dark:bg-neutral-800 font-medium"
+              className="inline-flex items-center rounded-lg gap-2 px-2 bg-zinc-100 dark:bg-neutral-800 font-medium"
               href="https://github.com/blackmann/compa"
             >
               <div className="i-lucide-github"></div>

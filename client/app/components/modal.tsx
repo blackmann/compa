@@ -20,7 +20,7 @@ function Modal({ children, onClose, show }: Props) {
     })
   }, [show, onClose])
 
-  return <dialog className="rounded-lg" ref={ref}>{children}</dialog>
+  return <dialog className="rounded-lg border border-zinc-300 dark:border-neutral-700 shadow" ref={ref}>{children}</dialog>
 }
 
 export { Modal }

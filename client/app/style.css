@@ -1,12 +1,13 @@
-@import url('https://fonts.googleapis.com/css2?family=Dosis:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;500;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Nanum+Gothic+Coding&display=swap');
 
 @unocss;
 
 :root {
   @apply bg-zinc-50 dark:bg-neutral-900;
-  font-family: 'Dosis', system-ui, sans-serif;
+  font-family: 'Lato', system-ui, sans-serif;
   color-scheme: light dark;
+  font-size: 14px;
 }
 
 .text-secondary {
