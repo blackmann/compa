@@ -4,6 +4,7 @@ import {
   MetaFunction,
 } from "@remix-run/node"
 import { Link, Outlet, useLoaderData } from "@remix-run/react"
+import posthog from "posthog-js"
 import { Button } from "~/components/button"
 import { DaysHeader } from "~/components/days-header"
 import { LessonItem } from "~/components/lesson-item"
@@ -88,6 +89,7 @@ export default function TimeTable() {
             <Link
               className="flex items-center gap-2 rounded-lg bg-zinc-200 px-2 py-1 dark:bg-neutral-800 font-medium"
               to="add"
+              onClick={() => posthog.capture('add_lesson_clicked')}
             >
               <div className="size-4">
                 <div className="i-lucide-list-plus opacity-50" />

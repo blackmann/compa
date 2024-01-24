@@ -54,6 +54,8 @@ function TimetableFilter({ programmes }: Props) {
   }, [selected, setValue])
 
   React.useEffect(() => {
+    if (!programme || !level || !sem || !year) return
+
     const day = params.day ?? "1"
     const to = `/timetable/${year}/${programme}/${level}/${sem}/${day}`
 
