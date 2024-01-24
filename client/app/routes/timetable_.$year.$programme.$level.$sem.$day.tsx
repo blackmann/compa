@@ -1,10 +1,15 @@
-import { LoaderFunctionArgs, MetaFunction } from "@remix-run/node"
+import {
+  ActionFunctionArgs,
+  LoaderFunctionArgs,
+  MetaFunction,
+} from "@remix-run/node"
 import { Link, Outlet, useLoaderData } from "@remix-run/react"
 import { Button } from "~/components/button"
 import { DaysHeader } from "~/components/days-header"
 import { LessonItem } from "~/components/lesson-item"
 import { TimetableFilter } from "~/components/timetable-filter"
 import { prisma } from "~/lib/prisma.server"
+import { timeFromString } from "~/lib/time"
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
   const { year, programme, level, sem, day: _day } = params
@@ -17,6 +22,10 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
       programme: { slug: programme },
       semester: Number(sem),
       year,
+    },
+    include: {
+      course: true,
+      instructor: true,
     },
   })
 
@@ -31,6 +40,32 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
     sem: sem!,
     year: year!,
   }
+}
+
+export const action = async ({ request, params }: ActionFunctionArgs) => {
+  if (request.method !== "POST") {
+    return new Response(null, {
+      status: 405,
+      statusText: "Method Not Allowed",
+    })
+  }
+
+  const { year, level, day, sem } = params
+  const { consent, endTime, startTime, ...data } = await request.json()
+
+  await prisma.schedule.create({
+    data: {
+      ...data,
+      day: Number(day),
+      level: Number(level),
+      year,
+      timeStart: timeFromString(startTime),
+      timeEnd: timeFromString(endTime),
+      semester: Number(sem),
+    },
+  })
+
+  return null
 }
 
 export const meta: MetaFunction = () => {
@@ -69,31 +104,32 @@ export default function TimeTable() {
           </div>
 
           <ul className="mt-2">
-            {schedule.map((lesson) => (
-              <li key={lesson.id}>
-                <LessonItem />
-                <hr className="border-zinc-300" />
-                <div className="flex justify-end">
-                  <div className="rounded-b-lg bg-zinc-300 text-sm font-medium text-zinc-800 px-2">
-                    2 hours apart
-                  </div>
-                </div>
-              </li>
-            ))}
+            {schedule.map((lesson, i) => {
+              const nextLesson = schedule[i + 1]
+              const timeDifference = nextLesson
+                ? nextLesson.timeStart - lesson.timeEnd
+                : 0
 
-            <li>
-              <LessonItem />
-              <hr className="border-zinc-300 dark:border-neutral-700" />
-              <div className="flex justify-end">
-                <div className="rounded-b-lg bg-zinc-300 dark:bg-neutral-700 dark:text-white text-sm font-medium text-zinc-800 px-2">
-                  2 hours apart
-                </div>
-              </div>
-            </li>
+              const hours = Math.floor(timeDifference / 3600)
 
-            <li>
-              <LessonItem />
-            </li>
+              return (
+                <li key={lesson.id}>
+                  <LessonItem lesson={lesson} />
+
+                  {hours > 2 && (
+                    <>
+                      <hr className="border-zinc-300" />
+
+                      <div className="flex justify-end">
+                        <div className="rounded-b-lg bg-zinc-300 text-sm font-medium text-zinc-800 px-2">
+                          {Math.floor(hours)} hours apart
+                        </div>
+                      </div>
+                    </>
+                  )}
+                </li>
+              )
+            })}
           </ul>
         </div>
 

@@ -5,7 +5,7 @@ import { FieldValues, useForm, useFormContext } from "react-hook-form"
 import { useAsyncFetcher } from "~/lib/use-async-fetcher"
 import { Button } from "./button"
 import dayjs from "dayjs"
-import { useLoaderData, useParams } from "@remix-run/react"
+import { useLoaderData, useParams, useSubmit } from "@remix-run/react"
 import { days } from "~/lib/days"
 import { AddLessonLoader } from "~/routes/timetable_.$year.$programme.$level.$sem.$day.add"
 
@@ -18,24 +18,26 @@ function LessonForm({
   courses: coursesRaw,
   instructors: instructorsRaw,
 }: Props) {
+  const { level, day } = useParams()
+  const { programme } = useLoaderData<AddLessonLoader>()
+
   const { handleSubmit, register, setValue, watch } = useForm({
     defaultValues: {
       consent: false,
-      course: null as number | null,
-      instructor: null as number | null,
-      start_time: dayjs().format("HH:mm"),
-      end_time: dayjs().add(1, "hour").format("HH:mm"),
+      courseId: null as number | null,
+      endTime: dayjs().add(1, "hour").format("HH:mm"),
+      instructorId: null as number | null,
       location: "",
+      startTime: dayjs().format("HH:mm"),
+      programmeId: programme?.id,
     },
   })
-
-  const { level, day } = useParams()
-  const { programme } = useLoaderData<AddLessonLoader>()
 
   const [showCourseSelect, setShowCourseSelect] = React.useState(false)
   const [showInstructorSelect, setShowInstructorSelect] = React.useState(false)
 
   const fetcher = useAsyncFetcher()
+  const submit = useSubmit()
 
   const courses = React.useMemo(
     () =>
@@ -51,8 +53,8 @@ function LessonForm({
     [instructorsRaw]
   )
 
-  const $instructor = watch("instructor")
-  const $course = watch("course")
+  const $instructor = watch("instructorId")
+  const $course = watch("courseId")
 
   const instructor = React.useMemo(
     () => instructors.find((i) => i.value === $instructor),
@@ -81,7 +83,15 @@ function LessonForm({
   }
 
   async function addLesson(data: FieldValues) {
-    console.log(data)
+    if (!(data.instructorId && data.courseId)) {
+      return
+    }
+
+    submit(JSON.stringify(data), {
+      action: "..",
+      encType: "application/json",
+      method: "POST",
+    })
   }
 
   return (
@@ -89,11 +99,17 @@ function LessonForm({
       <header className="font-bold text-lg">Add lesson</header>
 
       <div className="flex gap-2">
-        <div className="border rounded-lg px-2">{programme?.name}</div>
+        <div className="border border-zinc-200 dark:border-neutral-600 rounded-lg px-2">
+          {programme?.name}
+        </div>
 
-        <div className="border rounded-lg px-2">L{level}</div>
+        <div className="border border-zinc-200 dark:border-neutral-600 rounded-lg px-2">
+          L{level}
+        </div>
 
-        <div className="border rounded-lg px-2">{days[Number(day)]}s</div>
+        <div className="border border-zinc-200 dark:border-neutral-600 rounded-lg px-2">
+          {days[Number(day)]}s
+        </div>
       </div>
 
       <div className="text-secondary flex gap-2 mt-2">
@@ -111,7 +127,7 @@ function LessonForm({
           newForm={<CourseForm />}
           onAdd={handleCourseCreate}
           onSelect={(value) => {
-            setValue("course", value as number)
+            setValue("courseId", value as number)
             setShowCourseSelect(false)
           }}
         >
@@ -129,7 +145,7 @@ function LessonForm({
           newForm={<InstructorForm />}
           onAdd={handleInstructorCreate}
           onSelect={(value) => {
-            setValue("instructor", value as number)
+            setValue("instructorId", value as number)
             setShowInstructorSelect(false)
           }}
         >
@@ -141,17 +157,14 @@ function LessonForm({
         <div className="col-span-1">
           <label className="block">
             <span>Start time</span>
-            <Input
-              type="time"
-              {...register("start_time", { required: true })}
-            />
+            <Input type="time" {...register("startTime", { required: true })} />
           </label>
         </div>
 
         <div className="col-span-1">
           <label className="block">
             <span>End time</span>
-            <Input type="time" {...register("end_time", { required: true })} />
+            <Input type="time" {...register("endTime", { required: true })} />
           </label>
         </div>
 
@@ -167,7 +180,7 @@ function LessonForm({
       <label className="flex gap-2 mt-2">
         <div>
           <input
-            className="!border border-zinc-300 rounded-md w-5 h-5"
+            className="!border border-zinc-300 dark:bg-neutral-600 dark:border-neutral-500 rounded-md w-5 h-5"
             type="checkbox"
             {...register("consent", { required: true })}
           />

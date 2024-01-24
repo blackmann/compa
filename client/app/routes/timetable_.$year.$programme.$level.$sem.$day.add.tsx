@@ -1,4 +1,4 @@
-import { LoaderFunctionArgs } from "@remix-run/node"
+import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node"
 import { useLoaderData } from "@remix-run/react"
 import { LessonForm } from "~/components/lesson-form"
 import { prisma } from "~/lib/prisma.server"

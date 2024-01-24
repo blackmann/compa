@@ -30,7 +30,7 @@ model Schedule {
   course       Course     @relation(fields: [courseId], references: [id])
   courseId     Int
   day          Int
-  instruct     Instructor @relation(fields: [instructorId], references: [id])
+  instructor     Instructor @relation(fields: [instructorId], references: [id])
   instructorId Int
   level        Int
   programme    Programme  @relation(fields: [programmeId], references: [id])
@@ -38,7 +38,7 @@ model Schedule {
   semester     Int
   timeEnd      Int
   timeStart    Int // seconds since midnight
-  year         String
+  year         String // xxxx-xxxx
   location     String
 }
 
