@@ -18,7 +18,7 @@ function Footer() {
 
           <div className="flex gap-4">
             <a
-              className="inline-flex items-center rounded-lg gap-2 px-2 bg-zinc-100 dark:bg-neutral-800 font-medium"
+              className="inline-flex items-center rounded-lg gap-2 px-2 bg-zinc-200 dark:bg-neutral-800 font-medium"
               href="https://github.com/blackmann/compa"
             >
               <div className="i-lucide-github"></div>
@@ -26,7 +26,7 @@ function Footer() {
             </a>
 
             <div className="flex gap-2 items-center text-secondary">
-              <div className="size-2 rounded-full bg-green"></div>
+              <div className="size-2 rounded-full bg-green-500"></div>
               All systems green
             </div>
           </div>

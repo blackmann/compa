@@ -1,9 +1,16 @@
 import React from "react"
 import { LargeSelect } from "./large-select"
 import { Input } from "./input"
+import { FieldValues, useForm, useFormContext } from "react-hook-form"
+import { useAsyncFetcher } from "~/lib/use-async-fetcher"
+import { Button } from "./button"
+import dayjs from "dayjs"
+import { useLoaderData, useParams } from "@remix-run/react"
+import { days } from "~/lib/days"
+import { AddLessonLoader } from "~/routes/timetable_.$year.$programme.$level.$sem.$day.add"
 
 interface Props {
-  courses: { id: number; name: string }[]
+  courses: { id: number; code: string; name: string }[]
   instructors: { id: number; name: string }[]
 }
 
@@ -11,12 +18,31 @@ function LessonForm({
   courses: coursesRaw,
   instructors: instructorsRaw,
 }: Props) {
-  const [showCourseSelect, setShowCourseSelect] = React.useState(false)
+  const { handleSubmit, register, setValue, watch } = useForm({
+    defaultValues: {
+      consent: false,
+      course: null as number | null,
+      instructor: null as number | null,
+      start_time: dayjs().format("HH:mm"),
+      end_time: dayjs().add(1, "hour").format("HH:mm"),
+      location: "",
+    },
+  })
 
+  const { level, day } = useParams()
+  const { programme } = useLoaderData<AddLessonLoader>()
+
+  const [showCourseSelect, setShowCourseSelect] = React.useState(false)
   const [showInstructorSelect, setShowInstructorSelect] = React.useState(false)
 
+  const fetcher = useAsyncFetcher()
+
   const courses = React.useMemo(
-    () => coursesRaw.map(({ id, name }) => ({ label: name, value: id })),
+    () =>
+      coursesRaw.map(({ code, id, name }) => ({
+        label: `${code}: ${name}`,
+        value: id,
+      })),
     [coursesRaw]
   )
 
@@ -25,16 +51,57 @@ function LessonForm({
     [instructorsRaw]
   )
 
+  const $instructor = watch("instructor")
+  const $course = watch("course")
+
+  const instructor = React.useMemo(
+    () => instructors.find((i) => i.value === $instructor),
+    [$instructor, instructors]
+  )
+
+  const course = React.useMemo(
+    () => courses.find((i) => i.value === $course),
+    [$course, courses]
+  )
+
+  async function handleCourseCreate(data: FieldValues) {
+    await fetcher.submit(JSON.stringify(data), {
+      action: "/courses",
+      encType: "application/json",
+      method: "POST",
+    })
+  }
+
+  async function handleInstructorCreate(data: FieldValues) {
+    await fetcher.submit(JSON.stringify(data), {
+      action: "/instructors",
+      encType: "application/json",
+      method: "POST",
+    })
+  }
+
+  async function addLesson(data: FieldValues) {
+    console.log(data)
+  }
+
   return (
-    <form>
+    <form onSubmit={handleSubmit(addLesson)}>
       <header className="font-bold text-lg">Add lesson</header>
-      {/* <p className="text-secondary">Add new entry for BSc Statics on Mondays</p> */}
 
-      {/* <div className="w-[18rem]">
-        <CrowdsourceNotice />
-      </div> */}
+      <div className="flex gap-2">
+        <div className="border rounded-lg px-2">{programme?.name}</div>
 
-      <label className="block">
+        <div className="border rounded-lg px-2">L{level}</div>
+
+        <div className="border rounded-lg px-2">{days[Number(day)]}s</div>
+      </div>
+
+      <div className="text-secondary flex gap-2 mt-2">
+        <div className="i-lucide-corner-left-up"></div> You're adding a lesson
+        for the above
+      </div>
+
+      <label className="block mt-4">
         <span>Course</span>
         <LargeSelect
           label="Course"
@@ -42,10 +109,13 @@ function LessonForm({
           onToggle={setShowCourseSelect}
           options={courses}
           newForm={<CourseForm />}
-          onAdd={async () => {}}
-          onSelect={() => {}}
+          onAdd={handleCourseCreate}
+          onSelect={(value) => {
+            setValue("course", value as number)
+            setShowCourseSelect(false)
+          }}
         >
-          Logic and Set Theory
+          {course?.label ?? "Select a course"}
         </LargeSelect>
       </label>
 
@@ -57,37 +127,101 @@ function LessonForm({
           onToggle={setShowInstructorSelect}
           options={instructors}
           newForm={<InstructorForm />}
-          onAdd={async () => {}}
-          onSelect={() => {}}
+          onAdd={handleInstructorCreate}
+          onSelect={(value) => {
+            setValue("instructor", value as number)
+            setShowInstructorSelect(false)
+          }}
         >
-          P. A. Kwabi
+          {instructor?.label ?? "Select an instructor"}
         </LargeSelect>
       </label>
+
+      <div className="grid grid-cols-3 mt-2 gap-2">
+        <div className="col-span-1">
+          <label className="block">
+            <span>Start time</span>
+            <Input
+              type="time"
+              {...register("start_time", { required: true })}
+            />
+          </label>
+        </div>
+
+        <div className="col-span-1">
+          <label className="block">
+            <span>End time</span>
+            <Input type="time" {...register("end_time", { required: true })} />
+          </label>
+        </div>
+
+        <div className="col-span-1">
+          <label className="block">
+            <span>Location</span>
+            <Input {...register("location", { required: true })} />
+            <small className="text-secondary">Eg. SF24</small>
+          </label>
+        </div>
+      </div>
+
+      <label className="flex gap-2 mt-2">
+        <div>
+          <input
+            className="!border border-zinc-300 rounded-md w-5 h-5"
+            type="checkbox"
+            {...register("consent", { required: true })}
+          />
+        </div>
+        <div>
+          By clicking <b>Save</b>, you agree that these details are correct and
+          conform to the{" "}
+          <a className="underline" href="/crowdsourcing#ethics">
+            crowdsourcing ethics
+          </a>
+          .
+        </div>
+      </label>
+
+      <div className="mt-2">
+        <Button>
+          <div className="i-lucide-corner-down-left opacity-50"></div> Save
+        </Button>
+      </div>
     </form>
   )
 }
 
 function CourseForm() {
+  const { register } = useFormContext()
+
   return (
-    <div>
+    <div className="p-2">
+      <label className="block">
+        Code
+        <Input {...register("code", { required: true })} />
+        <small className="text-secondary">Eg. Math 171</small>
+      </label>
 
-
-      <div className="p-2">
-        <label>
-          Name
-          <Input name="name" />
-        </label>
-
-        <small className="text-secondary">
-          Eg. Math 171: Logic and Set Theory
-        </small>
-      </div>
+      <label className="block mt-2">
+        Name
+        <Input {...register("name", { required: true })} />
+        <small className="text-secondary">Eg. Logic and Set Theory</small>
+      </label>
     </div>
   )
 }
 
 function InstructorForm() {
-  return <div></div>
+  const { register } = useFormContext()
+
+  return (
+    <div className="p-2">
+      <label className="block">
+        Name
+        <Input {...register("name", { required: true })} />
+      </label>
+    </div>
+  )
 }
 
 export { LessonForm }

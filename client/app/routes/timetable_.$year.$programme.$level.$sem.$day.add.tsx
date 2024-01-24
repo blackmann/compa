@@ -3,13 +3,19 @@ import { useLoaderData } from "@remix-run/react"
 import { LessonForm } from "~/components/lesson-form"
 import { prisma } from "~/lib/prisma.server"
 
-export const loader = async ({}: LoaderFunctionArgs) => {
+export const loader = async ({ params }: LoaderFunctionArgs) => {
   const courses = await prisma.course.findMany({})
   const instructors = await prisma.instructor.findMany({})
-  return { courses, instructors }
+  const programme = await prisma.programme.findFirst({
+    where: { slug: params.programme },
+  })
+
+  return { courses, instructors, programme }
 }
 
 export default function AddLesson() {
   const { courses, instructors } = useLoaderData<typeof loader>()
   return <LessonForm courses={courses} instructors={instructors} />
 }
+
+export type AddLessonLoader = typeof loader

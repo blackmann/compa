@@ -13,16 +13,16 @@ datasource db {
 model Programme {
   id       Int        @id @default(autoincrement())
   Schedule Schedule[]
-  name     String
+  name     String     @unique
   slug     String     @unique
 }
 
 model Course {
-  id          Int        @id @default(autoincrement())
-  Schedule    Schedule[]
-  courseCode  String
-  name        String
-  slug        String     @unique
+  id       Int        @id @default(autoincrement())
+  Schedule Schedule[]
+  code     String     @unique
+  name     String
+  slug     String     @unique
 }
 
 model Schedule {

@@ -1,6 +1,7 @@
 import { LoaderFunctionArgs, MetaFunction } from "@remix-run/node"
 import { Link, Outlet, useLoaderData } from "@remix-run/react"
 import React from "react"
+import { Button } from "~/components/button"
 import { DaysHeader } from "~/components/days-header"
 import { LessonItem } from "~/components/lesson-item"
 import { TimetableFilter } from "~/components/timetable-filter"
@@ -42,7 +43,7 @@ export default function TimeTable() {
 
   return (
     <div className="container mx-auto">
-      <div className="grid grid-cols-1 lg:grid-cols-4 xl:grid-cols-6 gap-4 min-h-[60vh]">
+      <div className="grid grid-cols-1 lg:grid-cols-4 xl:grid-cols-6 gap-4 min-h-[70vh]">
         <div className="col-span-1 lg:col-span-2 lg:col-start-2">
           <TimetableFilter programmes={programmes} />
 
@@ -59,12 +60,12 @@ export default function TimeTable() {
               Add lesson
             </Link>
 
-            <button className="flex items-center gap-2 rounded-lg bg-blue-600 px-2 py-1 text-white font-medium">
+            <Button>
               <div className="size-4">
                 <div className="i-lucide-calendar-plus opacity-50" />
               </div>{" "}
               Save calendar
-            </button>
+            </Button>
           </div>
 
           <ul className="mt-2">

@@ -16,7 +16,7 @@ export default function Timetable() {
   const { programmes } = useLoaderData<typeof loader>()
 
   return (
-    <div className="container mx-auto min-h-[60vh]">
+    <div className="container mx-auto min-h-[70vh]">
       <div className="grid grid-cols-5">
         <div className="col-start-2 col-span-2">
           <TimetableFilter programmes={programmes} />

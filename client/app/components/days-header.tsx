@@ -1,20 +1,13 @@
 import { Link, useParams } from "@remix-run/react"
 import clsx from "clsx"
+import { days } from "~/lib/days"
 
 interface Props {
   className?: string
   selectedDay?: number
 }
 
-const days = [
-  "Sunday",
-  "Monday",
-  "Tuesday",
-  "Wednesday",
-  "Thursday",
-  "Friday",
-  "Saturday",
-]
+
 
 function DaysHeader({ className, selectedDay = 1 }: Props) {
   const { year, programme, level, sem } = useParams()
