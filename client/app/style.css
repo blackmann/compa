@@ -26,3 +26,7 @@ select {
 input {
   @apply !border-0;
 }
+
+.container {
+  @apply px-4;
+}

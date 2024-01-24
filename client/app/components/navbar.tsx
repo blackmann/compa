@@ -18,12 +18,12 @@ function Navbar() {
       <div className="grid grid-cols-3 gap-4">
         <div className="col-span-2">
           <div className="flex gap-4 items-center">
-            <div>
+            <a className="block" href="/">
               <img src="/sym.svg" width={40} className="inline" alt="Compa" />
               {/* <span className="text-sm capitalize bg-lime-600 text-white rounded-md px-2 font-medium rounded-bl-0">
                 KNUST
               </span> */}
-            </div>
+            </a>
 
             <nav>
               <ul className="flex gap-2">

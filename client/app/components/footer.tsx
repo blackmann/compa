@@ -3,7 +3,7 @@ import { SymOutline } from "./sym-outline"
 function Footer() {
   return (
     <footer className="container mx-auto py-6 border-t border-zinc-300 dark:border-neutral-700 mt-6">
-      <div className="grid grid-cols-4">
+      <div className="grid grid-cols-1 lg:grid-cols-4">
         <div className="col-span-1">
           <div className="mb-2">
             <SymOutline className="size-12" />

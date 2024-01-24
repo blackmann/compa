@@ -8,5 +8,5 @@ export const meta: MetaFunction = () => {
 }
 
 export default function Index() {
-  return <div>Nothing here mann</div>
+  return <div className="container min-h-[60vh] mx-auto">Nothing here mann</div>
 }
