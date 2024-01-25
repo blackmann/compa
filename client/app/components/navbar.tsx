@@ -28,18 +28,19 @@ function Navbar() {
             <nav>
               <ul className="flex gap-2">
                 {links.map((link) => (
-                  <NavLink
-                    to={link.href}
-                    key={link.href}
-                    className={({ isActive }) =>
-                      clsx(
-                        "px-2 py-1 hover:bg-zinc-200 dark:hover:bg-neutral-800 rounded-lg font-medium",
-                        { "!bg-blue-600 !text-white": isActive }
-                      )
-                    }
-                  >
-                    {link.title}
-                  </NavLink>
+                  <li key={link.href}>
+                    <NavLink
+                      to={link.href}
+                      className={({ isActive }) =>
+                        clsx(
+                          "px-2 py-1 hover:bg-zinc-200 dark:hover:bg-neutral-800 rounded-lg font-medium",
+                          { "!bg-blue-600 !text-white": isActive }
+                        )
+                      }
+                    >
+                      {link.title}
+                    </NavLink>
+                  </li>
                 ))}
               </ul>
             </nav>

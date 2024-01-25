@@ -1,5 +1,7 @@
 {
   "id": "knust",
+  "name": "Kwame Nkrumah University of Science and Technology",
+  "shortName": "KNUST",
   "semester": {
     "number": 1,
     "start": "2024-01-06",

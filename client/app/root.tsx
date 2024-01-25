@@ -5,7 +5,6 @@ import { cssBundleHref } from "@remix-run/css-bundle"
 import type { LinksFunction } from "@remix-run/node"
 import {
   Links,
-  LiveReload,
   Meta,
   Outlet,
   Scripts,
@@ -15,22 +14,29 @@ import { Navbar } from "./components/navbar"
 import { Footer } from "./components/footer"
 import posthog from "posthog-js"
 import React from "react"
+import { LiveReload, useSWEffect } from '@remix-pwa/sw'
 
 export const links: LinksFunction = () => [
   ...(cssBundleHref ? [{ rel: "stylesheet", href: cssBundleHref }] : []),
 ]
 
 export default function App() {
+  useSWEffect()
+
   React.useEffect(() => {
     posthog.init("phc_qmxF7NTz6XUnYUDoMpkTign6mujS8F8VqR75wb0Bsl7", {
       api_host: "https://eu.posthog.com",
     })
   }, [])
+
   return (
     <html lang="en">
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="theme-color" content="#f59e0b" />
+        {/* // add manifest link */}
+        <link rel="manifest" href="/manifest.webmanifest" />
         <Meta />
         <Links />
       </head>
