@@ -7,7 +7,6 @@ import { TimeTableLoader } from "~/routes/timetable_.$year.$programme.$level.$se
 
 // [ ]: Edit lesson
 // [ ]: Save programme, etc. as cookie preference
-// [ ]: PWA
 // [ ]: Hosting
 // [ ]: Website
 function TimetableSaveToCalender() {

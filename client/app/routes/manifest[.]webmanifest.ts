@@ -3,18 +3,20 @@ import { config } from '~/lib/config.server';
 
 export const loader = async () => {
   const shortName = config.get('shortName')
+  const appName = `${shortName} | compa`
 
   return json(
     {
-      short_name: `${shortName} | compa`,
-      name: `${shortName} | compa`,
+      short_name: appName,
+      name: appName,
       start_url: '/',
       display: 'standalone',
       background_color: '#ffffff',
       theme_color: '#f59e0b',
+      display_override: ['fullscreen'],
       shortcuts: [
         {
-          name: 'Homepage',
+          name: appName,
           url: '/',
           icons: [
             {

@@ -4,6 +4,5 @@ node_modules
 /build
 /public/build
 /public/entry.worker.js
-.env
 
 dev.db
