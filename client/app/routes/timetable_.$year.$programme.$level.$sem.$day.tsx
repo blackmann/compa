@@ -5,10 +5,10 @@ import {
 } from "@remix-run/node"
 import { Link, Outlet, useLoaderData } from "@remix-run/react"
 import posthog from "posthog-js"
-import { Button } from "~/components/button"
 import { DaysHeader } from "~/components/days-header"
 import { LessonItem } from "~/components/lesson-item"
 import { TimetableFilter } from "~/components/timetable-filter"
+import { TimetableSaveToCalender } from "~/components/timetable-save-to-calendar"
 import { prisma } from "~/lib/prisma.server"
 import { timeFromString } from "~/lib/time"
 
@@ -97,12 +97,7 @@ export default function TimeTable() {
               Add lesson
             </Link>
 
-            <Button>
-              <div className="size-4">
-                <div className="i-lucide-calendar-plus opacity-50" />
-              </div>{" "}
-              Save calendar
-            </Button>
+            <TimetableSaveToCalender />
           </div>
 
           <ul className="mt-2">
@@ -142,3 +137,5 @@ export default function TimeTable() {
     </div>
   )
 }
+
+export type TimeTableLoader = typeof loader

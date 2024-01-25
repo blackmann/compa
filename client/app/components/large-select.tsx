@@ -57,7 +57,7 @@ function LargeSelect({
         <div className="i-lucide-mouse-pointer-2 text-secondary"></div>
       </button>
 
-      <Modal onClose={() => onToggle(false)} show={open}>
+      <Modal onClose={() => onToggle(false)} open={open}>
         <div className="w-[24rem] rounded-lg bg-zinc-100 dark:bg-neutral-900 dark:border border-neutral-800 h-[24rem] flex flex-col">
           {state === "select" ? (
             <SelectState

@@ -2,16 +2,16 @@ import React from "react"
 import ReactDOM from "react-dom"
 
 interface Props extends React.PropsWithChildren {
-  show?: boolean
+  open?: boolean
   onClose?: VoidFunction
 }
 
-function Modal({ children, onClose, show }: Props) {
+function Modal({ children, onClose, open }: Props) {
   const ref = React.useRef<HTMLDialogElement>(null)
   const [mounted, setMounted] = React.useState(false)
 
   React.useEffect(() => {
-    if (show) {
+    if (open) {
       ref.current?.showModal()
     } else {
       ref.current?.close()
@@ -20,7 +20,7 @@ function Modal({ children, onClose, show }: Props) {
     ref.current?.addEventListener("close", () => {
       onClose?.()
     })
-  }, [show, onClose])
+  }, [open, onClose])
 
   React.useEffect(() => {
     setMounted(true)
