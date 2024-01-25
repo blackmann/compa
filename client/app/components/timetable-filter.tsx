@@ -49,7 +49,7 @@ function TimetableFilter({ programmes }: Props) {
   }
 
   React.useEffect(() => {
-    if (selected) return
+    if (selected || !programmes.length) return
     setValue("programme", programmes[0].slug)
   }, [selected, setValue])
 
