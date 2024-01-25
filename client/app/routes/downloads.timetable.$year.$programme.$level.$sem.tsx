@@ -3,6 +3,7 @@ import { prisma } from "~/lib/prisma.server"
 import ics from "ics"
 import dayjs from "dayjs"
 import { config } from "~/lib/config.server"
+import crypto from "crypto"
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
   const { year, programme, level, sem } = params
@@ -19,7 +20,8 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
     },
   })
 
-  const semesterEnd = config.get('semester.end').replace(/-/g, '')
+  const semesterEnd = config.get("semester.end").replace(/-/g, "")
+  const schoolId = config.get("id")
 
   const events: ics.EventAttributes[] = schedule.map((lesson) => {
     const _hours = (lesson.timeEnd - lesson.timeStart) / 3600
@@ -36,11 +38,15 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
       .set("second", 0)
       .set("millisecond", 0)
 
-    const day = date.format('dd').toUpperCase()
+    const day = date.format("dd").toUpperCase()
+
+    const id = [schoolId, programme, year, level, sem, lesson.id].join("-")
+    const eventId = crypto.createHash("md5").update(id).digest("hex")
 
     return {
       title: `${lesson.course.code} ${lesson.course.name}`,
       duration: { hours: Math.floor(hours), minutes: Math.floor(minutes) },
+      location: lesson.location,
       start: [
         date.year(),
         date.month() + 1,
@@ -48,6 +54,7 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
         date.hour(),
         date.minute(),
       ],
+      uid: eventId,
       recurrenceRule: `FREQ=WEEKLY;BYDAY=${day};INTERVAL=1;UNTIL=${semesterEnd}T235959Z`,
     }
   })
