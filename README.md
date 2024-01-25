@@ -13,6 +13,12 @@ Companion, _compass_, compact and open. Compa is all of these and more.
 
 ## Project setup
 
-This is a yarn workspace (aka. monorepo). Run `yarn` to install all dependencies. Prisma is the ORM used for the project. Run `yarn prisma generate` to generate the prisma client.
+Run the following commands after cloning the project:
+
+```sh
+yarn install
+yarn workspace client prisma generate
+yarn workspace client prisma migrate deploy
+```
 
 Run `yarn dev:client` to start the project in dev.
