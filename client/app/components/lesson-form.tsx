@@ -96,7 +96,7 @@ function LessonForm({
 
   return (
     <form onSubmit={handleSubmit(addLesson)}>
-      <header className="font-bold text-lg">Add lesson</header>
+      <header className="font-bold text-lg mb-2">Add Lesson</header>
 
       <div className="flex gap-2">
         <div className="border border-zinc-200 dark:border-neutral-600 rounded-lg px-2">
@@ -186,7 +186,7 @@ function LessonForm({
           />
         </div>
         <div>
-          By clicking <b>Save</b>, you agree that these details are correct and
+          By clicking <b>Save lesson</b>, you agree that these details are correct and
           conform to the{" "}
           <a className="underline" href="/crowdsourcing#ethics">
             crowdsourcing ethics
@@ -197,7 +197,7 @@ function LessonForm({
 
       <div className="mt-2">
         <Button>
-          <div className="i-lucide-corner-down-left opacity-50"></div> Save
+          <div className="i-lucide-corner-down-left opacity-50"></div> Save lesson
         </Button>
       </div>
     </form>
