@@ -186,8 +186,8 @@ function LessonForm({
           />
         </div>
         <div>
-          By clicking <b>Save lesson</b>, you agree that these details are correct and
-          conform to the{" "}
+          By clicking <b>Save lesson</b>, you agree that these details are
+          correct and conform to the{" "}
           <a className="underline" href="/crowdsourcing#ethics">
             crowdsourcing ethics
           </a>
@@ -197,7 +197,8 @@ function LessonForm({
 
       <div className="mt-2">
         <Button>
-          <div className="i-lucide-corner-down-left opacity-50"></div> Save lesson
+          <div className="i-lucide-corner-down-left opacity-50"></div> Save
+          lesson
         </Button>
       </div>
     </form>

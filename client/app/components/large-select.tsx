@@ -96,6 +96,14 @@ function SelectState({
   onShowAdd,
   options,
 }: SelectProps) {
+  const [q, setQ] = React.useState("")
+
+  const filteredOptions = React.useMemo(() => {
+    return options.filter((option) =>
+      option.label.toLowerCase().includes(q.toLowerCase())
+    )
+  }, [options, q])
+
   return (
     <>
       <header className="p-2">
@@ -103,18 +111,27 @@ function SelectState({
           <div className="i-lucide-scan-search"></div> Select {label}
         </div>
         <div>
-          <Input type="text" placeholder="Start typing…" />
+          <Input
+            type="text"
+            placeholder="Start typing…"
+            value={q}
+            onChange={(e) => setQ((e.target as HTMLInputElement).value)}
+          />
         </div>
       </header>
 
       <ul className="flex-1 mx-2 overflow-y-auto">
-        {options.length === 0 && (
+        {filteredOptions.length === 0 && (
           <li className="text-secondary">
-            No options available. Try adding new.
+            {filteredOptions.length === 0 ? (
+              <>No option with <b>{q}</b> found</>
+            ) : (
+              <>No options available. Try adding new.</>
+            )}
           </li>
         )}
 
-        {options.map((option) => (
+        {filteredOptions.map((option) => (
           <li
             className="px-2 py-1 hover:bg-zinc-200 dark:hover:bg-neutral-800 rounded-lg focus-within:bg-zinc-200 dark:focus-within:bg-neutral-800"
             key={option.value}

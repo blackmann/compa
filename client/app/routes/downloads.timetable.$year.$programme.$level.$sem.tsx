@@ -2,7 +2,7 @@ import { LoaderFunctionArgs } from "@remix-run/node"
 import { prisma } from "~/lib/prisma.server"
 import ics from "ics"
 import dayjs from "dayjs"
-import { config } from "~/lib/config.server"
+import { values } from "~/lib/values.server"
 import crypto from "crypto"
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
@@ -20,8 +20,8 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
     },
   })
 
-  const semesterEnd = config.get("semester.end").replace(/-/g, "")
-  const schoolId = config.get("id")
+  const semesterEnd = values.get("semester.end").replace(/-/g, "")
+  const schoolId = values.get("id")
 
   const events: ics.EventAttributes[] = schedule.map((lesson) => {
     const _hours = (lesson.timeEnd - lesson.timeStart) / 3600

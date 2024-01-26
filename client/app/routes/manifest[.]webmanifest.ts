@@ -1,8 +1,8 @@
 import { json } from '@remix-run/node';
-import { config } from '~/lib/config.server';
+import { values } from '~/lib/values.server';
 
 export const loader = async () => {
-  const shortName = config.get('shortName')
+  const shortName = values.get('shortName')
   const appName = `${shortName} | compa`
 
   return json(

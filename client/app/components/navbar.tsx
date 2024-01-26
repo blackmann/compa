@@ -3,12 +3,12 @@ import clsx from "clsx"
 
 const links = [
   {
-    title: "Timetable",
-    href: "/timetable",
-  },
-  {
     title: "Discussions",
     href: "/discussions",
+  },
+  {
+    title: "Timetable",
+    href: "/timetable",
   },
 ]
 
@@ -20,9 +20,6 @@ function Navbar() {
           <div className="flex gap-4 items-center">
             <a className="block" href="/">
               <img src="/sym.svg" width={40} className="inline" alt="Compa" />
-              {/* <span className="text-sm capitalize bg-lime-600 text-white rounded-md px-2 font-medium rounded-bl-0">
-                KNUST
-              </span> */}
             </a>
 
             <nav>

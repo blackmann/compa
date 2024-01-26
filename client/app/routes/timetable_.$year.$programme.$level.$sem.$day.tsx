@@ -6,12 +6,14 @@ import {
 import { Link, Outlet, useLoaderData, useOutlet } from "@remix-run/react"
 import clsx from "clsx"
 import posthog from "posthog-js"
+import React from "react"
 import { DaysHeader } from "~/components/days-header"
 import { LessonItem } from "~/components/lesson-item"
 import { TimetableFilter } from "~/components/timetable-filter"
 import { TimetableSaveToCalender } from "~/components/timetable-save-to-calendar"
 import { prisma } from "~/lib/prisma.server"
 import { timeFromString } from "~/lib/time"
+import { values } from "~/lib/values.server"
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
   const { year, programme, level, sem, day: _day } = params
@@ -42,6 +44,7 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
     schedule,
     sem: sem!,
     year: year!,
+    school: values.meta(),
   }
 }
 
@@ -71,14 +74,26 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   return null
 }
 
-export const meta: MetaFunction = () => {
-  return [{ title: "Timetable | KNUST | compa" }]
+export const meta: MetaFunction<typeof loader> = ({ data }) => {
+  return [{ title: `Timetable | ${data?.school.shortName} | compa` }]
 }
 
 export default function TimeTable() {
   const { day, programmes, schedule } = useLoaderData<typeof loader>()
+  const [checked, setChecked] = React.useState<number>(0)
 
   const outlet = useOutlet()
+
+  const [hours, minutes] = schedule.reduce(
+    (acc, lesson) => {
+      const [_hours, _minutes] = acc
+
+      const time = lesson.timeEnd - lesson.timeStart
+
+      return [_hours + Math.floor(time / 3600), _minutes + (time % 3600) / 60]
+    },
+    [0, 0]
+  )
 
   return (
     <div className="container mx-auto">
@@ -119,16 +134,26 @@ export default function TimeTable() {
 
               return (
                 <li key={lesson.id}>
-                  <LessonItem lesson={lesson} />
+                  <LessonItem
+                    lesson={lesson}
+                    checked={lesson.id === checked}
+                    onClick={() => {
+                      if (lesson.id === checked) {
+                        setChecked(0)
+                      } else {
+                        setChecked(lesson.id)
+                      }
+                    }}
+                  />
 
                   {i < schedule.length - 1 && (
-                    <hr className="border-zinc-300" />
+                    <hr className="border-zinc-300 dark:border-neutral-600" />
                   )}
 
                   {hours > 2 && (
                     <>
                       <div className="flex justify-end">
-                        <div className="rounded-b-lg bg-zinc-300 text-sm font-medium text-zinc-800 px-2">
+                        <div className="rounded-b-lg bg-zinc-300 dark:bg-neutral-600 text-sm font-medium text-zinc-800 dark:text-neutral-200 px-2">
                           {Math.floor(hours)} hours apart
                         </div>
                       </div>
@@ -138,6 +163,14 @@ export default function TimeTable() {
               )
             })}
           </ul>
+
+          {schedule.length > 0 && (
+            <div className="mt-2">
+              <div className="border rounded-full inline-block px-2 border-zinc-300 dark:border-neutral-700 text-secondary">
+                {schedule.length} lessons &bull; {hours}h {minutes}m total
+              </div>
+            </div>
+          )}
 
           {schedule.length === 0 && (
             <div className="text-center text-secondary mt-12">
