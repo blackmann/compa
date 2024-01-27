@@ -1,14 +1,37 @@
 import { SymOutline } from "./sym-outline"
 
+const projectLinks = [
+  {
+    name: "About",
+    href: "https://compa.so",
+  },
+  {
+    name: "Report an issue",
+    href: "https://github.com/blackmann/compa/issues",
+  },
+  {
+    name: "Contribute",
+    href: "https://compa.so/contribute",
+  },
+  {
+    name: "Roadmap",
+    href: "https://compa.so/roadmap",
+  },
+  {
+    name: "Data & Privacy Policy",
+    href: "https://compa.so/data-privacy-policy",
+  },
+]
+
 function Footer() {
   return (
     <footer className="container mx-auto py-6 border-t border-zinc-300 dark:border-neutral-700 mt-6">
-      <div className="grid grid-cols-1 lg:grid-cols-4">
-        <div className="col-span-1">
-          <div className="mb-2">
-            <SymOutline className="size-12" />
-          </div>
+      <div className="mb-2">
+        <SymOutline className="size-12" />
+      </div>
 
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="col-span-2 lg:col-span-1">
           <div className="font-bold">COMPA</div>
 
           <div className="text-secondary mb-2">
@@ -30,6 +53,20 @@ function Footer() {
               All systems green
             </div>
           </div>
+        </div>
+
+        <div className="lg:col-start-3 col-span-1">
+          <header className="font-bold">Project</header>
+
+          <ul className="text-secondary">
+            {projectLinks.map((link) => (
+              <li key={link.href}>
+                <a className="hover:underline" href={link.href}>
+                  {link.name}
+                </a>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
     </footer>

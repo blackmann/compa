@@ -57,7 +57,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   }
 
   const { year, level, day, sem } = params
-  const { consent, endTime, startTime, ...data } = await request.json()
+  const { consent, timeEnd, timeStart, ...data } = await request.json()
 
   await prisma.schedule.create({
     data: {
@@ -65,8 +65,8 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
       day: Number(day),
       level: Number(level),
       year,
-      timeStart: timeFromString(startTime),
-      timeEnd: timeFromString(endTime),
+      timeStart: timeFromString(timeStart),
+      timeEnd: timeFromString(timeEnd),
       semester: Number(sem),
     },
   })

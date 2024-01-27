@@ -12,8 +12,6 @@ import {
 } from "@remix-run/react"
 import { Navbar } from "./components/navbar"
 import { Footer } from "./components/footer"
-import posthog from "posthog-js"
-import React from "react"
 import { LiveReload, useSWEffect } from '@remix-pwa/sw'
 
 export const links: LinksFunction = () => [
@@ -22,12 +20,6 @@ export const links: LinksFunction = () => [
 
 export default function App() {
   useSWEffect()
-
-  React.useEffect(() => {
-    posthog.init("phc_qmxF7NTz6XUnYUDoMpkTign6mujS8F8VqR75wb0Bsl7", {
-      api_host: "https://eu.posthog.com",
-    })
-  }, [])
 
   return (
     <html lang="en">

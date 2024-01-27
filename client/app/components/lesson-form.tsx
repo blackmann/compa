@@ -25,10 +25,10 @@ function LessonForm({
     defaultValues: {
       consent: false,
       courseId: null as number | null,
-      endTime: dayjs().add(1, "hour").format("HH:mm"),
+      timeEnd: dayjs().add(1, "hour").format("HH:mm"),
       instructorId: null as number | null,
       location: "",
-      startTime: dayjs().format("HH:mm"),
+      timeStart: dayjs().format("HH:mm"),
       programmeId: programme?.id,
     },
   })
@@ -157,14 +157,14 @@ function LessonForm({
         <div className="col-span-1">
           <label className="block">
             <span>Start time</span>
-            <Input type="time" {...register("startTime", { required: true })} />
+            <Input type="time" {...register("timeStart", { required: true })} />
           </label>
         </div>
 
         <div className="col-span-1">
           <label className="block">
             <span>End time</span>
-            <Input type="time" {...register("endTime", { required: true })} />
+            <Input type="time" {...register("timeEnd", { required: true })} />
           </label>
         </div>
 
