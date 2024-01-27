@@ -15,13 +15,13 @@ Companion, _compass_, compact and open. Compa is all of these and more.
 
 ## Features
 
--[x] Timetable: See lecture schedule for a semester and download to your calendar. ❇️
+- [x] Timetable: See lecture schedule for a semester and download to your calendar. ❇️
 
--[ ] Discussions: Ask questions, share ideas and comments with other students. (Coming next). Discussions will be threaded and searchable. They can also be scoped to a specific programme, course, level, etc.
+- [ ] Discussions: Ask questions, share ideas and comments with other students. (Coming next). Discussions will be threaded and searchable. They can also be scoped to a specific programme, course, level, etc.
 
 With discussions, you can also create polls, flashcards, quizzes and files/docs.
 
--[ ] Communities: Join interest groups and clubs. (Coming some time)
+- [ ] Communities: Join interest groups and clubs. (Coming some time)
 
 ## Schools
 
