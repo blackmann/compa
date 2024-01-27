@@ -62,7 +62,7 @@ Start the project in dev mode.
 yarn dev:client
 ```
 
-## Contributions
+## Contributing
 
 Contributions are always welcome! We don't have a code of conduct right now, but we will soon!
 
