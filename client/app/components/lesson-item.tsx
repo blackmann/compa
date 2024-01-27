@@ -35,6 +35,21 @@ function LessonItem({ checked, lesson, onClick }: Props) {
     setShowEdit(true)
   }
 
+  async function handleDelete() {
+    const yes = confirm('Are you sure you want to delete this lesson? This cannot be undone.')
+    if (!yes) {
+      return
+    }
+
+    await fetcher.submit(null, {
+      encType: "application/json",
+      action: `/lessons/${lesson.id}`,
+      method: 'DELETE'
+    })
+
+    setShowEdit(false)
+  }
+
   async function saveLesson(data: FieldValues) {
     await fetcher.submit(JSON.stringify(data), {
       encType: "application/json",
@@ -147,7 +162,7 @@ function LessonItem({ checked, lesson, onClick }: Props) {
                   Cancel
                 </Button>
 
-                <Button variant="neutral" type="button">
+                <Button variant="neutral" type="button" onClick={handleDelete}>
                   <div className="opacity-50 i-lucide-trash-2"></div> Delete
                 </Button>
               </div>

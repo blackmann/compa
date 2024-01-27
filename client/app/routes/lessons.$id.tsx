@@ -10,6 +10,12 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
     })
   }
 
+  if (request.method === "DELETE") {
+    await prisma.schedule.delete({ where: { id: Number(params.id) } })
+
+    return null
+  }
+
   const body = await request.json()
 
   const updated = await prisma.schedule.update({
