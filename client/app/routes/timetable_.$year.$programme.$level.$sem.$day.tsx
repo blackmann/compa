@@ -84,16 +84,12 @@ export default function TimeTable() {
 
   const outlet = useOutlet()
 
-  const [hours, minutes] = schedule.reduce(
-    (acc, lesson) => {
-      const [_hours, _minutes] = acc
+  const _minutes = schedule.reduce((acc, lesson) => {
+    return acc + (lesson.timeEnd - lesson.timeStart) / 60
+  }, 0)
 
-      const time = lesson.timeEnd - lesson.timeStart
-
-      return [_hours + Math.floor(time / 3600), _minutes + (time % 3600) / 60]
-    },
-    [0, 0]
-  )
+  const hours = Math.floor(_minutes / 60)
+  const minutes = _minutes - hours * 60
 
   return (
     <div className="container mx-auto">
