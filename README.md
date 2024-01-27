@@ -17,9 +17,9 @@ As a fresher, settling into school could be easier. You usually need to find:
 - Semester timetables
 - Resources from past semesters
 
-For continuting students, it's just as to track where documents or ckass notes are when conversations are strewn across multiple platfroms.
+For continuing students, it's just as hard to track where documents or class notes are when conversations are strewn across multiple platforms.
 
-Being a student is hard enough, that's why Compa aims to be _resource-central_ for higher education institutions, and save you from one source of stress.
+Being a student is hard enough, that's why Compa aims to be _resource-central_ for higher education institutions and save you from one source of stress.
 
 As continuing students, keeping up with any of these is scattered across multiple platforms. Compa aims to offer a cohesive experience for all of these.
 
@@ -27,7 +27,7 @@ Your open, compact, companion and compass. That is _Compa_.
 
 ## Features
 
-- [x] Timetable: See lecture schedule for a semester and import to your calendar. ❇️
+- [x] Timetable: See the lecture schedule for a semester and import it to your calendar. ❇️
 
 - [ ] Discussions: Ask questions, share ideas and interact with other students.
 
@@ -37,7 +37,7 @@ Your open, compact, companion and compass. That is _Compa_.
 
 - [x] Kwame Nkrumah University of Science and Technology (KNUST) - [Website](https://knust.compa.so)
 
-> If you'd like to set up compa for your school, please create an issue with the title: `School Request: <School Name>`.
+> If you'd like to set up Compa for your school, please create an issue with the title: `School Request: <School Name>`.
 
 ## Run locally
 
