@@ -14,12 +14,12 @@ const links = [
 
 function Navbar() {
   return (
-    <header className="py-2 container mx-auto border-b border-zinc-300 dark:border-neutral-700 mb-5">
+    <header className="py-2 container mx-auto bg-zinc-100 dark:bg-neutral-800 lg:rounded-xl lg:mt-2 mb-5 max-lg:rounded-b-lg max-md:rounded-b-0">
       <div className="grid grid-cols-3 gap-4">
         <div className="col-span-2">
           <div className="flex gap-4 items-center">
             <a className="block" href="/">
-              <img src="/sym.svg" width={40} className="inline" alt="Compa" />
+              <img src="/sym.svg" width={32} className="inline" alt="Compa" />
             </a>
 
             <nav>

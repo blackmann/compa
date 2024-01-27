@@ -100,7 +100,7 @@ export default function TimeTable() {
       <div className="grid grid-cols-1 lg:grid-cols-4 xl:grid-cols-6 gap-4 min-h-[70vh]">
         <div
           className={clsx("col-span-1 lg:col-span-2 lg:col-start-2", {
-            "max-md:hidden": outlet,
+            "max-lg:hidden": outlet,
           })}
         >
           <TimetableFilter programmes={programmes} />

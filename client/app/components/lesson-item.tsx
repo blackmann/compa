@@ -151,7 +151,7 @@ function LessonItem({ checked, lesson, onClick }: Props) {
             </p>
           </div>
 
-          <footer className="p-2 border-t border-zinc-300">
+          <footer className="p-2 border-t border-zinc-300 dark:border-neutral-700">
             <div className="flex justify-between">
               <div className="flex gap-2">
                 <Button
