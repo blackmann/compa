@@ -13,6 +13,7 @@ import {
 import { Navbar } from "./components/navbar"
 import { Footer } from "./components/footer"
 import { LiveReload, useSWEffect } from '@remix-pwa/sw'
+import { PendingUI } from "./components/pending-ui"
 
 export const links: LinksFunction = () => [
   ...(cssBundleHref ? [{ rel: "stylesheet", href: cssBundleHref }] : []),
@@ -33,6 +34,8 @@ export default function App() {
         <Links />
       </head>
       <body>
+        <PendingUI />
+
         <Navbar />
         <Outlet />
         <ScrollRestoration />
