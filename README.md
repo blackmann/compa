@@ -5,38 +5,67 @@
 
 <p align="center"><img src="assets/sc-timetable.png" style="border-radius: 1rem" width="500"/></p>
 
-## About the project
+# Compa
 
-Compa aims to be the resource-central for higher education. As a fresher, easing into the school system has lots of friction. Finding interest groups/clubs, timetable, starting conversations, learning from seniors and past students is simply difficult.
+A companion application for students to manage and access resources at their higher education institution.
+
+## About
+
+As a fresher, settling into school could be easier. You usually need to find:
+
+- Groups/Clubs you are interested in
+- Semester timetables
+- Resources from past semesters
+
+For continuting students, it's just as to track where documents or ckass notes are when conversations are strewn across multiple platfroms.
+
+Being a student is hard enough, that's why Compa aims to be _resource-central_ for higher education institutions, and save you from one source of stress.
 
 As continuing students, keeping up with any of these is scattered across multiple platforms. Compa aims to offer a cohesive experience for all of these.
 
-Companion, _compass_, compact and open. Compa is all of these and more.
+Your open, compact, companion and compass. That is _Compa_.
 
 ## Features
 
-- [x] Timetable: See lecture schedule for a semester and download to your calendar. ❇️
+- [x] Timetable: See lecture schedule for a semester and import to your calendar. ❇️
 
-- [ ] Discussions: Ask questions, share ideas and comments with other students. (Coming next). Discussions will be threaded and searchable. They can also be scoped to a specific programme, course, level, etc.
+- [ ] Discussions: Ask questions, share ideas and interact with other students.
 
-  With discussions, you can add polls, flashcards, quizzes and files/docs.
+- [ ] Communities: Find and join groups that interest you.
 
-- [ ] Communities: Join interest groups and clubs. (Coming some time)
+## Supported Schools
 
-## Schools
+- [x] Kwame Nkrumah University of Science and Technology (KNUST) - [Website](https://knust.compa.so)
 
-- [x] Kwame Nkrumah University of Science and Technology (KNUST): https://knust.compa.so
+> If you'd like to set up compa for your school, please create an issue with the title: `School Request: <School Name>`.
 
-> If you'll like to set up compa for your school, please create an issue with the title: `School Request: <School Name>`.
+## Run locally
 
-## Project setup
+Clone the project
 
-Run the following commands after cloning the project:
+```bash
+git clone https://github.com/blackmann/compa
+cd compa
+```
 
-```sh
+Run the following commands:
+
+```bash
 yarn install
 yarn workspace client prisma migrate deploy
 yarn workspace client prisma generate
 ```
 
-Run `yarn dev:client` to start the project in dev.
+Start the project in dev mode.
+
+```bash
+yarn dev:client
+```
+
+## Contributions
+
+Contributions are always welcome! We don't have a code of conduct right now, but we will soon!
+
+## Roadmap
+
+Coming soon...
