@@ -13,7 +13,7 @@ A companion application for students to manage and access resources at their hig
 
 As a fresher, settling into school could be easier. You usually need to find:
 
-- Groups/Clubs you are interested in
+- Communities/Clubs you are interested in
 - Semester timetables
 - Resources from past semesters
 
@@ -33,9 +33,9 @@ Your open, compact, companion and compass. That is _Compa_.
 
 - [ ] Communities: Find and join groups that interest you.
 
-## Supported Schools
+## Schools
 
-- [x] Kwame Nkrumah University of Science and Technology (KNUST) - [Website](https://knust.compa.so)
+- [x] Kwame Nkrumah University of Science and Technology (KNUST) - https://knust.compa.so
 
 > If you'd like to set up Compa for your school, please create an issue with the title: `School Request: <School Name>`.
 
