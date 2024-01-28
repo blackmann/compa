@@ -8,7 +8,7 @@ import dayjs from "dayjs"
 import { useLoaderData, useParams, useSubmit } from "@remix-run/react"
 import { days } from "~/lib/days"
 import { AddLessonLoader } from "~/routes/timetable_.$year.$programme.$level.$sem.$day.add"
-import { isStartTimeBeforeEndTime } from "~/lib/time"
+import { isBefore } from "~/lib/time"
 
 interface Props {
   courses: { id: number; code: string; name: string }[]
@@ -181,15 +181,10 @@ function LessonForm({
               {...register("timeEnd", {
                 required: true,
                 validate: (value) =>
-                  isStartTimeBeforeEndTime(watch("timeStart"), value) ||
-                  "End time must be after start time",
+                  isBefore(watch("timeStart"), value) ||
+                  "Should be after start time",
               })}
             />
-            {errors.timeEnd && (
-              <span className="text-red-500 text-sm">
-                {errors.timeEnd.message}
-              </span>
-            )}
           </label>
         </div>
 
@@ -201,6 +196,9 @@ function LessonForm({
           </label>
         </div>
       </div>
+      {errors.timeEnd && (
+        <span className="text-red-500 text-sm">{errors.timeEnd.message}</span>
+      )}
 
       <label className="flex gap-2 mt-2">
         <div>

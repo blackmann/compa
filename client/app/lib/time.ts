@@ -15,8 +15,8 @@ function pad2(digit: number): string {
   return digit < 10 ? `0${digit}` : `${digit}`
 }
 
-const isStartTimeBeforeEndTime = (startTime: string, endTime: string) => {
+function isBefore(startTime: string, endTime: string): boolean {
   return timeFromString(startTime) < timeFromString(endTime)
 }
 
-export { timeFromString, timeToString, isStartTimeBeforeEndTime }
+export { timeFromString, timeToString, isBefore }
