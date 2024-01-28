@@ -4,8 +4,11 @@ import { LessonForm } from "~/components/lesson-form"
 import { prisma } from "~/lib/prisma.server"
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
-  const courses = await prisma.course.findMany({})
-  const instructors = await prisma.instructor.findMany({})
+  const courses = await prisma.course.findMany({ orderBy: { name: "asc" } })
+  const instructors = await prisma.instructor.findMany({
+    orderBy: { name: "asc" },
+  })
+
   const programme = await prisma.programme.findFirst({
     where: { slug: params.programme },
   })
