@@ -1,5 +1,9 @@
 import { Prisma } from "@prisma/client"
+<<<<<<< HEAD
 import { timeToString, isStartTimeBeforeEndTime } from "~/lib/time"
+=======
+import { timeToString, isBefore } from "~/lib/time"
+>>>>>>> upstream/master
 import { Button } from "./button"
 import clsx from "clsx"
 import { Modal } from "./modal"
@@ -148,8 +152,8 @@ function LessonItem({ checked, lesson, onClick }: Props) {
                     {...register("timeEnd", {
                       required: true,
                       validate: (value) =>
-                        isStartTimeBeforeEndTime(watch("timeStart"), value) ||
-                        "End time must be after start time",
+                        isBefore(watch("timeStart"), value) ||
+                        "Should be after start time",
                     })}
                   />
                   {errors.timeEnd && (
