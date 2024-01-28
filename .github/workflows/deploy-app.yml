@@ -1,0 +1,30 @@
+name: Deploy App (knust)
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'client/**'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cloning repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Push to dokku
+        uses: dokku/github-action@master
+        # enable verbose ssh output
+        env:
+          GIT_SSH_COMMAND: 'ssh -vvv'
+        with:
+          # enable verbose git output
+          git_push_flags: '-vvv'
+          git_remote_url: 'ssh://dokku@85.159.211.246:22/knust'
+          ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
+          # enable shell trace mode
+          trace: '1'
