@@ -1,6 +1,7 @@
+import dayjs from "dayjs"
 
 function timeFromString(time: string): number {
-  const [hour, minute] = time.split(':').map((t) => parseInt(t, 10))
+  const [hour, minute] = time.split(":").map((t) => parseInt(t, 10))
   return (hour * 60 + minute) * 60
 }
 
@@ -14,4 +15,8 @@ function pad2(digit: number): string {
   return digit < 10 ? `0${digit}` : `${digit}`
 }
 
-export { timeFromString, timeToString }
+const isStartTimeBeforeEndTime = (startTime: string, endTime: string) => {
+  return timeFromString(startTime) < timeFromString(endTime)
+}
+
+export { timeFromString, timeToString, isStartTimeBeforeEndTime }
