@@ -20,8 +20,8 @@ export default function Timetable() {
 
   return (
     <div className="container mx-auto min-h-[70vh]">
-      <div className="grid grid-cols-5">
-        <div className="col-start-2 col-span-2">
+      <div className="grid grid-cols-1 lg:grid-cols-5">
+        <div className="col-span-1 lg:col-start-2 lg:col-span-2">
           <TimetableFilter programmes={programmes} />
         </div>
       </div>
