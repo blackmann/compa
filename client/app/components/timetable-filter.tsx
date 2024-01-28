@@ -65,48 +65,52 @@ function TimetableFilter({ programmes }: Props) {
   }, [programme, level, sem, year])
 
   return (
-    <div className="flex gap-2">
-      <LargeSelect
-        label="Programme"
-        newForm={<NewForm />}
-        onAdd={handleAdd}
-        open={programmeSelectOpen}
-        onToggle={(open) => setProgrammeSelectOpen(open)}
-        options={programmeOptions}
-        onSelect={(value) => {
-          setValue("programme", value as string)
-          setProgrammeSelectOpen(false)
-        }}
-      >
-        {selected?.name}
-      </LargeSelect>
+    <div className="max-lg:block flex gap-2">
+      <div className="flex-1 max-lg:mb-2">
+        <LargeSelect
+          label="Programme"
+          newForm={<NewForm />}
+          onAdd={handleAdd}
+          open={programmeSelectOpen}
+          onToggle={(open) => setProgrammeSelectOpen(open)}
+          options={programmeOptions}
+          onSelect={(value) => {
+            setValue("programme", value as string)
+            setProgrammeSelectOpen(false)
+          }}
+        >
+          {selected?.name}
+        </LargeSelect>
+      </div>
 
-      <select
-        className="bg-zinc-200 dark:bg-neutral-800 px-2 py-1 pe-6 rounded-lg font-medium"
-        {...register("year")}
-      >
-        <option value="2023-2024">2023/2024</option>
-      </select>
+      <div className="flex gap-2">
+        <select
+          className="bg-zinc-200 dark:bg-neutral-800 px-2 py-1 pe-6 rounded-lg font-medium flex-1"
+          {...register("year")}
+        >
+          <option value="2023-2024">2023/2024</option>
+        </select>
 
-      <select
-        className="bg-zinc-200 dark:bg-neutral-800 px-2 py-1 pe-6 rounded-lg font-medium"
-        {...register("level", { required: true })}
-      >
-        <option value="100">L100</option>
-        <option value="200">L200</option>
-        <option value="300">L300</option>
-        <option value="400">L400</option>
-        <option value="500">L500</option>
-        <option value="600">L600</option>
-      </select>
+        <select
+          className="bg-zinc-200 dark:bg-neutral-800 px-2 py-1 pe-6 rounded-lg font-medium flex-1"
+          {...register("level", { required: true })}
+        >
+          <option value="100">L100</option>
+          <option value="200">L200</option>
+          <option value="300">L300</option>
+          <option value="400">L400</option>
+          <option value="500">L500</option>
+          <option value="600">L600</option>
+        </select>
 
-      <select
-        className="bg-zinc-200 dark:bg-neutral-800 px-2 py-1 pe-6 rounded-lg font-medium"
-        {...register("sem", { required: true })}
-      >
-        <option value="1">Sem 1</option>
-        <option value="2">Sem 2</option>
-      </select>
+        <select
+          className="bg-zinc-200 dark:bg-neutral-800 px-2 py-1 pe-6 rounded-lg font-medium flex-1"
+          {...register("sem", { required: true })}
+        >
+          <option value="1">Sem 1</option>
+          <option value="2">Sem 2</option>
+        </select>
+      </div>
     </div>
   )
 }

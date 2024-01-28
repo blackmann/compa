@@ -149,7 +149,7 @@ export default function TimeTable() {
                   {hours > 2 && (
                     <>
                       <div className="flex justify-end">
-                        <div className="rounded-b-lg bg-zinc-300 dark:bg-neutral-600 text-sm font-medium text-zinc-800 dark:text-neutral-200 px-2">
+                        <div className="rounded-b-lg bg-zinc-200 dark:bg-neutral-600 text-sm font-medium text-zinc-800 dark:text-neutral-200 px-2">
                           {Math.floor(hours)} hours apart
                         </div>
                       </div>

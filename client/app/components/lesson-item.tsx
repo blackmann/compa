@@ -103,8 +103,8 @@ function LessonItem({ checked, lesson, onClick }: Props) {
         </div>
       </div>
 
-      <Modal open={showEdit} onClose={() => setShowEdit(false)}>
-        <form className="w-[24rem]" onSubmit={handleSubmit(saveLesson)}>
+      <Modal open={showEdit} onClose={() => setShowEdit(false)} className="w-full max-w-[24rem]">
+        <form className="w-full" onSubmit={handleSubmit(saveLesson)}>
           <header className="p-2 pb-0">
             <div className="text-sm text-secondary flex gap-2 items-center mb-2 font-medium">
               <div className="i-lucide-scan-search"></div> Edit lesson

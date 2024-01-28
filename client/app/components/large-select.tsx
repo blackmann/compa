@@ -57,8 +57,12 @@ function LargeSelect({
         <div className="i-lucide-mouse-pointer-2 text-secondary"></div>
       </button>
 
-      <Modal onClose={() => onToggle(false)} open={open}>
-        <div className="w-[24rem] rounded-lg bg-zinc-100 dark:bg-neutral-900 dark:border border-neutral-800 h-[24rem] flex flex-col">
+      <Modal
+        onClose={() => onToggle(false)}
+        open={open}
+        className="w-full max-w-[24rem]"
+      >
+        <div className="w-full rounded-lg bg-zinc-100 dark:bg-neutral-900 dark:border border-neutral-800 h-[24rem] flex flex-col">
           {state === "select" ? (
             <SelectState
               onShowAdd={showAdd}
@@ -110,21 +114,21 @@ function SelectState({
         <div className="text-sm text-secondary flex gap-2 items-center mb-2 font-medium">
           <div className="i-lucide-scan-search"></div> Select {label}
         </div>
-        <div>
-          <Input
-            type="text"
-            placeholder="Start typing…"
-            value={q}
-            onChange={(e) => setQ((e.target as HTMLInputElement).value)}
-          />
-        </div>
+        <Input
+          type="text"
+          placeholder="Start typing…"
+          value={q}
+          onChange={(e) => setQ((e.target as HTMLInputElement).value)}
+        />
       </header>
 
-      <ul className="flex-1 mx-2 overflow-y-auto">
+      <ul className="flex-1 px-2 overflow-y-auto">
         {filteredOptions.length === 0 && (
           <li className="text-secondary">
             {filteredOptions.length === 0 ? (
-              <>No option with <b>{q}</b> found</>
+              <>
+                No option with <b>{q}</b> found
+              </>
             ) : (
               <>No options available. Try adding new.</>
             )}

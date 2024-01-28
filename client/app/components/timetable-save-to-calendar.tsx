@@ -27,8 +27,12 @@ function TimetableSaveToCalender() {
         Save to calendar
       </Button>
 
-      <Modal open={open} onClose={() => setOpen(false)}>
-        <div className="w-[22rem]">
+      <Modal
+        open={open}
+        onClose={() => setOpen(false)}
+        className="w-full max-w-[24rem]"
+      >
+        <div className="w-full">
           <header className="flex text-secondary p-2 items-center text-sm gap-2">
             <div className=" i-lucide-calendar-plus"></div>
             <div>Save to Calendar</div>
@@ -41,10 +45,18 @@ function TimetableSaveToCalender() {
               <code className="bg-zinc-200 dark:bg-neutral-700 px-1 rounded">
                 {programme?.name}
               </code>{" "}
-              <code className="bg-zinc-200 dark:bg-neutral-700 px-1 rounded">L{level}</code>{" "}
+              <code className="bg-zinc-200 dark:bg-neutral-700 px-1 rounded">
+                L{level}
+              </code>{" "}
               Semester{" "}
-              <code className="bg-zinc-200 dark:bg-neutral-700 px-1 rounded">{sem}</code> for the
-              year <code className="bg-zinc-200 dark:bg-neutral-700 px-1 rounded">{year}</code>.
+              <code className="bg-zinc-200 dark:bg-neutral-700 px-1 rounded">
+                {sem}
+              </code>{" "}
+              for the year{" "}
+              <code className="bg-zinc-200 dark:bg-neutral-700 px-1 rounded">
+                {year}
+              </code>
+              .
             </p>
 
             <p className="mt-2 text-secondary">
