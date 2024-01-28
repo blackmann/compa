@@ -4,7 +4,7 @@ import { LessonForm } from "~/components/lesson-form"
 import { prisma } from "~/lib/prisma.server"
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
-  const courses = await prisma.course.findMany({ orderBy: { name: "asc" } })
+  const courses = await prisma.course.findMany({ orderBy: { code: "asc" } })
   const instructors = await prisma.instructor.findMany({
     orderBy: { name: "asc" },
   })
