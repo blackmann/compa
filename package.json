@@ -6,6 +6,7 @@
   "private": true,
   "scripts": {
     "build:client": "yarn workspace client build",
+    "build:website": "yarn workspace website build",
     "dev:client": "yarn workspace client dev",
     "dev:website": "yarn workspace website dev",
     "start:client": "yarn workspace client start"
