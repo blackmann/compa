@@ -7,6 +7,7 @@
   "scripts": {
     "build:client": "yarn workspace client build",
     "dev:client": "yarn workspace client dev",
+    "dev:website": "yarn workspace website dev",
     "start:client": "yarn workspace client start"
   },
   "workspaces": [
