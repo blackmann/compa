@@ -162,7 +162,7 @@ export default function TimeTable() {
 
           {schedule.length > 0 && (
             <div className="mt-2">
-              <div className="border rounded-full inline-block px-2 border-zinc-300 dark:border-neutral-700 text-secondary">
+              <div className="text-sm border rounded-full inline-block px-2 border-zinc-300 dark:border-neutral-700 text-secondary">
                 {schedule.length} lessons &bull; {hours}h {minutes}m total
               </div>
             </div>

@@ -18,7 +18,7 @@ function Navbar() {
       <div className="grid grid-cols-3 gap-4">
         <div className="col-span-2">
           <div className="flex gap-4 items-center">
-            <a className="block" href="/">
+            <a className="block shrink-0" href="/">
               <img src="/sym.svg" width={32} className="inline" alt="Compa" />
             </a>
 
