@@ -12,7 +12,6 @@ export const loader = async () => {
       start_url: '/',
       display: 'standalone',
       background_color: '#ffffff',
-      theme_color: '#f59e0b',
       display_override: ['fullscreen'],
       shortcuts: [
         {

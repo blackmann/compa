@@ -186,7 +186,7 @@ function LessonForm({
           />
         </div>
         <div>
-          By clicking <b>Save lesson</b>, you agree that these details are
+          By clicking <span className="font-medium">Save lesson</span>, you agree that these details are
           correct and conform to the{" "}
           <a className="underline" href="/crowdsourcing#ethics">
             crowdsourcing ethics
