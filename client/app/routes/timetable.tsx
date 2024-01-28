@@ -4,7 +4,10 @@ import { TimetableFilter } from "~/components/timetable-filter"
 import { prisma } from "~/lib/prisma.server"
 
 export const loader = async ({}: LoaderFunctionArgs) => {
-  const programmes = await prisma.programme.findMany()
+  const programmes = await prisma.programme.findMany({
+    orderBy: { name: "asc" },
+  })
+
   return { programmes }
 }
 

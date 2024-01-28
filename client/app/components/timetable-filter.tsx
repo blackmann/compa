@@ -49,11 +49,6 @@ function TimetableFilter({ programmes }: Props) {
   }
 
   React.useEffect(() => {
-    if (selected || !programmes.length) return
-    setValue("programme", programmes[0].slug)
-  }, [selected, setValue])
-
-  React.useEffect(() => {
     if (!programme || !level || !sem || !year) return
 
     const day = params.day ?? "1"
@@ -79,7 +74,7 @@ function TimetableFilter({ programmes }: Props) {
             setProgrammeSelectOpen(false)
           }}
         >
-          {selected?.name}
+          {selected?.name ?? "Select a programme"}
         </LargeSelect>
       </div>
 

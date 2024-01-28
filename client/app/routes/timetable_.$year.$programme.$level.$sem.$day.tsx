@@ -34,7 +34,9 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
     orderBy: [{ timeStart: "asc" }],
   })
 
-  const programmes = await prisma.programme.findMany()
+  const programmes = await prisma.programme.findMany({
+    orderBy: { name: "asc" },
+  })
 
   return {
     day,
