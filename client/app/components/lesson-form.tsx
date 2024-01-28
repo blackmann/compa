@@ -8,11 +8,7 @@ import dayjs from "dayjs"
 import { useLoaderData, useParams, useSubmit } from "@remix-run/react"
 import { days } from "~/lib/days"
 import { AddLessonLoader } from "~/routes/timetable_.$year.$programme.$level.$sem.$day.add"
-<<<<<<< HEAD
-import { isStartTimeBeforeEndTime } from "~/lib/time"
-=======
 import { isBefore } from "~/lib/time"
->>>>>>> upstream/master
 
 interface Props {
   courses: { id: number; code: string; name: string }[]
