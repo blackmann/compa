@@ -1,5 +1,5 @@
 import { Prisma } from "@prisma/client"
-import { timeToString } from "~/lib/time"
+import { timeToString, isBefore } from "~/lib/time"
 import { Button } from "./button"
 import clsx from "clsx"
 import { Modal } from "./modal"
@@ -20,7 +20,12 @@ function LessonItem({ checked, lesson, onClick }: Props) {
   const [showEdit, setShowEdit] = React.useState(false)
   const fetcher = useAsyncFetcher()
 
-  const { handleSubmit, register } = useForm({
+  const {
+    handleSubmit,
+    register,
+    watch,
+    formState: { errors },
+  } = useForm({
     defaultValues: {
       timeStart: timeToString(lesson.timeStart),
       timeEnd: timeToString(lesson.timeEnd),
@@ -36,7 +41,9 @@ function LessonItem({ checked, lesson, onClick }: Props) {
   }
 
   async function handleDelete() {
-    const yes = confirm('Are you sure you want to delete this lesson? This cannot be undone.')
+    const yes = confirm(
+      "Are you sure you want to delete this lesson? This cannot be undone."
+    )
     if (!yes) {
       return
     }
@@ -44,7 +51,7 @@ function LessonItem({ checked, lesson, onClick }: Props) {
     await fetcher.submit(null, {
       encType: "application/json",
       action: `/lessons/${lesson.id}`,
-      method: 'DELETE'
+      method: "DELETE",
     })
 
     setShowEdit(false)
@@ -54,7 +61,7 @@ function LessonItem({ checked, lesson, onClick }: Props) {
     await fetcher.submit(JSON.stringify(data), {
       encType: "application/json",
       action: `/lessons/${lesson.id}`,
-      method: 'PATCH'
+      method: "PATCH",
     })
 
     setShowEdit(false)
@@ -103,7 +110,11 @@ function LessonItem({ checked, lesson, onClick }: Props) {
         </div>
       </div>
 
-      <Modal open={showEdit} onClose={() => setShowEdit(false)} className="w-full max-w-[24rem]">
+      <Modal
+        open={showEdit}
+        onClose={() => setShowEdit(false)}
+        className="w-full max-w-[24rem]"
+      >
         <form className="w-full" onSubmit={handleSubmit(saveLesson)}>
           <header className="p-2 pb-0">
             <div className="text-sm text-secondary flex gap-2 items-center mb-2 font-medium">
@@ -122,7 +133,9 @@ function LessonItem({ checked, lesson, onClick }: Props) {
                   <span>Start time</span>
                   <Input
                     type="time"
-                    {...register("timeStart", { required: true })}
+                    {...register("timeStart", {
+                      required: true,
+                    })}
                   />
                 </label>
               </div>
@@ -132,15 +145,29 @@ function LessonItem({ checked, lesson, onClick }: Props) {
                   <span>End time</span>
                   <Input
                     type="time"
-                    {...register("timeEnd", { required: true })}
+                    {...register("timeEnd", {
+                      required: true,
+                      validate: (value) =>
+                        isBefore(watch("timeStart"), value) ||
+                        "Should be after start time",
+                    })}
                   />
+                  {errors.timeEnd && (
+                    <span className="text-red-500">
+                      {errors.timeEnd.message}
+                    </span>
+                  )}
                 </label>
               </div>
 
               <div className="col-span-1">
                 <label className="block">
                   <span>Location</span>
-                  <Input {...register("location", { required: true })} />
+                  <Input
+                    {...register("location", {
+                      required: true,
+                    })}
+                  />
                   <small className="text-secondary">Eg. SF24</small>
                 </label>
               </div>

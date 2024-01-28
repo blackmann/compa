@@ -8,6 +8,7 @@ import dayjs from "dayjs"
 import { useLoaderData, useParams, useSubmit } from "@remix-run/react"
 import { days } from "~/lib/days"
 import { AddLessonLoader } from "~/routes/timetable_.$year.$programme.$level.$sem.$day.add"
+import { isBefore } from "~/lib/time"
 
 interface Props {
   courses: { id: number; code: string; name: string }[]
@@ -21,7 +22,13 @@ function LessonForm({
   const { level, day } = useParams()
   const { programme } = useLoaderData<AddLessonLoader>()
 
-  const { handleSubmit, register, setValue, watch } = useForm({
+  const {
+    handleSubmit,
+    register,
+    setValue,
+    watch,
+    formState: { errors },
+  } = useForm({
     defaultValues: {
       consent: false,
       courseId: null as number | null,
@@ -157,14 +164,27 @@ function LessonForm({
         <div className="col-span-1">
           <label className="block">
             <span>Start time</span>
-            <Input type="time" {...register("timeStart", { required: true })} />
+            <Input
+              type="time"
+              {...register("timeStart", {
+                required: true,
+              })}
+            />
           </label>
         </div>
 
         <div className="col-span-1">
           <label className="block">
             <span>End time</span>
-            <Input type="time" {...register("timeEnd", { required: true })} />
+            <Input
+              type="time"
+              {...register("timeEnd", {
+                required: true,
+                validate: (value) =>
+                  isBefore(watch("timeStart"), value) ||
+                  "Should be after start time",
+              })}
+            />
           </label>
         </div>
 
@@ -176,6 +196,9 @@ function LessonForm({
           </label>
         </div>
       </div>
+      {errors.timeEnd && (
+        <span className="text-red-500 text-sm">{errors.timeEnd.message}</span>
+      )}
 
       <label className="flex gap-2 mt-2">
         <div>
@@ -186,8 +209,8 @@ function LessonForm({
           />
         </div>
         <div>
-          By clicking <span className="font-medium">Save lesson</span>, you agree that these details are
-          correct and conform to the{" "}
+          By clicking <span className="font-medium">Save lesson</span>, you
+          agree that these details are correct and conform to the{" "}
           <a className="underline" href="/crowdsourcing#ethics">
             crowdsourcing ethics
           </a>
