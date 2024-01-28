@@ -55,6 +55,7 @@ function LessonForm({
 
   const $instructor = watch("instructorId")
   const $course = watch("courseId")
+  const $timeStart = watch("timeStart")
 
   const instructor = React.useMemo(
     () => instructors.find((i) => i.value === $instructor),
@@ -164,7 +165,29 @@ function LessonForm({
         <div className="col-span-1">
           <label className="block">
             <span>End time</span>
-            <Input type="time" {...register("timeEnd", { required: true })} />
+            <Input
+              type="time"
+              {...register("timeEnd", {
+                required: true,
+                onChange: (e) => {
+                  const timeStart =
+                    dayjs().format("YYYY-MM-DD") + ` ${$timeStart}`
+                  const timeEnd =
+                    dayjs().format("YYYY-MM-DD") + ` ${e.target.value}`
+
+                  if (
+                    dayjs(timeEnd, { format: "YYYY-MM-DD HH:mm" }).isBefore(
+                      dayjs(timeStart, { format: "YYYY-MM-DD HH:mm" })
+                    )
+                  ) {
+                    setValue(
+                      "timeEnd",
+                      dayjs(timeStart).add(1, "hour").format("HH:mm")
+                    )
+                  }
+                },
+              })}
+            />
           </label>
         </div>
 
@@ -186,8 +209,8 @@ function LessonForm({
           />
         </div>
         <div>
-          By clicking <span className="font-medium">Save lesson</span>, you agree that these details are
-          correct and conform to the{" "}
+          By clicking <span className="font-medium">Save lesson</span>, you
+          agree that these details are correct and conform to the{" "}
           <a className="underline" href="/crowdsourcing#ethics">
             crowdsourcing ethics
           </a>
