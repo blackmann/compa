@@ -1,9 +1,18 @@
-import { LoaderFunctionArgs, MetaFunction } from "@remix-run/node"
+import { LoaderFunctionArgs, MetaFunction, redirect } from "@remix-run/node"
 import { useLoaderData } from "@remix-run/react"
 import { TimetableFilter } from "~/components/timetable-filter"
+import { userPrefs } from "~/lib/cookies"
 import { prisma } from "~/lib/prisma.server"
 
-export const loader = async ({}: LoaderFunctionArgs) => {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
+  const cookie = (await userPrefs.parse(request.headers.get("Cookie"))) || {}
+
+  const { programme, year, level, sem } = cookie
+
+  if (programme && year && level) {
+    return redirect(`/timetable/${year}/${programme}/${level}/${sem}/1`)
+  }
+
   const programmes = await prisma.programme.findMany({
     orderBy: { name: "asc" },
   })
