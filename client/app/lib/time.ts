@@ -1,5 +1,3 @@
-import dayjs from "dayjs"
-
 function timeFromString(time: string): number {
   const [hour, minute] = time.split(":").map((t) => parseInt(t, 10))
   return (hour * 60 + minute) * 60
