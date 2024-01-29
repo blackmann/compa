@@ -31,6 +31,8 @@ function LargeSelect({
     setState("add")
   }
 
+  const handleModalClose = React.useCallback(() => onToggle(false), [])
+
   function hide() {
     onToggle(false)
   }
@@ -58,7 +60,7 @@ function LargeSelect({
       </button>
 
       <Modal
-        onClose={() => onToggle(false)}
+        onClose={handleModalClose}
         open={open}
         className="w-full max-w-[24rem]"
       >

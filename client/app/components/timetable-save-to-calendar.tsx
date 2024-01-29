@@ -13,6 +13,8 @@ function TimetableSaveToCalender() {
   const [open, setOpen] = React.useState(false)
   const { programmes } = useLoaderData<TimeTableLoader>()
 
+  const handleModalClose = React.useCallback(() => setOpen(false), [])
+
   const { year, programme: programmeSlug, sem, level } = useParams()
   const url = `/downloads/timetable/${year}/${programmeSlug}/${level}/${sem}`
 
@@ -29,7 +31,7 @@ function TimetableSaveToCalender() {
 
       <Modal
         open={open}
-        onClose={() => setOpen(false)}
+        onClose={handleModalClose}
         className="w-full max-w-[24rem]"
       >
         <div className="w-full">

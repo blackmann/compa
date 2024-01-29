@@ -20,6 +20,8 @@ function LessonItem({ checked, lesson, onClick }: Props) {
   const [showEdit, setShowEdit] = React.useState(false)
   const fetcher = useAsyncFetcher()
 
+  const handleModalClose = React.useCallback(() => setShowEdit(false), [])
+
   const {
     handleSubmit,
     register,
@@ -112,7 +114,7 @@ function LessonItem({ checked, lesson, onClick }: Props) {
 
       <Modal
         open={showEdit}
-        onClose={() => setShowEdit(false)}
+        onClose={handleModalClose}
         className="w-full max-w-[24rem]"
       >
         <form className="w-full" onSubmit={handleSubmit(saveLesson)}>
