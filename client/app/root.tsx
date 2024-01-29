@@ -5,6 +5,7 @@ import { cssBundleHref } from "@remix-run/css-bundle"
 import type { LinksFunction } from "@remix-run/node"
 import {
   Links,
+  LiveReload,
   Meta,
   Outlet,
   Scripts,
@@ -12,7 +13,6 @@ import {
 } from "@remix-run/react"
 import { Navbar } from "./components/navbar"
 import { Footer } from "./components/footer"
-import { LiveReload, useSWEffect } from '@remix-pwa/sw'
 import { PendingUI } from "./components/pending-ui"
 
 export const links: LinksFunction = () => [
@@ -20,8 +20,6 @@ export const links: LinksFunction = () => [
 ]
 
 export default function App() {
-  useSWEffect()
-
   return (
     <html lang="en">
       <head>
