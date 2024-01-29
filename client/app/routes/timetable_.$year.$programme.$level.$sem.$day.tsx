@@ -2,6 +2,7 @@ import {
   ActionFunctionArgs,
   LoaderFunctionArgs,
   MetaFunction,
+  json,
 } from "@remix-run/node"
 import { Link, Outlet, useLoaderData, useOutlet } from "@remix-run/react"
 import clsx from "clsx"
@@ -11,11 +12,14 @@ import { DaysHeader } from "~/components/days-header"
 import { LessonItem } from "~/components/lesson-item"
 import { TimetableFilter } from "~/components/timetable-filter"
 import { TimetableSaveToCalender } from "~/components/timetable-save-to-calendar"
+import { userPrefs } from "~/lib/cookies"
 import { prisma } from "~/lib/prisma.server"
 import { timeFromString } from "~/lib/time"
 import { values } from "~/lib/values.server"
 
-export const loader = async ({ params }: LoaderFunctionArgs) => {
+export const loader = async ({ params, request }: LoaderFunctionArgs) => {
+  const cookie = (await userPrefs.parse(request.headers.get("Cookie"))) || {}
+
   const { year, programme, level, sem, day: _day } = params
   const day = Number(_day)
 
@@ -38,16 +42,31 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
     orderBy: { name: "asc" },
   })
 
-  return {
-    day,
-    level: level!,
-    programme: programme!,
-    programmes,
-    schedule,
-    sem: sem!,
-    year: year!,
-    school: values.meta(),
+  const updatedCookie = {
+    ...cookie,
+    programme,
+    level,
+    year,
+    sem,
   }
+
+  return json(
+    {
+      day,
+      level: level!,
+      programme: programme!,
+      programmes,
+      schedule,
+      sem: sem!,
+      year: year!,
+      school: values.meta(),
+    },
+    {
+      headers: {
+        "Set-Cookie": await userPrefs.serialize(updatedCookie),
+      },
+    }
+  )
 }
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {
