@@ -4,10 +4,14 @@
 @unocss;
 
 :root {
-  @apply bg-zinc-50 dark:bg-neutral-900;
+  @apply bg-zinc-50 dark:bg-neutral-900 dark:text-white;
   font-family: 'Inter', system-ui, sans-serif;
   color-scheme: light dark;
   font-size: 14px;
+}
+
+dialog {
+  @apply dark:text-white;
 }
 
 .text-secondary {
