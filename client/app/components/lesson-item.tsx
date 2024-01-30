@@ -73,7 +73,7 @@ function LessonItem({ checked, lesson, onClick }: Props) {
     <>
       <div
         className={clsx(
-          "group p-2 rounded-lg hover:bg-zinc-100 dark:hover:bg-neutral-800 transition-[background] duration-200 cursor-pointer",
+          "group p-2 rounded-lg hover:bg-zinc-100 dark:hover:bg-neutral-800 transition-[background] duration-200 cursor-pointer dark:text-white",
           {
             "bg-zinc-100 dark:bg-neutral-800": checked,
           }
@@ -85,11 +85,11 @@ function LessonItem({ checked, lesson, onClick }: Props) {
           <span>{lesson.location}</span>
         </header>
 
-        <div className="font-medium">
+        <div className="font-medium dark:text-white ">
           {lesson.course.code}: {lesson.course.name}
-        </div>
+        </div> 
 
-        <footer className="text-sm text-secondary flex justify-between">
+        <footer className="text-sm text-secondary flex justify-between dark:text-white">
           <span>{lesson.instructor.name}</span>
         </footer>
 

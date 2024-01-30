@@ -7,7 +7,7 @@ const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(
       <input
         ref={ref}
         className={clsx(
-          "block w-full rounded-lg bg-zinc-200 dark:bg-neutral-800 px-2 py-1",
+          "block w-full rounded-lg bg-zinc-200 dark:bg-neutral-800 px-2 py-1 dark:text-white",
           className
         )}
         {...props}

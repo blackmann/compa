@@ -30,8 +30,8 @@ function Navbar() {
                       to={link.href}
                       className={({ isActive }) =>
                         clsx(
-                          "px-2 py-1 hover:bg-zinc-200 dark:hover:bg-neutral-800 rounded-lg font-medium",
-                          { "!bg-blue-600 !text-white": isActive }
+                          "px-2 py-1 hover:bg-zinc-200 dark:hover:bg-neutral-800 rounded-lg font-medium dark:text-white",
+                          { "!bg-blue-600 !text-white dark:!text-black": isActive }
                         )
                       }
                     >

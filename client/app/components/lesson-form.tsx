@@ -103,29 +103,29 @@ function LessonForm({
 
   return (
     <form onSubmit={handleSubmit(addLesson)}>
-      <header className="font-bold text-lg mb-2">Add Lesson</header>
+      <header className="font-bold text-lg mb-2 dark:text-blue-400">Add Lesson</header>
 
       <div className="flex gap-2">
-        <div className="border border-zinc-200 dark:border-neutral-600 rounded-lg px-2">
+        <div className="border border-zinc-200 dark:border-neutral-600 rounded-lg px-2 dark:text-white">
           {programme?.name}
         </div>
 
-        <div className="border border-zinc-200 dark:border-neutral-600 rounded-lg px-2">
+        <div className="border border-zinc-200 dark:border-neutral-600 rounded-lg px-2 dark:text-white">
           L{level}
         </div>
 
-        <div className="border border-zinc-200 dark:border-neutral-600 rounded-lg px-2">
+        <div className="border border-zinc-200 dark:border-neutral-600 rounded-lg px-2 dark:text-white">
           {days[Number(day)]}s
         </div>
       </div>
 
-      <div className="text-secondary flex gap-2 mt-2">
+      <div className="text-secondary flex gap-2 mt-2 ">
         <div className="i-lucide-corner-left-up"></div> You're adding a lesson
         for the above
       </div>
 
       <label className="block mt-4">
-        <span>Course</span>
+        <span className="dark:text-white" >Course</span>
         <LargeSelect
           label="Course"
           open={showCourseSelect}
@@ -143,7 +143,7 @@ function LessonForm({
       </label>
 
       <label className="mt-2 block">
-        <span>Instructor</span>
+        <span className="dark:text-white" >Instructor</span>
         <LargeSelect
           label="Instructor"
           open={showInstructorSelect}
@@ -163,7 +163,7 @@ function LessonForm({
       <div className="grid grid-cols-3 mt-2 gap-2">
         <div className="col-span-1">
           <label className="block">
-            <span>Start time</span>
+            <span className="dark:text-white" >Start time</span>
             <Input
               type="time"
               {...register("timeStart", {
@@ -175,7 +175,7 @@ function LessonForm({
 
         <div className="col-span-1">
           <label className="block">
-            <span>End time</span>
+            <span className="dark:text-white" >End time</span>
             <Input
               type="time"
               {...register("timeEnd", {
@@ -190,7 +190,7 @@ function LessonForm({
 
         <div className="col-span-1">
           <label className="block">
-            <span>Location</span>
+            <span className="dark:text-white" >Location</span>
             <Input {...register("location", { required: true })} />
             <small className="text-secondary">Eg. SF24</small>
           </label>
@@ -208,10 +208,10 @@ function LessonForm({
             {...register("consent", { required: true })}
           />
         </div>
-        <div>
+        <div className="dark:text-white" >
           By clicking <span className="font-medium">Save lesson</span>, you
           agree that these details are correct and conform to the{" "}
-          <a className="underline" href="/crowdsourcing#ethics">
+          <a className="underline text-secondary hover:text-blue-400" href="/crowdsourcing#ethics">
             crowdsourcing ethics
           </a>
           .
