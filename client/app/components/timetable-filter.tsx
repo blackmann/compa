@@ -80,14 +80,14 @@ function TimetableFilter({ programmes }: Props) {
 
       <div className="flex gap-2">
         <select
-          className="bg-zinc-200 dark:bg-neutral-800 px-2 py-1 pe-6 rounded-lg font-medium flex-1 dark:text-white"
+          className="bg-zinc-200 dark:bg-neutral-800 px-2 py-1 pe-6 rounded-lg font-medium flex-1"
           {...register("year")}
         >
           <option value="2023-2024">2023/2024</option>
         </select>
 
         <select
-          className="bg-zinc-200 dark:bg-neutral-800 px-2 py-1 pe-6 rounded-lg font-medium flex-1 dark:text-white"
+          className="bg-zinc-200 dark:bg-neutral-800 px-2 py-1 pe-6 rounded-lg font-medium flex-1"
           {...register("level", { required: true })}
         >
           <option value="100">L100</option>
@@ -99,7 +99,7 @@ function TimetableFilter({ programmes }: Props) {
         </select>
 
         <select
-          className="bg-zinc-200 dark:bg-neutral-800 px-2 py-1 pe-6 rounded-lg font-medium flex-1 dark:text-white"
+          className="bg-zinc-200 dark:bg-neutral-800 px-2 py-1 pe-6 rounded-lg font-medium flex-1"
           {...register("sem", { required: true })}
         >
           <option value="1">Sem 1</option>

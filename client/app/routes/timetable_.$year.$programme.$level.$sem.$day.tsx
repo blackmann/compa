@@ -113,9 +113,11 @@ export default function TimeTable() {
               onClick={() => posthog.capture("add_lesson_clicked")}
             >
               <div className="size-4">
-                <div className="i-lucide-list-plus opacity-50 dark:text-white" />
+                <div className="i-lucide-list-plus opacity-50" />
               </div>{" "}
-              <span className="dark:text-white" >Add lesson</span>
+              <span className="text-blue-400">
+              Add lesson
+                </span>
             </Link>
 
             <TimetableSaveToCalender />

@@ -51,7 +51,7 @@ function LargeSelect({
   return (
     <>
       <button
-        className="bg-zinc-200 dark:bg-neutral-800 px-2 py-1 rounded-lg font-medium flex-1 text-start flex items-center w-full dark:text-white"
+        className="bg-zinc-200 dark:bg-neutral-800 px-2 py-1 rounded-lg font-medium flex-1 text-start flex items-center w-full"
         type="button"
         onClick={() => onToggle(true)}
       >
@@ -64,7 +64,7 @@ function LargeSelect({
         open={open}
         className="w-full max-w-[24rem]"
       >
-        <div className="w-full rounded-lg bg-zinc-100 dark:bg-neutral-900 dark:border border-neutral-800 h-[24rem] flex flex-col ">
+        <div className="w-full rounded-lg bg-zinc-100 dark:bg-neutral-900 dark:border border-neutral-800 h-[24rem] flex flex-col">
           {state === "select" ? (
             <SelectState
               onShowAdd={showAdd}
@@ -143,7 +143,7 @@ function SelectState({
             key={option.value}
             onClick={() => onSelect(option.value)}
           >
-            <button className="block w-full text-start dark:text-white">{option.label}</button>
+            <button className="block w-full text-start">{option.label}</button>
           </li>
         ))}
       </ul>
@@ -193,7 +193,7 @@ function FormState({ form, label, onAdd, onCancel }: FormStateProps) {
     <FormProvider {...formMethods}>
       <form className="flex flex-col h-full" onSubmit={handleSubmit(submit)}>
         <header className="p-2">
-          <div className="text-sm text-secondary flex gap-2 items-center font-medium dark:text-white">
+          <div className="text-sm text-secondary flex gap-2 items-center font-medium">
             <div className="i-lucide-list-plus"></div> Add new {label}
           </div>
         </header>
