@@ -9,9 +9,11 @@ import { startTransition, StrictMode } from "react";
 import { hydrateRoot } from "react-dom/client";
 import posthog from "posthog-js";
 
-posthog.init("phc_qmxF7NTz6XUnYUDoMpkTign6mujS8F8VqR75wb0Bsl7", {
-	api_host: "https://eu.posthog.com",
-});
+if (process.env.NODE_ENV === "production") {
+	posthog.init("phc_qmxF7NTz6XUnYUDoMpkTign6mujS8F8VqR75wb0Bsl7", {
+		api_host: "https://eu.posthog.com",
+	});
+}
 
 startTransition(() => {
 	hydrateRoot(
