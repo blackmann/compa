@@ -14,12 +14,14 @@ export default function AccountCreated() {
 
 	return (
 		<div className="container mx-auto h-[60vh]">
-			<div className="max-w-[24rem] mx-auto border p-4 rounded-lg bg-white">
-				<h1 className="font-bold text-2xl mb-2">Account created</h1>
+			<div className="mx-auto max-w-[24rem] rounded-lg border  bg-white p-4 dark:border-neutral-700 dark:bg-neutral-800">
+				<h1 className="mb-2 text-2xl font-bold">Account created</h1>
 
 				<p>
 					A verification link has been sent to this email:{" "}
-					<span className="text-blue-600 font-medium">{email}</span>
+					<span className="font-medium text-blue-600 dark:text-blue-500">
+						{email}
+					</span>
 				</p>
 
 				<p className="mt-2">

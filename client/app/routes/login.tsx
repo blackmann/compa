@@ -1,5 +1,11 @@
 import { ActionFunctionArgs, MetaFunction, json } from "@remix-run/node";
-import { Link, useActionData, useFetcher } from "@remix-run/react";
+import {
+	Link,
+	useActionData,
+	useFetcher,
+	useNavigation,
+	useSubmit,
+} from "@remix-run/react";
 import { FieldValues, useForm } from "react-hook-form";
 import { Button } from "~/components/button";
 import { Input } from "~/components/input";
@@ -23,7 +29,9 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 		});
 	}
 
-	const { email, password } = await request.json();
+	const { email, password, ...rest } = await request.json();
+
+	console.log("...res", rest);
 
 	const user = await prisma.user.findFirst({ where: { email } });
 	if (!user) {
@@ -59,13 +67,16 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 	const token = signUser(user);
 	const previousAuth = await authCookie.parse(request.headers.get("Cookie"));
 
-	return json({}, {
-		headers: {
-			"Set-Cookie": await authCookie.serialize({ ...previousAuth, token }),
-			Location: "/",
+	return json(
+		{},
+		{
+			headers: {
+				"Set-Cookie": await authCookie.serialize({ ...previousAuth, token }),
+				Location: "/",
+			},
+			status: 302,
 		},
-		status: 302,
-	});
+	);
 };
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
@@ -73,26 +84,47 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
 };
 
 export default function Login() {
-	const { handleSubmit, register } = useForm();
+	const { handleSubmit, register, watch } = useForm();
 	const actionData = useActionData<typeof action>();
-	const fetcher = useFetcher();
+	const submit = useSubmit();
+	const navigation = useNavigation();
 
 	async function login(data: FieldValues) {
-		fetcher.submit(JSON.stringify(data), {
+		submit(JSON.stringify(data), {
 			method: "POST",
 			encType: "application/json",
 		});
 	}
+
+	const $email = watch("email");
 
 	return (
 		<div className="container mx-auto">
 			<div className="min-h-[60vh]">
 				<div className="lg:max-w-[24rem] mx-auto">
 					<form
-						className="bg-white dark:bg-neutral-900 rounded-lg border dark:border-neutral-800 p-4 z-10 relative"
+						className="bg-white dark:bg-neutral-900 rounded-lg border dark:border-neutral-800 p-4"
 						onSubmit={handleSubmit(login)}
 					>
 						<h1 className="font-bold text-2xl mb-2">Login</h1>
+
+						{actionData?.type === "invalid-credentials" && (
+							<div>{actionData?.message}</div>
+						)}
+
+						{actionData?.type === "unverified-account" && (
+							<div className="p-2 rounded-lg bg-red-700 bg-opacity-10 text-red-400 mb-2">
+								You need to verify your email to be able to login. Check your
+								inbox.{" "}
+								<a
+									className="underline text-red-200"
+									href={`/resend-verification?email=${$email}`}
+								>
+									Resend email
+								</a>{" "}
+								if you can't find it.
+							</div>
+						)}
 
 						<label>
 							Email
@@ -115,14 +147,14 @@ export default function Login() {
 						</label>
 
 						<div className="mt-2">
-							<Button disabled={fetcher.state === "submitting"}>
-								{fetcher.state === "submitting" ? "Please wait…" : "Login"}
+							<Button disabled={navigation.state === "submitting"}>
+								{navigation.state === "submitting" ? "Please wait…" : "Login"}
 							</Button>
 						</div>
 
 						<p className="mt-4">
 							<Link
-								className="underline font-medium text-rose-500"
+								className="underline font-medium text-green-500"
 								to="/create-account"
 							>
 								Create an account
@@ -130,9 +162,6 @@ export default function Login() {
 							to be start interacting on compa.
 						</p>
 					</form>
-					<span className="bg-zinc-200 dark:bg-neutral-800 ms-4 px-2 pt-2 font-medium rounded-b-md -mt-2">
-						KNUST
-					</span>
 				</div>
 			</div>
 		</div>

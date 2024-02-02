@@ -28,7 +28,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 		data: { password: await bcrypt.hash(password, ROUNDS), userId: user.id },
 	});
 
-	return redirect(`/account-created?email=${user.email}`)
+	return redirect(`/account-created?email=${user.email}`);
 };
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
@@ -54,7 +54,7 @@ export default function CreateAccount() {
 			<div className="min-h-[60vh]">
 				<div className="lg:max-w-[24rem] mx-auto">
 					<form
-						className="bg-white dark:bg-neutral-900 rounded-lg border dark:border-neutral-800 p-4 z-10 relative"
+						className="bg-white dark:bg-neutral-900 rounded-lg border dark:border-neutral-800 p-4"
 						onSubmit={handleSubmit(createAccount)}
 					>
 						<h1 className="font-bold text-2xl mb-2">Create Account</h1>
@@ -112,9 +112,6 @@ export default function CreateAccount() {
 							instead.
 						</p>
 					</form>
-					<span className="bg-zinc-200 dark:bg-neutral-800 ms-4 px-2 pt-2 font-medium rounded-b-md -mt-2">
-						KNUST
-					</span>
 				</div>
 			</div>
 		</div>
