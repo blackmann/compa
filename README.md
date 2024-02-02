@@ -17,9 +17,10 @@ As a fresher, settling into school could be easier. You usually need to find:
 - Semester timetables
 - Resources from past semesters
 
-As continuing students, keeping up with any of these is scattered across multiple platforms. Compa aims to offer a cohesive experience for all of it.
+For continuing students, it's just as hard to find documents or class notes when conversations are scattered across multiple platforms.
 
-Being a student is hard enough, that's why Compa aims to be _resource-central_ for higher education institutions and save you from one source of stress.  
+Being a student is hard enough, that's why Compa aims to be the go-to resource for higher education institutions and save you from one source of stress.
+
 Your open, compact, companion and compass. That is _Compa_.
 
 ## Features
