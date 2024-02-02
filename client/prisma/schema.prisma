@@ -55,6 +55,7 @@ model User {
   AuthCredential AuthCredential?
   createdAt      DateTime        @default(now())
   updatedAt      DateTime        @updatedAt
+  verified       Boolean         @default(false)
 }
 
 model AuthCredential {

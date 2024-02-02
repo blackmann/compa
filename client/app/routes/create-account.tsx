@@ -1,14 +1,11 @@
-import { ActionFunctionArgs, MetaFunction } from "@remix-run/node";
+import { ActionFunctionArgs, MetaFunction, redirect } from "@remix-run/node";
 import { Link, useFetcher, useLoaderData } from "@remix-run/react";
 import { FieldValues, useForm } from "react-hook-form";
 import { Button } from "~/components/button";
 import { Input } from "~/components/input";
 import { prisma } from "~/lib/prisma.server";
 import { values } from "~/lib/values.server";
-import jwt from "~/lib/jwt.server";
-import { authCookie } from "~/lib/cookies";
 import bcrypt from "~/lib/bcrypt.server";
-import { signUser } from "~/lib/sign-user";
 
 const ROUNDS = process.env.NODE_ENV === "production" ? 12 : 4;
 
@@ -31,18 +28,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 		data: { password: await bcrypt.hash(password, ROUNDS), userId: user.id },
 	});
 
-	const token = signUser(user);
-
-	const previousAuth =
-		(await authCookie.parse(request.headers.get("Cookie"))) || {};
-
-	return new Response(null, {
-		headers: {
-			"Set-Cookie": await authCookie.serialize({ ...previousAuth, token }),
-			Location: "/",
-		},
-		status: 302,
-	});
+	return redirect(`/account-created?email=${user.email}`)
 };
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {

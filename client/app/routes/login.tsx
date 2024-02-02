@@ -1,5 +1,5 @@
 import { ActionFunctionArgs, MetaFunction, json } from "@remix-run/node";
-import { Link, useFetcher } from "@remix-run/react";
+import { Link, useActionData, useFetcher } from "@remix-run/react";
 import { FieldValues, useForm } from "react-hook-form";
 import { Button } from "~/components/button";
 import { Input } from "~/components/input";
@@ -17,7 +17,7 @@ export const loader = async () => {
 
 export const action = async ({ request }: ActionFunctionArgs) => {
 	if (request.method !== "POST") {
-		return new Response(null, {
+		return json(null, {
 			status: 405,
 			statusText: "Method Not Allowed",
 		});
@@ -27,7 +27,14 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
 	const user = await prisma.user.findFirst({ where: { email } });
 	if (!user) {
-		return json({ message: "Invalid email or password" }, { status: 400 });
+		return json(
+			{ type: "invalid-credentials", message: "Invalid email or password" },
+			{ status: 400 },
+		);
+	}
+
+	if (!user.verified) {
+		return json({ type: "unverified-account" }, { status: 400 });
 	}
 
 	const authCredential = await prisma.authCredential.findFirst({
@@ -35,18 +42,24 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 	});
 
 	if (!authCredential) {
-		return json({ message: "Invalid email or password" }, { status: 400 });
+		return json(
+			{ type: "invalid-credentials", message: "Invalid email or password" },
+			{ status: 400 },
+		);
 	}
 
 	const passwordMatch = await bcrypt.compare(password, authCredential.password);
 	if (!passwordMatch) {
-		return json({ message: "Invalid email or password" }, { status: 400 });
+		return json(
+			{ type: "invalid-credentials", message: "Invalid email or password" },
+			{ status: 400 },
+		);
 	}
 
 	const token = signUser(user);
 	const previousAuth = await authCookie.parse(request.headers.get("Cookie"));
 
-	return new Response(null, {
+	return json({}, {
 		headers: {
 			"Set-Cookie": await authCookie.serialize({ ...previousAuth, token }),
 			Location: "/",
@@ -61,6 +74,7 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
 
 export default function Login() {
 	const { handleSubmit, register } = useForm();
+	const actionData = useActionData<typeof action>();
 	const fetcher = useFetcher();
 
 	async function login(data: FieldValues) {
