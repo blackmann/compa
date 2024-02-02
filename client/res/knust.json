@@ -10,5 +10,6 @@
 	"examination": {
 		"start": "2024-04-11",
 		"end": "2024-04-28"
-	}
+	},
+	"emailExtensions": ["knust.edu.gh"]
 }
