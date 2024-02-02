@@ -8,6 +8,7 @@ import { values } from "~/lib/values.server";
 import jwt from "~/lib/jwt.server";
 import { authCookie } from "~/lib/cookies";
 import bcrypt from "~/lib/bcrypt.server";
+import { signUser } from "~/lib/sign-user";
 
 const ROUNDS = process.env.NODE_ENV === "production" ? 12 : 4;
 
@@ -30,7 +31,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 		data: { password: await bcrypt.hash(password, ROUNDS), userId: user.id },
 	});
 
-	const token = jwt.sign({ sub: user.id }, process.env.SECRET_KEY!);
+	const token = signUser(user);
 
 	const previousAuth =
 		(await authCookie.parse(request.headers.get("Cookie"))) || {};
