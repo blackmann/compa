@@ -963,6 +963,13 @@
   dependencies:
     "@iconify/types" "*"
 
+"@iconify-json/lucide@^1.1.160":
+  version "1.1.160"
+  resolved "https://registry.yarnpkg.com/@iconify-json/lucide/-/lucide-1.1.160.tgz#f90eb0327004ca61503401b20c185774a95333ea"
+  integrity sha512-wQJvbP+wliSEEAcQZUWvEFSo9vEzpGbK21dE4kQjISix8joS3ud3vIrxP82YGWCEScYcXi1T+gBxqej3SQLzTg==
+  dependencies:
+    "@iconify/types" "*"
+
 "@iconify-json/svg-spinners@^1.1.2":
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/@iconify-json/svg-spinners/-/svg-spinners-1.1.2.tgz#930a8540f676cbc3f14696562df23132473d8261"
