@@ -27,7 +27,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 		},
 	});
 
-	// [ ]: Send email
+	// [ ]: Send email. Link is combination of email and token
 
 	return json({});
 };

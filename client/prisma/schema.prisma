@@ -71,6 +71,7 @@ model PasswordResetRequest {
   user      User     @relation(fields: [userId], references: [id])
   userId    Int
   token     String
+  used     Boolean  @default(false)
   createdAt DateTime @default(now())
 }
 

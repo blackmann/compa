@@ -2,15 +2,14 @@ import { ActionFunctionArgs, MetaFunction, json } from "@remix-run/node";
 import {
 	Link,
 	useActionData,
-	useFetcher,
 	useNavigation,
 	useSubmit,
 } from "@remix-run/react";
 import { FieldValues, useForm } from "react-hook-form";
 import { Button } from "~/components/button";
 import { Input } from "~/components/input";
-import bcrypt from "~/lib/bcrypt.server";
 import { authCookie } from "~/lib/cookies.server";
+import { compare } from "~/lib/password.server";
 import { prisma } from "~/lib/prisma.server";
 import { signUser } from "~/lib/sign-user";
 import { values } from "~/lib/values.server";
@@ -29,9 +28,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 		});
 	}
 
-	const { email, password, ...rest } = await request.json();
-
-	console.log("...res", rest);
+	const { email, password } = await request.json();
 
 	const user = await prisma.user.findFirst({ where: { email } });
 	if (!user) {
@@ -39,10 +36,6 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 			{ type: "invalid-credentials", message: "Invalid email or password" },
 			{ status: 400 },
 		);
-	}
-
-	if (!user.verified) {
-		return json({ type: "unverified-account" }, { status: 400 });
 	}
 
 	const authCredential = await prisma.authCredential.findFirst({
@@ -56,10 +49,17 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 		);
 	}
 
-	const passwordMatch = await bcrypt.compare(password, authCredential.password);
+	const passwordMatch = await compare(password, authCredential.password);
 	if (!passwordMatch) {
 		return json(
 			{ type: "invalid-credentials", message: "Invalid email or password" },
+			{ status: 400 },
+		);
+	}
+
+	if (!user.verified) {
+		return json(
+			{ type: "unverified-account", message: "Unverified account" },
 			{ status: 400 },
 		);
 	}
@@ -68,7 +68,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 	const previousAuth = await authCookie.parse(request.headers.get("Cookie"));
 
 	return json(
-		{},
+		{ type: "success", message: "Login successful" },
 		{
 			headers: {
 				"Set-Cookie": await authCookie.serialize({ ...previousAuth, token }),
@@ -108,21 +108,24 @@ export default function Login() {
 					>
 						<h1 className="font-bold text-2xl mb-2">Login</h1>
 
-						{actionData?.type === "invalid-credentials" && (
-							<div>{actionData?.message}</div>
-						)}
+						{actionData && (
+							<div className="p-2 rounded-lg bg-red-50 text-red-500 dark:bg-red-700 dark:bg-opacity-10 dark:text-red-400 mb-2">
+								{actionData.type === "invalid-credentials" &&
+									actionData?.message}
 
-						{actionData?.type === "unverified-account" && (
-							<div className="p-2 rounded-lg bg-red-700 bg-opacity-10 text-red-400 mb-2">
-								You need to verify your email to be able to login. Check your
-								inbox.{" "}
-								<a
-									className="underline text-red-200"
-									href={`/resend-verification?email=${$email}`}
-								>
-									Resend email
-								</a>{" "}
-								if you can't find it.
+								{actionData.type === "unverified-account" && (
+									<>
+										You need to verify your email to be able to login. Check
+										your inbox.{" "}
+										<a
+											className="underline font-medium dark:text-red-200"
+											href={`/resend-verification?email=${$email}`}
+										>
+											Resend email
+										</a>{" "}
+										if you can't find it.
+									</>
+								)}
 							</div>
 						)}
 

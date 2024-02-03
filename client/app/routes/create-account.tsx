@@ -3,11 +3,9 @@ import { Link, useFetcher, useLoaderData } from "@remix-run/react";
 import { FieldValues, useForm } from "react-hook-form";
 import { Button } from "~/components/button";
 import { Input } from "~/components/input";
+import { hash } from "~/lib/password.server";
 import { prisma } from "~/lib/prisma.server";
 import { values } from "~/lib/values.server";
-import bcrypt from "~/lib/bcrypt.server";
-
-const ROUNDS = process.env.NODE_ENV === "production" ? 12 : 4;
 
 export const loader = async () => {
 	const school = values.get("shortName");
@@ -25,7 +23,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
 	const user = await prisma.user.create({ data });
 	await prisma.authCredential.create({
-		data: { password: await bcrypt.hash(password, ROUNDS), userId: user.id },
+		data: { password: await hash(password), userId: user.id },
 	});
 
 	return redirect(`/account-created?email=${user.email}`);
