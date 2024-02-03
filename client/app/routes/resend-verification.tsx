@@ -1,10 +1,20 @@
 import { ActionFunctionArgs } from "react-router";
+import { sendEmailVerification } from "~/lib/send-email-verification";
 
 export const loader = async ({ request }: ActionFunctionArgs) => {
 	const email = new URL(request.url).searchParams.get("email");
 
-	// [ ]: Send email
+	if (!email) {
+		return new Response(null, { status: 400 });
+	}
+
+	await sendEmailVerification(email);
+
 	return null;
+};
+
+export const meta = () => {
+	return [{ title: "Resend Verification | compa" }];
 };
 
 export default function ResendVerification() {

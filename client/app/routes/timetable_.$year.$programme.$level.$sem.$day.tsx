@@ -125,7 +125,6 @@ export default function TimeTable() {
 					<DaysHeader className="mt-2" selectedDay={day} />
 
 					<div className="mt-2 flex justify-between">
-						{/* // [ ]: Disable link if sem and year selection arent the current one */}
 						<Link
 							className="flex items-center gap-2 rounded-lg bg-zinc-200 px-2 py-1 dark:bg-neutral-800 font-medium"
 							to="add"

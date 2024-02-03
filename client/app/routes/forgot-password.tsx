@@ -3,6 +3,7 @@ import { useFetcher } from "@remix-run/react";
 import { FieldValues, useForm } from "react-hook-form";
 import { Button } from "~/components/button";
 import { Input } from "~/components/input";
+import { send } from "~/lib/mail.server";
 import { prisma } from "~/lib/prisma.server";
 import { randomStr } from "~/lib/random-str";
 
@@ -20,14 +21,27 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 		return json({});
 	}
 
-	await prisma.passwordResetRequest.create({
+	const resetRequest = await prisma.passwordResetRequest.create({
 		data: {
 			userId: user.id,
 			token: randomStr(24),
 		},
 	});
 
-	// [ ]: Send email. Link is combination of email and token
+	const subdomain = process.env.SCHOOL;
+
+	const link = [
+		`https://${subdomain}.compa.so/reset-password?`,
+		`email=${email}`,
+		`&token=${resetRequest.token}`,
+	].join("");
+
+	await send({
+		to: user.email,
+		from: "m@compa.so",
+		subject: "Reset Password | compa",
+		text: `Hi 👋🏽,\n\nYou requested to change your password. Click this link to continue: ${link}.\n\nAll the best!`,
+	});
 
 	return json({});
 };

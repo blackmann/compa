@@ -5,10 +5,6 @@ import { Anchor } from "./anchor";
 import { useLoaderData, useParams } from "@remix-run/react";
 import { TimeTableLoader } from "~/routes/timetable_.$year.$programme.$level.$sem.$day";
 
-// [ ]: Edit lesson
-// [ ]: Save programme, etc. as cookie preference
-// [ ]: Hosting
-// [ ]: Website
 function TimetableSaveToCalender() {
 	const [open, setOpen] = React.useState(false);
 	const { programmes } = useLoaderData<TimeTableLoader>();
