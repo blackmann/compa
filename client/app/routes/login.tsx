@@ -162,7 +162,7 @@ export default function Login() {
 							>
 								Create an account
 							</Link>{" "}
-							to be start interacting on compa.
+							to start interacting on compa.
 						</p>
 					</form>
 				</div>
