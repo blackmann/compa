@@ -17,11 +17,9 @@ As a fresher, settling into school could be easier. You usually need to find:
 - Semester timetables
 - Resources from past semesters
 
-For continuing students, it's just as hard to track where documents or class notes are when conversations are strewn across multiple platforms.
+For continuing students, it's just as hard to find documents or class notes when conversations are scattered across multiple platforms.
 
-Being a student is hard enough, that's why Compa aims to be _resource-central_ for higher education institutions and save you from one source of stress.
-
-As continuing students, keeping up with any of these is scattered across multiple platforms. Compa aims to offer a cohesive experience for all of these.
+Being a student is hard enough, that's why Compa aims to be the go-to resource for higher education institutions and save you from one source of stress.
 
 Your open, compact, companion and compass. That is _Compa_.
 
@@ -35,28 +33,26 @@ Your open, compact, companion and compass. That is _Compa_.
 
 ## Schools
 
-- [x] Kwame Nkrumah University of Science and Technology (KNUST) - https://knust.compa.so
+- [x] Kwame Nkrumah University of Science and Technology (KNUST) - <https://knust.compa.so>
 
 > If you'd like to set up Compa for your school, please create an issue with the title: `School Request: <School Name>`.
 
 ## Run locally
 
-Clone the project
+Clone the project:
 
 ```bash
 git clone https://github.com/blackmann/compa
 cd compa
 ```
 
-Run the following commands:
+Run the following command to install dependencies and setup Prisma migrations:
 
 ```bash
-yarn install
-yarn workspace client prisma migrate deploy
-yarn workspace client prisma generate
+yarn setup:all
 ```
 
-Start the project in dev mode.
+Start the project in dev mode:
 
 ```bash
 yarn dev:client
