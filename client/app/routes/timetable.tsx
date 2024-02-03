@@ -2,7 +2,7 @@ import { LoaderFunctionArgs, MetaFunction, redirect } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import dayjs from "dayjs";
 import { TimetableFilter } from "~/components/timetable-filter";
-import { userPrefs } from "~/lib/cookies";
+import { userPrefs } from "~/lib/cookies.server";
 import { prisma } from "~/lib/prisma.server";
 import { values } from "~/lib/values.server";
 

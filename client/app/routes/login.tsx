@@ -10,7 +10,7 @@ import { FieldValues, useForm } from "react-hook-form";
 import { Button } from "~/components/button";
 import { Input } from "~/components/input";
 import bcrypt from "~/lib/bcrypt.server";
-import { authCookie } from "~/lib/cookies";
+import { authCookie } from "~/lib/cookies.server";
 import { prisma } from "~/lib/prisma.server";
 import { signUser } from "~/lib/sign-user";
 import { values } from "~/lib/values.server";

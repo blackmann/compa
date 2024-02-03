@@ -12,7 +12,7 @@ import { DaysHeader } from "~/components/days-header";
 import { LessonItem } from "~/components/lesson-item";
 import { TimetableFilter } from "~/components/timetable-filter";
 import { TimetableSaveToCalender } from "~/components/timetable-save-to-calendar";
-import { userPrefs } from "~/lib/cookies";
+import { userPrefs } from "~/lib/cookies.server";
 import { prisma } from "~/lib/prisma.server";
 import { timeFromString } from "~/lib/time";
 import { values } from "~/lib/values.server";

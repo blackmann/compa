@@ -1,32 +1,88 @@
+import { ActionFunctionArgs, json } from "@remix-run/node";
+import { useFetcher } from "@remix-run/react";
+import { FieldValues, useForm } from "react-hook-form";
 import { Button } from "~/components/button";
 import { Input } from "~/components/input";
+import { prisma } from "~/lib/prisma.server";
+import { randomStr } from "~/lib/random-str";
+
+export const action = async ({ request }: ActionFunctionArgs) => {
+	if (request.method !== "POST") {
+		return new Response(null, { status: 405 });
+	}
+
+	const { email } = await request.json();
+
+	// [ ]: Throttle this request. Users should not spam this endpoint.
+
+	const user = await prisma.user.findFirst({ where: { email } });
+	if (!user) {
+		return json({});
+	}
+
+	await prisma.passwordResetRequest.create({
+		data: {
+			userId: user.id,
+			token: randomStr(24),
+		},
+	});
+
+	// [ ]: Send email
+
+	return json({});
+};
+
+export const meta = () => {
+	return [{ title: "Forgot Password | compa" }];
+};
 
 export default function ForgotPassword() {
+	const { handleSubmit, register } = useForm();
+	const fetcher = useFetcher();
+
+	async function sendRequest(data: FieldValues) {
+		console.log("sending again...");
+		fetcher.submit(JSON.stringify(data), {
+			encType: "application/json",
+			method: "POST",
+		});
+	}
+
 	return (
 		<div className="container mx-auto">
 			<div className="min-h-[60vh]">
 				<div className="lg:max-w-[24rem] mx-auto">
-					<form className="bg-white dark:bg-neutral-900 rounded-lg border dark:border-neutral-800 p-4 z-10 relative">
+					<form
+						className="bg-white dark:bg-neutral-900 rounded-lg border dark:border-neutral-800 p-4"
+						onSubmit={handleSubmit(sendRequest)}
+					>
 						<h1 className="font-bold text-2xl mb-2">
-							Reset Account <br />
+							Forgot <br />
 							Password
 						</h1>
 
-						<label className="block mt-2">
-							Email
-							<Input name="email" />
-							<small className="text-secondary">
-								A reset link will be sent to this address if it's valid.
-							</small>
-						</label>
+						{fetcher.data ? (
+							<div className="mt-2">
+								Reset link has been sent to your email.
+							</div>
+						) : (
+							<>
+								<label className="block mt-2">
+									Email
+									<Input {...register("email", { required: true })} />
+									<small className="text-secondary">
+										A reset link will be sent to this address if it's valid.
+									</small>
+								</label>
 
-						<div className="mt-2">
-							<Button>Send link</Button>
-						</div>
+								<div className="mt-2">
+									<Button disabled={fetcher.state === "submitting"}>
+										{fetcher.state === "submitting" ? "Sending..." : "Send"}
+									</Button>
+								</div>
+							</>
+						)}
 					</form>
-					<span className="bg-zinc-200 dark:bg-neutral-800 ms-4 px-2 pt-2 font-medium rounded-b-md -mt-2">
-						KNUST
-					</span>
 				</div>
 			</div>
 		</div>
