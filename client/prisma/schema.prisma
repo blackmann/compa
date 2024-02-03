@@ -30,7 +30,7 @@ model Schedule {
   course       Course     @relation(fields: [courseId], references: [id])
   courseId     Int
   day          Int
-  instructor     Instructor @relation(fields: [instructorId], references: [id])
+  instructor   Instructor @relation(fields: [instructorId], references: [id])
   instructorId Int
   level        Int
   programme    Programme  @relation(fields: [programmeId], references: [id])
@@ -46,4 +46,38 @@ model Instructor {
   id       Int        @id @default(autoincrement())
   name     String
   Schedule Schedule[]
+}
+
+model User {
+  id                   Int                    @id @default(autoincrement())
+  username             String                 @unique
+  email                String                 @unique
+  AuthCredential       AuthCredential?
+  createdAt            DateTime               @default(now())
+  updatedAt            DateTime               @updatedAt
+  verified             Boolean                @default(false)
+  PasswordResetRequest PasswordResetRequest[]
+}
+
+model AuthCredential {
+  id       Int    @id @default(autoincrement())
+  user     User   @relation(fields: [userId], references: [id])
+  userId   Int    @unique
+  password String
+}
+
+model PasswordResetRequest {
+  id        Int      @id @default(autoincrement())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
+  token     String
+  used     Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model EmailVerificationRequest {
+  id        Int      @id @default(autoincrement())
+  email     String
+  token     String
+  createdAt DateTime @default(now())
 }

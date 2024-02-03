@@ -1,8 +1,10 @@
 import { LoaderFunctionArgs, MetaFunction, redirect } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
+import dayjs from "dayjs";
 import { TimetableFilter } from "~/components/timetable-filter";
-import { userPrefs } from "~/lib/cookies";
+import { userPrefs } from "~/lib/cookies.server";
 import { prisma } from "~/lib/prisma.server";
+import { values } from "~/lib/values.server";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
 	const cookie = (await userPrefs.parse(request.headers.get("Cookie"))) || {};
@@ -10,18 +12,21 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 	const { programme, year, level, sem } = cookie;
 
 	if (programme && year && level) {
-		return redirect(`/timetable/${year}/${programme}/${level}/${sem}/1`);
+		const day = dayjs().day();
+		return redirect(`/timetable/${year}/${programme}/${level}/${sem}/${day}`);
 	}
 
 	const programmes = await prisma.programme.findMany({
 		orderBy: { name: "asc" },
 	});
 
-	return { programmes };
+	const school = values.get("shortName");
+
+	return { programmes, school };
 };
 
-export const meta: MetaFunction<typeof loader> = () => {
-	return [{ title: "Timetable | KNUST | compa" }];
+export const meta: MetaFunction<typeof loader> = ({ data }) => {
+	return [{ title: `Timetable | ${data?.school} | compa` }];
 };
 
 export default function Timetable() {

@@ -5,10 +5,6 @@ import { Anchor } from "./anchor";
 import { useLoaderData, useParams } from "@remix-run/react";
 import { TimeTableLoader } from "~/routes/timetable_.$year.$programme.$level.$sem.$day";
 
-// [ ]: Edit lesson
-// [ ]: Save programme, etc. as cookie preference
-// [ ]: Hosting
-// [ ]: Website
 function TimetableSaveToCalender() {
 	const [open, setOpen] = React.useState(false);
 	const { programmes } = useLoaderData<TimeTableLoader>();
@@ -36,7 +32,7 @@ function TimetableSaveToCalender() {
 			>
 				<div className="w-full">
 					<header className="flex text-secondary p-2 items-center text-sm gap-2">
-						<div className=" i-lucide-calendar-plus"></div>
+						<div className=" i-lucide-calendar-plus" />
 						<div>Save to Calendar</div>
 					</header>
 
