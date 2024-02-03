@@ -5,6 +5,7 @@ import { Button } from "~/components/button";
 import { Input } from "~/components/input";
 import { hash } from "~/lib/password.server";
 import { prisma } from "~/lib/prisma.server";
+import { sendEmailVerification } from "~/lib/send-email-verification";
 import { values } from "~/lib/values.server";
 
 export const loader = async () => {
@@ -19,12 +20,14 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 		return new Response(null, { status: 405 });
 	}
 
-	const { password, ...data } = await request.json();
+	const { password, email, username } = await request.json();
 
-	const user = await prisma.user.create({ data });
+	const user = await prisma.user.create({ data: { email, username } });
 	await prisma.authCredential.create({
 		data: { password: await hash(password), userId: user.id },
 	});
+
+	await sendEmailVerification(email);
 
 	return redirect(`/account-created?email=${user.email}`);
 };

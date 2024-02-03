@@ -32,7 +32,7 @@ function TimetableSaveToCalender() {
 			>
 				<div className="w-full">
 					<header className="flex text-secondary p-2 items-center text-sm gap-2">
-						<div className=" i-lucide-calendar-plus"></div>
+						<div className=" i-lucide-calendar-plus" />
 						<div>Save to Calendar</div>
 					</header>
 
