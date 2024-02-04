@@ -1,12 +1,14 @@
 import { Prisma } from "@prisma/client";
 import { useFetcher } from "@remix-run/react";
+import { useGlobalCtx } from "~/lib/global-ctx";
 
 interface Props {
 	post: Prisma.PostGetPayload<{ include: { user: true } }>;
 }
 
 function Votes({ post }: Props) {
-  const fetcher = useFetcher();
+	const fetcher = useFetcher();
+	const { user } = useGlobalCtx();
 
 	async function vote(up: boolean) {
 		fetcher.submit(JSON.stringify({ up }), {
@@ -36,6 +38,7 @@ function Votes({ post }: Props) {
 				className="i-lucide-triangle text-secondary"
 				type="button"
 				onClick={handleUpvote}
+				disabled={!user}
 			/>
 
 			<span className="font-medium text-sm">
@@ -46,6 +49,7 @@ function Votes({ post }: Props) {
 				className="i-lucide-triangle rotate-180 text-secondary"
 				type="button"
 				onClick={handleDownvote}
+				disabled={!user}
 			/>
 		</>
 	);

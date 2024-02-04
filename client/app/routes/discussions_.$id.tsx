@@ -6,8 +6,10 @@ import {
 } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { Avatar } from "~/components/avatar";
+import { LoginComment } from "~/components/login-comment";
 import { PostInput } from "~/components/post-input";
 import { PostItem, PostItemProps } from "~/components/post-item";
+import { PostMenu } from "~/components/post-menu";
 import { PostPeople } from "~/components/post-people";
 import { PostTime } from "~/components/post-time";
 import { Votes } from "~/components/votes";
@@ -89,14 +91,18 @@ export default function Discussion() {
 						</div>
 
 						<div className="border-b dark:border-neutral-700 pb-2 flex-1">
-							<header>
+							<header className="flex justify-between">
 								<span className="font-mono text-secondary">
 									@{post.user.username} &bull;{" "}
 									<PostTime time={post.createdAt} />
 								</span>
+
+								<div>
+									<PostMenu post={post} />
+								</div>
 							</header>
 
-							<div>
+							<div className="-mt-2">
 								<p>{post.content}</p>
 
 								{/* <div className="flex mt-2">
@@ -119,13 +125,19 @@ export default function Discussion() {
 					</div>
 
 					<div className="flex gap-2 mt-4">
-						<Avatar name={user?.username || ""} />
-						<div className="flex-1">
-							<PostInput
-								parent={post as unknown as PostItemProps["post"]}
-								level={1}
-							/>
-						</div>
+						{user ? (
+							<>
+								<Avatar name={user?.username || ""} />
+								<div className="flex-1">
+									<PostInput
+										parent={post as unknown as PostItemProps["post"]}
+										level={1}
+									/>
+								</div>
+							</>
+						) : (
+							<LoginComment />
+						)}
 					</div>
 
 					<div className="mt-2">

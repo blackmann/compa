@@ -6,6 +6,10 @@ import { PostInput } from "./post-input";
 import { useMounted } from "~/lib/use-mounted";
 import { NestedComments } from "./nested-comments";
 import { Votes } from "./votes";
+import clsx from "clsx";
+import { PostMenu } from "./post-menu";
+import { useGlobalCtx } from "~/lib/global-ctx";
+import { LoginComment } from "./login-comment";
 
 interface Props {
 	level?: number;
@@ -15,6 +19,8 @@ interface Props {
 function PostItem({ post, level = 0 }: Props) {
 	const location = useLocation();
 	const mounted = useMounted();
+
+	const { user } = useGlobalCtx();
 
 	function handleLinkClick(e: React.MouseEvent<HTMLAnchorElement>) {
 		if (level > 1) {
@@ -46,7 +52,12 @@ function PostItem({ post, level = 0 }: Props) {
 				id={post.id.toString()}
 				onClick={handleLinkClick}
 			>
-				<div className="p-2 rounded-lg hover-bg-light transition-[background] duration-200 flex gap-2">
+				<div
+					className={clsx(
+						"p-2 rounded-lg hover-bg-light transition-[background] duration-200 flex gap-2",
+						{ "bg-light dark:bg-neutral-800": active },
+					)}
+				>
 					<div className="flex flex-col items-center">
 						{full && (
 							<div className="mb-2">
@@ -57,13 +68,17 @@ function PostItem({ post, level = 0 }: Props) {
 						<Votes post={post} />
 					</div>
 					<div className="flex-1">
-						<header>
+						<header className="flex gap-2 justify-between">
 							<span className="font-mono text-secondary text-sm">
 								@{post.user.username} &bull; <PostTime time={post.createdAt} />
 							</span>
+
+							<div>
+								<PostMenu post={post} />
+							</div>
 						</header>
 
-						<div>
+						<div className="-mt-3">
 							<p>{post.content}</p>
 
 							{/* <div className="flex mt-2">
@@ -90,9 +105,13 @@ function PostItem({ post, level = 0 }: Props) {
 
 			{showCommentInput && mounted && (
 				<div className="ms-12 border-s-2 ps-2 dark:border-neutral-700">
-					<div className="p-2">
-						<PostInput parent={post} level={1} />
-					</div>
+					{user ? (
+						<div className="p-2">
+							<PostInput parent={post} level={1} />
+						</div>
+					) : (
+						<LoginComment />
+					)}
 
 					<NestedComments post={post} />
 				</div>
