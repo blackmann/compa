@@ -18,6 +18,10 @@ dialog {
   @apply text-zinc-500 dark:text-neutral-400;
 }
 
+.hover-bg-light {
+  @apply hover:bg-zinc-100 hover:dark:bg-neutral-800;
+}
+
 .font-mono {
   font-family: 'JetBrains Mono', monospace;
 }

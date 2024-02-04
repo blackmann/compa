@@ -57,6 +57,7 @@ model User {
   updatedAt            DateTime               @updatedAt
   verified             Boolean                @default(false)
   PasswordResetRequest PasswordResetRequest[]
+  Post                 Post[]
 }
 
 model AuthCredential {
@@ -71,7 +72,7 @@ model PasswordResetRequest {
   user      User     @relation(fields: [userId], references: [id])
   userId    Int
   token     String
-  used     Boolean  @default(false)
+  used      Boolean  @default(false)
   createdAt DateTime @default(now())
 }
 
@@ -80,4 +81,23 @@ model EmailVerificationRequest {
   email     String
   token     String
   createdAt DateTime @default(now())
+}
+
+model Post {
+  id            Int      @id @default(autoincrement())
+  content       String
+  user          User     @relation(fields: [userId], references: [id])
+  userId        Int
+  parent        Post?    @relation("Parent", fields: [parentId], references: [id])
+  parentId      Int?
+  comments      Post[]   @relation("Parent")
+  quote         Post?    @relation("Quote", fields: [quoteId], references: [id])
+  quotedBy      Post[]   @relation("Quote")
+  quoteId       Int?
+  upvotes       Int      @default(0)
+  downvotes     Int      @default(0)
+  people        Int      @default(0)
+  commentsCount Int      @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 }

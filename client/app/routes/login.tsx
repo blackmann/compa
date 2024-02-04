@@ -9,9 +9,9 @@ import { FieldValues, useForm } from "react-hook-form";
 import { Button } from "~/components/button";
 import { Input } from "~/components/input";
 import { authCookie } from "~/lib/cookies.server";
+import { signUser } from "~/lib/jwt.server";
 import { compare } from "~/lib/password.server";
 import { prisma } from "~/lib/prisma.server";
-import { signUser } from "~/lib/sign-user";
 import { values } from "~/lib/values.server";
 
 export const loader = async () => {
