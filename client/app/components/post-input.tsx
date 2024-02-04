@@ -15,7 +15,6 @@ function PostInput({ level = 0, parent }: Props) {
 	const isComment = level > 0;
 
 	async function createPost(data: FieldValues) {
-		console.log('parent', parent)
 		fetcher.submit(JSON.stringify({ ...data, parentId: parent?.id }), {
 			encType: "application/json",
 			method: "POST",
@@ -26,7 +25,9 @@ function PostInput({ level = 0, parent }: Props) {
 		<form onSubmit={handleSubmit(createPost)}>
 			<textarea
 				className="w-full rounded-lg bg-zinc-100 dark:bg-neutral-800 border-zinc-200 dark:border-neutral-700 p-2 h-30"
-				placeholder="What have you got to share?"
+				placeholder={
+					isComment ? "What do you think?" : "What have you got to share?"
+				}
 				{...register("content")}
 			/>
 
@@ -50,6 +51,15 @@ function PostInput({ level = 0, parent }: Props) {
 
 			<p className="text-sm text-secondary">
 				Maximum 4 files. Images and documents only.
+				<br />
+				<span className="i-lucide-file-code inline-block me-1" />
+				<a
+					className="underline"
+					href="https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax"
+				>
+					Markdown
+				</a>{" "}
+				is supported.
 			</p>
 		</form>
 	);

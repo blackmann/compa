@@ -7,7 +7,8 @@ import {
 import { useLoaderData } from "@remix-run/react";
 import { Avatar } from "~/components/avatar";
 import { PostInput } from "~/components/post-input";
-import { PostItem } from "~/components/post-item";
+import { PostItem, PostItemProps } from "~/components/post-item";
+import { PostTime } from "~/components/post-time";
 import { checkAuth } from "~/lib/check-auth";
 import { prisma } from "~/lib/prisma.server";
 import { values } from "~/lib/values.server";
@@ -43,6 +44,19 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 			parentId: data.parentId,
 			userId,
 		},
+	});
+
+	const comments = await prisma.post.count({
+		where: { parentId: data.parentId },
+	});
+
+	const people = await prisma.user.count({
+		where: { Post: { every: { id: data.parentId } } },
+	});
+
+	await prisma.post.update({
+		where: { id: data.parentId },
+		data: { commentsCount: comments, people },
 	});
 
 	return null;
@@ -83,7 +97,8 @@ export default function Discussion() {
 						<div className="border-b dark:border-neutral-700 pb-2">
 							<header>
 								<span className="font-mono text-secondary">
-									@notgr &bull; 2mins
+									@{post.user.username} &bull;{" "}
+									<PostTime time={post.createdAt} />
 								</span>
 							</header>
 
@@ -117,27 +132,22 @@ export default function Discussion() {
 					<div className="flex gap-2 mt-4">
 						<Avatar />
 						<div className="flex-1">
-							<PostInput parent={post} level={1} />
+							<PostInput
+								parent={post as unknown as PostItemProps["post"]}
+								level={1}
+							/>
 						</div>
 					</div>
 
 					<div className="mt-2">
 						{comments.map((comment) => (
-							<PostItem key={comment.id} post={comment} />
+							<PostItem
+								key={comment.id}
+								post={comment as unknown as PostItemProps["post"]}
+								level={1}
+							/>
 						))}
 					</div>
-
-					{/* <div className="mt-2">
-						<PostItem />
-
-						<div className="ms-12 border-s-2 ps-2 dark:border-neutral-700">
-							<div className="p-2">
-								<PostInput />
-							</div>
-
-							<PostItem />
-						</div>
-					</div> */}
 				</div>
 
 				<div className="cols-span-1">

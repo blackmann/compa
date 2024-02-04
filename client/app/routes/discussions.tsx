@@ -1,7 +1,7 @@
-import { ActionFunctionArgs, MetaFunction } from "@remix-run/node";
+import { ActionFunctionArgs, MetaFunction, json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { PostInput } from "~/components/post-input";
-import { PostItem } from "~/components/post-item";
+import { PostItem, PostItemProps } from "~/components/post-item";
 import { checkAuth } from "~/lib/check-auth";
 import { prisma } from "~/lib/prisma.server";
 import { values } from "~/lib/values.server";
@@ -11,7 +11,7 @@ export const loader = async () => {
 		where: { parentId: null },
 		include: { user: true },
 	});
-	return { school: values.meta(), posts };
+	return json({ school: values.meta(), posts });
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
@@ -46,7 +46,10 @@ export default function Discussions() {
 					</div>
 
 					{posts.map((post) => (
-						<PostItem post={post} key={post.id} />
+						<PostItem
+							post={post as unknown as PostItemProps["post"]}
+							key={post.id}
+						/>
 					))}
 				</div>
 

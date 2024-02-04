@@ -10,6 +10,10 @@
   font-size: 14px;
 }
 
+* {
+  scroll-margin-top: 3.5rem;
+}
+
 dialog {
   @apply dark:text-white;
 }
