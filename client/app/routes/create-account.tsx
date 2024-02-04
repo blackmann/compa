@@ -1,3 +1,5 @@
+import { Prisma, User } from "@prisma/client";
+
 import {
   ActionFunctionArgs,
   MetaFunction,
@@ -33,38 +35,22 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
   const { password, email, username } = await request.json();
 
-  // check if username already exits
-  const usernameExits = await prisma.user.findUnique({
-    where: {
-      username,
-    },
-  });
+  let user: User;
+  try {
+    user = await prisma.user.create({ data: { email, username } });
+  } catch (error) {
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      const errorPayload = (error.meta?.target as string[])?.includes(
+        "username"
+      )
+        ? { type: "username-exists", message: "username already exits" }
+        : { type: "email-exists", message: "email alrady exists" };
 
-  if (usernameExits) {
-    return json(
-      {
-        type: "username-exists",
-        message: "username already exists",
-      },
-      { status: 403 }
-    );
+      return json(errorPayload, { status: 403 });
+    }
+    return json({ type: "db-error", message: "something went wrong" });
   }
 
-  // check if email already exits
-  const emailExits = await prisma.user.findUnique({
-    where: {
-      email,
-    },
-  });
-
-  if (emailExits) {
-    return json(
-      { type: "email-exists", message: "email already exits" },
-      { status: 403 }
-    );
-  }
-
-  const user = await prisma.user.create({ data: { email, username } });
   await prisma.authCredential.create({
     data: { password: await hash(password), userId: user.id },
   });
