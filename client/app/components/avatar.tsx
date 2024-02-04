@@ -1,6 +1,16 @@
+import BoringAvatar from "boring-avatars";
 
-function Avatar() {
-  return <div className="size-8 rounded-full bg-zinc-200 dark:bg-neutral-700 mb-2" />
+interface Props {
+	name: string;
+	size?: number;
 }
 
-export { Avatar }
+const colors = ["#ffe12e", "#4d8c3a", "#0060ff", "#ff7d10", "#4e412b"];
+
+const BA = BoringAvatar.default;
+
+function Avatar({ name, size = 28 }: Props) {
+	return <BA colors={colors} size={size} name={name} variant="beam" />;
+}
+
+export { Avatar };

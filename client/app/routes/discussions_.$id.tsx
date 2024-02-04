@@ -12,6 +12,7 @@ import { PostPeople } from "~/components/post-people";
 import { PostTime } from "~/components/post-time";
 import { Votes } from "~/components/votes";
 import { checkAuth } from "~/lib/check-auth";
+import { useGlobalCtx } from "~/lib/global-ctx";
 import { prisma } from "~/lib/prisma.server";
 import { values } from "~/lib/values.server";
 
@@ -70,6 +71,7 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
 
 export default function Discussion() {
 	const { comments, post } = useLoaderData<typeof loader>();
+	const { user } = useGlobalCtx();
 
 	return (
 		<div className="container mx-auto min-h-[60vh]">
@@ -79,7 +81,9 @@ export default function Discussion() {
 				<div className="col-span-1 lg:col-span-2">
 					<div className="flex gap-2">
 						<div className="flex flex-col items-center">
-							<Avatar />
+							<div className="mb-2">
+								<Avatar name={post.user.username} />
+							</div>
 
 							<Votes post={post} />
 						</div>
@@ -115,7 +119,7 @@ export default function Discussion() {
 					</div>
 
 					<div className="flex gap-2 mt-4">
-						<Avatar />
+						<Avatar name={user?.username || ""} />
 						<div className="flex-1">
 							<PostInput
 								parent={post as unknown as PostItemProps["post"]}

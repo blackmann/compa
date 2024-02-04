@@ -48,7 +48,11 @@ function PostItem({ post, level = 0 }: Props) {
 			>
 				<div className="p-2 rounded-lg hover-bg-light transition-[background] duration-200 flex gap-2">
 					<div className="flex flex-col items-center">
-						{full && <Avatar />}
+						{full && (
+							<div className="mb-2">
+								<Avatar name={post.user.username} />
+							</div>
+						)}
 
 						<Votes post={post} />
 					</div>

@@ -1,5 +1,6 @@
 import { Prisma } from "@prisma/client";
 import { usePostPeople } from "~/lib/use-post-people";
+import { Avatar } from "./avatar";
 
 interface Props {
 	post: Prisma.PostGetPayload<{ include: { user: true } }>;
@@ -21,7 +22,8 @@ function PostPeople({ post }: Props) {
 				{people.map((person) => (
 					<li key={person.id}>
 						<div className="flex gap-2 py-1 px-2 rounded-lg hover:bg-zinc-100 items-center hover-bg-light">
-							<div className="rounded-full bg-zinc-200 dark:bg-neutral-700 size-6" />
+							<Avatar size={22} name={person.username} />
+
 							<div>
 								{person.username}{" "}
 								{person.id === post.user.id && (

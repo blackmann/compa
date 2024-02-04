@@ -18,6 +18,7 @@
     "@remix-run/react": "^2.5.1",
     "@remix-run/serve": "^2.5.1",
     "bcrypt": "^5.1.1",
+    "boring-avatars": "^1.10.1",
     "clsx": "^2.1.0",
     "dayjs": "^1.11.10",
     "dotenv": "^16.3.1",
