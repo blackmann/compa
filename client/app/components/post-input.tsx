@@ -15,7 +15,8 @@ function PostInput({ level = 0, parent }: Props) {
 	const isComment = level > 0;
 
 	async function createPost(data: FieldValues) {
-		fetcher.submit(JSON.stringify(data), {
+		console.log('parent', parent)
+		fetcher.submit(JSON.stringify({ ...data, parentId: parent?.id }), {
 			encType: "application/json",
 			method: "POST",
 		});

@@ -19,8 +19,12 @@ function PostItem({ post }: Props) {
 		e.stopPropagation();
 	}
 
+	const link = post.parentId
+		? `/discussions/${post.parentId}#${post.id}`
+		: `/discussions/${post.id}`;
+
 	return (
-		<Link to="/discussions/1" className="block">
+		<Link to={link} className="block">
 			<div className="p-2 rounded-lg hover-bg-light transition-[background] duration-200 flex gap-2">
 				<div className="flex flex-col items-center">
 					<Avatar />

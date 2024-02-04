@@ -1,7 +1,14 @@
-import { LoaderFunctionArgs, MetaFunction, json } from "@remix-run/node";
+import {
+	ActionFunctionArgs,
+	LoaderFunctionArgs,
+	MetaFunction,
+	json,
+} from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { Avatar } from "~/components/avatar";
 import { PostInput } from "~/components/post-input";
+import { PostItem } from "~/components/post-item";
+import { checkAuth } from "~/lib/check-auth";
 import { prisma } from "~/lib/prisma.server";
 import { values } from "~/lib/values.server";
 
@@ -18,7 +25,27 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
 		throw new Response("Not found", { status: 404 });
 	}
 
-	return json({ schoolName, post });
+	const comments = await prisma.post.findMany({
+		where: { parentId: post.id },
+		include: { user: true },
+	});
+
+	return json({ comments, schoolName, post });
+};
+
+export const action = async ({ request }: ActionFunctionArgs) => {
+	const userId = await checkAuth(request);
+	const data = await request.json();
+
+	await prisma.post.create({
+		data: {
+			content: data.content,
+			parentId: data.parentId,
+			userId,
+		},
+	});
+
+	return null;
 };
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
@@ -26,7 +53,7 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
 };
 
 export default function Discussion() {
-	const { post } = useLoaderData<typeof loader>();
+	const { comments, post } = useLoaderData<typeof loader>();
 
 	return (
 		<div className="container mx-auto min-h-[60vh]">
@@ -92,6 +119,12 @@ export default function Discussion() {
 						<div className="flex-1">
 							<PostInput parent={post} level={1} />
 						</div>
+					</div>
+
+					<div className="mt-2">
+						{comments.map((comment) => (
+							<PostItem key={comment.id} post={comment} />
+						))}
 					</div>
 
 					{/* <div className="mt-2">

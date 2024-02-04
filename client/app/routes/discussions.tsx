@@ -7,7 +7,10 @@ import { prisma } from "~/lib/prisma.server";
 import { values } from "~/lib/values.server";
 
 export const loader = async () => {
-	const posts = await prisma.post.findMany({ include: { user: true }});
+	const posts = await prisma.post.findMany({
+		where: { parentId: null },
+		include: { user: true },
+	});
 	return { school: values.meta(), posts };
 };
 
