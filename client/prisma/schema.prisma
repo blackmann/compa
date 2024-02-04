@@ -102,6 +102,7 @@ model Post {
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
   Vote          Vote[]
+  deleted       Boolean  @default(false)
 }
 
 model Vote {

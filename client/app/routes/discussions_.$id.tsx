@@ -3,6 +3,7 @@ import {
 	LoaderFunctionArgs,
 	MetaFunction,
 	json,
+	redirect,
 } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { Avatar } from "~/components/avatar";
@@ -39,32 +40,55 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
 	return json({ comments, schoolName, post });
 };
 
-export const action = async ({ request }: ActionFunctionArgs) => {
+export const action = async ({ request, params }: ActionFunctionArgs) => {
 	const userId = await checkAuth(request);
-	const data = await request.json();
+	switch (request.method) {
+		case "DELETE": {
+			const postId = Number(params.id);
+			const post = await prisma.post.findFirst({ where: { id: postId } });
 
-	await prisma.post.create({
-		data: {
-			content: data.content,
-			parentId: data.parentId,
-			userId,
-		},
-	});
+			await prisma.post.delete({ where: { id: postId, userId: userId } });
 
-	const comments = await prisma.post.count({
-		where: { parentId: data.parentId },
-	});
+			if (!post?.parentId) {
+				return redirect("/discussions");
+			}
 
-	const people = await prisma.user.count({
-		where: { Post: { every: { id: data.parentId } } },
-	});
+			return redirect(`/discussions/${post.parentId}`);
+		}
 
-	await prisma.post.update({
-		where: { id: data.parentId },
-		data: { commentsCount: comments, people },
-	});
+		case "POST": {
+			const data = await request.json();
 
-	return json({}, { status: 201 });
+			const post = await prisma.post.create({
+				data: {
+					content: data.content,
+					parentId: data.parentId,
+					userId,
+					upvotes: 1,
+					people: 1,
+				},
+			});
+
+			await prisma.vote.create({ data: { postId: post.id, userId, up: true } });
+
+			const comments = await prisma.post.count({
+				where: { parentId: data.parentId },
+			});
+
+			const people = await prisma.user.count({
+				where: { Post: { every: { id: data.parentId } } },
+			});
+
+			await prisma.post.update({
+				where: { id: data.parentId },
+				data: { commentsCount: comments, people },
+			});
+
+			return json({}, { status: 201 });
+		}
+	}
+
+	return json({}, { status: 405 });
 };
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {

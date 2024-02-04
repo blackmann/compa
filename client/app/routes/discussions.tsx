@@ -24,6 +24,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 			content: data.content,
 			userId,
 			upvotes: 1,
+			people: 1,
 		},
 	});
 
