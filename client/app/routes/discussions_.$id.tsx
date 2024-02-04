@@ -9,6 +9,7 @@ import { Avatar } from "~/components/avatar";
 import { PostInput } from "~/components/post-input";
 import { PostItem, PostItemProps } from "~/components/post-item";
 import { PostTime } from "~/components/post-time";
+import { Votes } from "~/components/votes";
 import { checkAuth } from "~/lib/check-auth";
 import { prisma } from "~/lib/prisma.server";
 import { values } from "~/lib/values.server";
@@ -59,7 +60,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 		data: { commentsCount: comments, people },
 	});
 
-	return null;
+	return json({}, { status: 201 });
 };
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
@@ -79,22 +80,10 @@ export default function Discussion() {
 						<div className="flex flex-col items-center">
 							<Avatar />
 
-							<button
-								className="i-lucide-triangle text-secondary"
-								type="button"
-							/>
-
-							<span className="font-medium text-sm">
-								{post.upvotes - post.downvotes}
-							</span>
-
-							<button
-								className="i-lucide-triangle rotate-180 text-secondary"
-								type="button"
-							/>
+							<Votes post={post} />
 						</div>
 
-						<div className="border-b dark:border-neutral-700 pb-2">
+						<div className="border-b dark:border-neutral-700 pb-2 flex-1">
 							<header>
 								<span className="font-mono text-secondary">
 									@{post.user.username} &bull;{" "}
@@ -104,11 +93,6 @@ export default function Discussion() {
 
 							<div>
 								<p>{post.content}</p>
-
-								<p className="mt-2">
-									Lorem ipsum dolor sit amet consectetur adipisicing elit.
-									Laborum voluptatibus reiciendis earum.
-								</p>
 
 								{/* <div className="flex mt-2">
 									<MediaItem />

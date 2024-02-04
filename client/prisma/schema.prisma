@@ -58,6 +58,7 @@ model User {
   verified             Boolean                @default(false)
   PasswordResetRequest PasswordResetRequest[]
   Post                 Post[]
+  Vote                 Vote[]
 }
 
 model AuthCredential {
@@ -100,4 +101,16 @@ model Post {
   commentsCount Int      @default(0)
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
+  Vote          Vote[]
+}
+
+model Vote {
+  id        Int      @id @default(autoincrement())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
+  post      Post     @relation(fields: [postId], references: [id])
+  postId    Int
+  up        Boolean
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

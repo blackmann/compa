@@ -10,6 +10,7 @@ export const loader = async () => {
 	const posts = await prisma.post.findMany({
 		where: { parentId: null },
 		include: { user: true },
+		orderBy: { createdAt: "desc" },
 	});
 	return json({ school: values.meta(), posts });
 };
@@ -18,14 +19,23 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 	const userId = await checkAuth(request);
 	const data = await request.json();
 
-	await prisma.post.create({
+	const post = await prisma.post.create({
 		data: {
 			content: data.content,
 			userId,
+			upvotes: 1,
 		},
 	});
 
-	return null;
+	await prisma.vote.create({
+		data: {
+			postId: post.id,
+			userId,
+			up: true,
+		},
+	});
+
+	return json({}, { status: 201 });
 };
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {

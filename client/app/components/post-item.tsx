@@ -5,6 +5,7 @@ import { PostTime } from "~/components/post-time";
 import { PostInput } from "./post-input";
 import { useMounted } from "~/lib/use-mounted";
 import { NestedComments } from "./nested-comments";
+import { Votes } from "./votes";
 
 interface Props {
 	level?: number;
@@ -28,16 +29,6 @@ function PostItem({ post, level = 0 }: Props) {
 		}
 	}
 
-	function handleUpvote(e: React.MouseEvent<HTMLButtonElement>) {
-		e.preventDefault();
-		e.stopPropagation();
-	}
-
-	function handleDownvote(e: React.MouseEvent<HTMLButtonElement>) {
-		e.preventDefault();
-		e.stopPropagation();
-	}
-
 	const link = post.parentId
 		? `/discussions/${post.parentId}#${post.id}`
 		: `/discussions/${post.id}`;
@@ -59,21 +50,7 @@ function PostItem({ post, level = 0 }: Props) {
 					<div className="flex flex-col items-center">
 						{full && <Avatar />}
 
-						<button
-							className="i-lucide-triangle text-secondary"
-							type="button"
-							onClick={handleUpvote}
-						/>
-
-						<span className="font-medium text-sm">
-							{post.upvotes - post.downvotes}
-						</span>
-
-						<button
-							className="i-lucide-triangle rotate-180 text-secondary"
-							type="button"
-							onClick={handleDownvote}
-						/>
+						<Votes post={post} />
 					</div>
 					<div className="flex-1">
 						<header>

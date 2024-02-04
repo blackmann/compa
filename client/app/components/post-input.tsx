@@ -2,6 +2,7 @@ import { FieldValues, useForm } from "react-hook-form";
 import { Button } from "./button";
 import { useFetcher } from "react-router-dom";
 import { Post } from "@prisma/client";
+import React from "react";
 
 interface Props {
 	level?: number;
@@ -9,7 +10,7 @@ interface Props {
 }
 
 function PostInput({ level = 0, parent }: Props) {
-	const { handleSubmit, register } = useForm();
+	const { handleSubmit, register, setValue } = useForm();
 	const fetcher = useFetcher();
 
 	const isComment = level > 0;
@@ -20,6 +21,12 @@ function PostInput({ level = 0, parent }: Props) {
 			method: "POST",
 		});
 	}
+
+	React.useEffect(() => {
+		if (fetcher.data) {
+			setValue("content", "");
+		}
+	}, [fetcher.data, setValue]);
 
 	return (
 		<form onSubmit={handleSubmit(createPost)}>
@@ -55,7 +62,9 @@ function PostInput({ level = 0, parent }: Props) {
 				<span className="i-lucide-file-code inline-block me-1" />
 				<a
 					className="underline"
+					target="_blank"
 					href="https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax"
+					rel="noreferrer"
 				>
 					Markdown
 				</a>{" "}
