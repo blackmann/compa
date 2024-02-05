@@ -15,6 +15,7 @@ const Button = React.forwardRef<HTMLButtonElement, Props>(
 					{
 						"bg-zinc-200 px-2 py-1 dark:bg-neutral-800": variant === "neutral",
 						"text-white": variant === "primary",
+						"opacity-60": props.disabled,
 					},
 					className,
 				)}

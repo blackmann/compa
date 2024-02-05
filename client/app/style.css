@@ -10,12 +10,20 @@
   font-size: 14px;
 }
 
+* {
+  scroll-margin-top: 3.5rem;
+}
+
 dialog {
   @apply dark:text-white;
 }
 
 .text-secondary {
   @apply text-zinc-500 dark:text-neutral-400;
+}
+
+.hover-bg-light {
+  @apply hover:bg-zinc-100 hover:dark:bg-neutral-800;
 }
 
 .font-mono {
@@ -33,4 +41,8 @@ input {
 
 .container {
   @apply px-4;
+}
+
+.post-content p + p {
+  @apply mt-4;
 }

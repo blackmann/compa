@@ -57,6 +57,9 @@ model User {
   updatedAt            DateTime               @updatedAt
   verified             Boolean                @default(false)
   PasswordResetRequest PasswordResetRequest[]
+  Post                 Post[]
+  Vote                 Vote[]
+  Media                Media[]
 }
 
 model AuthCredential {
@@ -71,7 +74,7 @@ model PasswordResetRequest {
   user      User     @relation(fields: [userId], references: [id])
   userId    Int
   token     String
-  used     Boolean  @default(false)
+  used      Boolean  @default(false)
   createdAt DateTime @default(now())
 }
 
@@ -80,4 +83,56 @@ model EmailVerificationRequest {
   email     String
   token     String
   createdAt DateTime @default(now())
+}
+
+model Post {
+  id            Int      @id @default(autoincrement())
+  content       String
+  user          User     @relation(fields: [userId], references: [id])
+  userId        Int
+  parent        Post?    @relation("Parent", fields: [parentId], references: [id])
+  parentId      Int?
+  comments      Post[]   @relation("Parent")
+  quote         Post?    @relation("Quote", fields: [quoteId], references: [id])
+  quotedBy      Post[]   @relation("Quote")
+  quoteId       Int?
+  upvotes       Int      @default(0)
+  downvotes     Int      @default(0)
+  people        Int      @default(0)
+  commentsCount Int      @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  media         Media[]
+  Vote          Vote[]
+  deleted       Boolean  @default(false)
+}
+
+model Vote {
+  id        Int      @id @default(autoincrement())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
+  post      Post     @relation(fields: [postId], references: [id])
+  postId    Int
+  up        Boolean
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, postId])
+  @@index([postId])
+}
+
+model Media {
+  id          Int      @id @default(autoincrement())
+  filename    String
+  user        User     @relation(fields: [userId], references: [id])
+  userId      Int
+  thumbnail   String?
+  url         String
+  contentType String
+  size        Int
+  duration    Int?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  Post        Post?    @relation(fields: [postId], references: [id])
+  postId      Int?
 }

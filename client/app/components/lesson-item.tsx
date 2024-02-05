@@ -71,14 +71,15 @@ function LessonItem({ checked, lesson, onClick }: Props) {
 
 	return (
 		<>
-			<div
+			<button
 				className={clsx(
-					"group p-2 rounded-lg hover:bg-zinc-100 dark:hover:bg-neutral-800 transition-[background] duration-200 cursor-pointer",
+					"block w-full text-start group p-2 rounded-lg hover:bg-zinc-100 dark:hover:bg-neutral-800 transition-[background] duration-200 cursor-pointer",
 					{
 						"bg-zinc-100 dark:bg-neutral-800": checked,
 					},
 				)}
 				onClick={onClick}
+				type="button"
 			>
 				<header className="font-mono text-sm text-secondary">
 					{timeToString(lesson.timeStart)} — {timeToString(lesson.timeEnd)} @{" "}
@@ -104,13 +105,13 @@ function LessonItem({ checked, lesson, onClick }: Props) {
 						variant="neutral"
 						onClick={handleEdit}
 					>
-						<div className="i-lucide-edit-3 opacity-50"></div> Edit
+						<div className="i-lucide-edit-3 opacity-50" /> Edit
 					</Button>
 					{/* <Button className="dark:bg-zinc-700" variant="neutral">
           Start Discussion
         </Button> */}
 				</div>
-			</div>
+			</button>
 
 			<Modal
 				open={showEdit}
@@ -120,7 +121,7 @@ function LessonItem({ checked, lesson, onClick }: Props) {
 				<form className="w-full" onSubmit={handleSubmit(saveLesson)}>
 					<header className="p-2 pb-0">
 						<div className="text-sm text-secondary flex gap-2 items-center mb-2 font-medium">
-							<div className="i-lucide-scan-search"></div> Edit lesson
+							<div className="i-lucide-scan-search" /> Edit lesson
 						</div>
 
 						<p>
@@ -192,7 +193,7 @@ function LessonItem({ checked, lesson, onClick }: Props) {
 								</Button>
 
 								<Button variant="neutral" type="button" onClick={handleDelete}>
-									<div className="opacity-50 i-lucide-trash-2"></div> Delete
+									<div className="opacity-50 i-lucide-trash-2" /> Delete
 								</Button>
 							</div>
 
