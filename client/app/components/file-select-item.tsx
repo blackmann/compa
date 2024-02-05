@@ -26,9 +26,10 @@ function FileSelectItem({ file, onRemove }: Props) {
 			</div>
 
 			<div className="flex-1">
-				<div className="font-mono leading-tight line-clamp-1">
+				<div className="font-mono leading-tight line-clamp-1 break-all">
 					{ellipsizeFilename(file.name)}
 				</div>
+
 				<div className="text-secondary text-sm leading-none">
 					{humanizeSize(file.size)}
 				</div>

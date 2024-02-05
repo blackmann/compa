@@ -31,7 +31,7 @@ function MediaItem({ media, noPlay }: Props) {
 			</div>
 
 			<div>
-				<div className="font-mono">{ellipsizeFilename(media.filename)}</div>
+				<div className="font-mono break-all">{ellipsizeFilename(media.filename)}</div>
 				<div className="text-secondary leading-none">
 					{humanizeSize(media.size)}
 				</div>
@@ -51,7 +51,7 @@ function Thumbnail({
 				src={thumbnail}
 				width={30}
 				alt={name}
-				className="size-10 object-cover rounded-lg border"
+				className="size-10 object-cover rounded-lg border dark:border-neutral-700"
 			/>
 		);
 	}

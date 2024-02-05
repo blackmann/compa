@@ -28,6 +28,7 @@ async function upload(
 			Bucket: "compa",
 			Key: filename,
 			ContentType: contentType,
+			CacheControl: "max-age=31536000",
 			Body: Readable.from(stream),
 		},
 	}).done();

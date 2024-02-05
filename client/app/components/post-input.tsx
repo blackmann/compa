@@ -7,6 +7,7 @@ import { FileSelectItem } from "./file-select-item";
 import clsx from "clsx";
 import { uploadMedia } from "~/lib/upload-media";
 import { AudioRecorder } from "./audio-recorder";
+import { useGlobalCtx } from "~/lib/global-ctx";
 
 interface Props {
 	level?: number;
@@ -27,6 +28,8 @@ function PostInput({ level = 0, parent }: Props) {
 	const [uploading, setUploading] = React.useState(false);
 
 	const fetcher = useFetcher();
+
+	const { user } = useGlobalCtx();
 
 	const isComment = level > 0;
 	const $files = watch("files");
@@ -97,6 +100,7 @@ function PostInput({ level = 0, parent }: Props) {
 					}
 					maxLength={1024}
 					{...register("content", {
+						required: true,
 						setValueAs(value) {
 							return value.trim();
 						},
@@ -121,18 +125,25 @@ function PostInput({ level = 0, parent }: Props) {
 
 				<div className="flex justify-between">
 					<div className="flex gap-2">
-						<label
-							className="flex items-center gap-2 rounded-lg px-2 py-1 font-medium bg-zinc-200 px-2 py-1 dark:bg-neutral-800 cursor-pointer"
-							htmlFor="files"
-						>
+						<label className="flex items-center gap-2 rounded-lg px-2 py-1 font-medium bg-zinc-200 px-2 py-1 dark:bg-neutral-800 cursor-pointer">
 							<div className="i-lucide-file-symlink opacity-50" /> Add files
+							<input
+								type="file"
+								name="files"
+								multiple
+								maxLength={4}
+								accept="image/png,image/jpeg,image/gif,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,audio/*"
+								className="opacity-0 h-0 w-0"
+								onChange={handleFilesSelect}
+								disabled={posting || $files.length >= 5}
+							/>
 						</label>
 
 						<AudioRecorder onRecorded={handleRecordComplete} />
 					</div>
 
 					<div>
-						<Button disabled={posting}>
+						<Button disabled={posting || !user}>
 							{posting ? (
 								<>
 									<span className="i-svg-spinners-180-ring-with-bg" /> Posting…
@@ -161,18 +172,6 @@ function PostInput({ level = 0, parent }: Props) {
 					is supported.
 				</p>
 			</form>
-
-			<input
-				type="file"
-				name="files"
-				id="files"
-				multiple
-				maxLength={4}
-				accept="image/png,image/jpeg,image/gif,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,audio/*"
-				className="opacity-0 absolute top-[-10rem] left-0"
-				onChange={handleFilesSelect}
-				disabled={posting || $files.length >= 5}
-			/>
 		</>
 	);
 }
