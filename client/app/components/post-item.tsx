@@ -11,13 +11,16 @@ import { PostMenu } from "./post-menu";
 import { useGlobalCtx } from "~/lib/global-ctx";
 import { LoginComment } from "./login-comment";
 import { MediaItem } from "./media-item";
+import React from "react";
+import { Content } from "./content";
 
 interface Props {
 	level?: number;
 	post: Prisma.PostGetPayload<{ include: { user: true; media: true } }>;
+	limit?: boolean;
 }
 
-function PostItem({ post, level = 0 }: Props) {
+function PostItem({ post, limit, level = 0 }: Props) {
 	const location = useLocation();
 	const mounted = useMounted();
 
@@ -79,8 +82,8 @@ function PostItem({ post, level = 0 }: Props) {
 							</div>
 						</header>
 
-						<div className="-mt-3">
-							<p>{post.content}</p>
+						<div className="-mt-3 post-content">
+							<Content content={post.content} limit={limit} />
 
 							{post.media.length > 0 && (
 								<div className="grid xl:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-2 flex-wrap mt-2">

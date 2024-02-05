@@ -95,7 +95,12 @@ function PostInput({ level = 0, parent }: Props) {
 					placeholder={
 						isComment ? "What do you think?" : "What have you got to share?"
 					}
-					{...register("content")}
+					maxLength={1024}
+					{...register("content", {
+						setValueAs(value) {
+							return value.trim();
+						},
+					})}
 				/>
 
 				<div

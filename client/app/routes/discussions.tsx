@@ -46,7 +46,7 @@ export default function Discussions() {
 
 					{posts.map((post, i) => (
 						<React.Fragment key={post.id}>
-							<PostItem post={post as unknown as PostItemProps["post"]} />
+							<PostItem limit post={post as unknown as PostItemProps["post"]} />
 
 							{i < posts.length - 1 && <hr className="me-2 ms-12 dark:border-neutral-700" />}
 						</React.Fragment>

@@ -26,6 +26,7 @@
     "clsx": "^2.1.0",
     "dayjs": "^1.11.10",
     "dotenv": "^16.3.1",
+    "html-react-parser": "^5.1.1",
     "ics": "^3.7.2",
     "isbot": "^4.1.0",
     "jsonwebtoken": "^9.0.2",

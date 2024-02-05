@@ -42,3 +42,7 @@ input {
 .container {
   @apply px-4;
 }
+
+.post-content p + p {
+  @apply mt-4;
+}

@@ -7,6 +7,7 @@ import {
 } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { Avatar } from "~/components/avatar";
+import { Content } from "~/components/content";
 import { LoginComment } from "~/components/login-comment";
 import { MediaItem } from "~/components/media-item";
 import { PostInput } from "~/components/post-input";
@@ -119,7 +120,7 @@ export default function Discussion() {
 							</header>
 
 							<div className="-mt-2">
-								<p>{post.content}</p>
+								<Content content={post.content} />
 
 								{post.media.length > 0 && (
 									<div className="grid xl:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-2 flex-wrap mt-2">
