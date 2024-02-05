@@ -1,16 +1,49 @@
-function MediaItem() {
+import { Media } from "@prisma/client";
+import { ellipsizeFilename, humanizeSize } from "~/lib/files";
+import { NonImageThumb } from "./non-image-thumb";
+
+interface Props {
+	media: Media;
+}
+
+function MediaItem({ media }: Props) {
 	return (
 		<div className="text-sm flex gap-2 py-1 px-1 rounded-lg border border-zinc-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 !bg-opacity-30">
 			<div>
-				<div className="w-8 h-9 bg-rose-500 rounded-md" />
+				<Thumbnail
+					contentType={media.contentType}
+					name={media.filename}
+					thumbnail={media.thumbnail}
+				/>
 			</div>
 
 			<div>
-				<div className="font-mono">logic_assignment.jpg</div>
-				<div className="text-secondary leading-none">image</div>
+				<div className="font-mono">{ellipsizeFilename(media.filename)}</div>
+				<div className="text-secondary leading-none">
+					{humanizeSize(media.size)}
+				</div>
 			</div>
 		</div>
 	);
+}
+
+function Thumbnail({
+	contentType,
+	thumbnail,
+	name,
+}: { contentType: string; name: string; thumbnail?: string }) {
+	if (contentType.startsWith("image/")) {
+		return (
+			<img
+				src={thumbnail}
+				width={30}
+				alt={name}
+				className="size-10 object-cover rounded-lg border"
+			/>
+		);
+	}
+
+	return <NonImageThumb contentType={contentType} />;
 }
 
 export { MediaItem };

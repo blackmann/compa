@@ -10,10 +10,11 @@ import clsx from "clsx";
 import { PostMenu } from "./post-menu";
 import { useGlobalCtx } from "~/lib/global-ctx";
 import { LoginComment } from "./login-comment";
+import { MediaItem } from "./media-item";
 
 interface Props {
 	level?: number;
-	post: Prisma.PostGetPayload<{ include: { user: true } }>;
+	post: Prisma.PostGetPayload<{ include: { user: true; media: true } }>;
 }
 
 function PostItem({ post, level = 0 }: Props) {
@@ -81,9 +82,13 @@ function PostItem({ post, level = 0 }: Props) {
 						<div className="-mt-3">
 							<p>{post.content}</p>
 
-							{/* <div className="flex mt-2">
-							<MediaItem />
-						</div> */}
+							{post.media.length > 0 && (
+								<div className="flex mt-2">
+									{post.media.map((media) => (
+										<MediaItem key={media.id} media={media} />
+									))}
+								</div>
+							)}
 						</div>
 
 						{level < 2 && (

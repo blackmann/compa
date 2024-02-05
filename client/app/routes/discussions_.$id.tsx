@@ -15,6 +15,7 @@ import { PostPeople } from "~/components/post-people";
 import { PostTime } from "~/components/post-time";
 import { Votes } from "~/components/votes";
 import { checkAuth } from "~/lib/check-auth";
+import { createPost } from "~/lib/create-post";
 import { useGlobalCtx } from "~/lib/global-ctx";
 import { prisma } from "~/lib/prisma.server";
 import { values } from "~/lib/values.server";
@@ -25,7 +26,7 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
 
 	const post = await prisma.post.findFirst({
 		where: { id: postId },
-		include: { user: true },
+		include: { user: true, media: true },
 	});
 
 	if (!post) {
@@ -34,7 +35,7 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
 
 	const comments = await prisma.post.findMany({
 		where: { parentId: post.id },
-		include: { user: true },
+		include: { user: true, media: true },
 	});
 
 	return json({ comments, schoolName, post });
@@ -59,17 +60,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 		case "POST": {
 			const data = await request.json();
 
-			const post = await prisma.post.create({
-				data: {
-					content: data.content,
-					parentId: data.parentId,
-					userId,
-					upvotes: 1,
-					people: 1,
-				},
-			});
-
-			await prisma.vote.create({ data: { postId: post.id, userId, up: true } });
+			await createPost(data, userId);
 
 			const comments = await prisma.post.count({
 				where: { parentId: data.parentId },

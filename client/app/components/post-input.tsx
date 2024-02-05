@@ -5,6 +5,7 @@ import { Post } from "@prisma/client";
 import React from "react";
 import { FileSelectItem } from "./file-select-item";
 import clsx from "clsx";
+import { uploadMedia } from "~/lib/upload-media";
 
 interface Props {
 	level?: number;
@@ -27,17 +28,14 @@ function PostInput({ level = 0, parent }: Props) {
 	const $files = watch("files");
 
 	async function createPost(data: FieldValues) {
-		const formData = new FormData();
-		formData.append("file", $files[0]);
+		setUploading(true);
+		const media = await Promise.all($files.map(uploadMedia));
+		setUploading(false);
 
-		fetch("/media", {
+		fetcher.submit(JSON.stringify({ ...data, parentId: parent?.id, media }), {
+			encType: "application/json",
 			method: "POST",
-			body: formData,
 		});
-		// fetcher.submit(JSON.stringify({ ...data, parentId: parent?.id }), {
-		// 	encType: "application/json",
-		// 	method: "POST",
-		// });
 	}
 
 	function handleFilesSelect(e: React.ChangeEvent<HTMLInputElement>) {
@@ -60,6 +58,8 @@ function PostInput({ level = 0, parent }: Props) {
 			reset();
 		}
 	}, [fetcher.data, reset]);
+
+	const posting = fetcher.state === "submitting" || uploading;
 
 	return (
 		<>
@@ -99,8 +99,8 @@ function PostInput({ level = 0, parent }: Props) {
 					</div>
 
 					<div>
-						<Button disabled={fetcher.state === "submitting"}>
-							{fetcher.state === "submitting" ? (
+						<Button disabled={posting}>
+							{posting ? (
 								<>
 									<span className="i-svg-spinners-180-ring-with-bg" /> Posting…
 								</>

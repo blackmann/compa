@@ -1,3 +1,6 @@
+import { ellipsizeFilename, humanizeSize } from "~/lib/files";
+import { NonImageThumb } from "./non-image-thumb";
+
 interface Props {
 	file: File;
 	onRemove?: VoidFunction;
@@ -44,61 +47,7 @@ function Thumbnail({ file }: Props) {
 		);
 	}
 
-	if (file.type.startsWith("video/")) {
-		return (
-			<div className="size-10 rounded-lg bg-zinc-100 items-center justify-center flex text-secondary">
-				<div className="i-lucide-video size-6" />
-			</div>
-		);
-	}
-
-	if (file.type.startsWith("audio/")) {
-		return (
-			<div className="size-10 rounded-lg bg-zinc-100 items-center justify-center flex text-secondary">
-				<div className="i-lucide-music size-6" />
-			</div>
-		);
-	}
-
-	if (
-		[
-			"application/pdf",
-			"application/msword",
-			"application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-		].includes(file.type)
-	) {
-		return (
-			<div className="size-10 rounded-lg bg-zinc-100 items-center justify-center flex text-secondary">
-				<div className="i-lucide-file-text size-6" />
-			</div>
-		);
-	}
-
-	return (
-		<div className="size-10 rounded-lg bg-zinc-100 items-center justify-center flex text-secondary">
-			<div className="i-lucide-asterisk size-6" />
-		</div>
-	);
-}
-
-function ellipsizeFilename(name: string, length = 14) {
-	const parts = name.split(".");
-	if (parts.length === 1) {
-		return `${name.slice(0, length)}…`;
-	}
-	const [filename, ...extension] = parts;
-	return `${filename.slice(0, length)}…${extension[extension.length - 1]}`;
-}
-
-function humanizeSize(s: number) {
-	const units = ["B", "KB", "MB", "GB"];
-	let i = 0;
-	let size = s;
-	while (size >= 1024 && i < units.length) {
-		size /= 1024;
-		i++;
-	}
-	return `${size.toFixed(1)}${units[i]}`;
+	return <NonImageThumb contentType={file.type} />
 }
 
 export { FileSelectItem };

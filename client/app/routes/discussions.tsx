@@ -1,15 +1,17 @@
+import { Media } from "@prisma/client";
 import { ActionFunctionArgs, MetaFunction, json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { PostInput } from "~/components/post-input";
 import { PostItem, PostItemProps } from "~/components/post-item";
 import { checkAuth } from "~/lib/check-auth";
+import { createPost } from "~/lib/create-post";
 import { prisma } from "~/lib/prisma.server";
 import { values } from "~/lib/values.server";
 
 export const loader = async () => {
 	const posts = await prisma.post.findMany({
 		where: { parentId: null },
-		include: { user: true },
+		include: { user: true, media: true },
 		orderBy: { createdAt: "desc" },
 	});
 	return json({ school: values.meta(), posts });
@@ -19,22 +21,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 	const userId = await checkAuth(request);
 	const data = await request.json();
 
-	const post = await prisma.post.create({
-		data: {
-			content: data.content,
-			userId,
-			upvotes: 1,
-			people: 1,
-		},
-	});
-
-	await prisma.vote.create({
-		data: {
-			postId: post.id,
-			userId,
-			up: true,
-		},
-	});
+	await createPost(data, userId);
 
 	return json({}, { status: 201 });
 };

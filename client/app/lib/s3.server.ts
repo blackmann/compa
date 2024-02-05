@@ -5,6 +5,7 @@ import { Readable } from "stream";
 
 const endpoint = new aws.Endpoint("eu-central-1.linodeobjects.com");
 
+// @ts-ignore
 const s3 = new S3Client({
 	endpoint,
 	credentials: {
@@ -14,13 +15,19 @@ const s3 = new S3Client({
 	region: "eu-central-1",
 });
 
-async function upload(stream: AsyncIterable<Uint8Array>, filename: string) {
+async function upload(
+	stream: AsyncIterable<Uint8Array> | Buffer,
+	filename: string,
+	contentType?: string,
+) {
 	return new Upload({
 		client: s3,
 		leavePartsOnError: false,
 		params: {
+			ACL: "public-read",
 			Bucket: "compa",
 			Key: filename,
+			ContentType: contentType,
 			Body: Readable.from(stream),
 		},
 	}).done();
