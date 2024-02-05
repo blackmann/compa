@@ -1,5 +1,6 @@
 import { ellipsizeFilename, humanizeSize } from "~/lib/files";
 import { NonImageThumb } from "./non-image-thumb";
+import { AudioItem } from "./audio-item";
 
 interface Props {
 	file: File;
@@ -7,6 +8,17 @@ interface Props {
 }
 
 function FileSelectItem({ file, onRemove }: Props) {
+	if (file.type.startsWith("audio/")) {
+		return (
+			<AudioItem
+				name={file.name}
+				url={URL.createObjectURL(file)}
+				size={file.size}
+				onRemove={onRemove}
+			/>
+		);
+	}
+
 	return (
 		<div className="flex border dark:border-neutral-700 rounded-lg p-1 gap-2">
 			<div className=" shrink-0">
@@ -47,7 +59,7 @@ function Thumbnail({ file }: Props) {
 		);
 	}
 
-	return <NonImageThumb contentType={file.type} />
+	return <NonImageThumb contentType={file.type} />;
 }
 
 export { FileSelectItem };

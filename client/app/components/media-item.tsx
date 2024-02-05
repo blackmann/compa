@@ -1,12 +1,25 @@
 import { Media } from "@prisma/client";
 import { ellipsizeFilename, humanizeSize } from "~/lib/files";
 import { NonImageThumb } from "./non-image-thumb";
+import { AudioItem } from "./audio-item";
 
 interface Props {
 	media: Media;
+	noPlay?: boolean;
 }
 
-function MediaItem({ media }: Props) {
+function MediaItem({ media, noPlay }: Props) {
+	if (media.contentType.startsWith("audio/")) {
+		return (
+			<AudioItem
+				noPlay={noPlay}
+				url={media.url}
+				size={media.size}
+				name={media.filename}
+			/>
+		);
+	}
+
 	return (
 		<div className="text-sm flex gap-2 py-1 px-1 rounded-lg border border-zinc-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 !bg-opacity-30">
 			<div>
@@ -31,7 +44,7 @@ function Thumbnail({
 	contentType,
 	thumbnail,
 	name,
-}: { contentType: string; name: string; thumbnail?: string }) {
+}: { contentType: string; name: string; thumbnail?: string | null }) {
 	if (contentType.startsWith("image/")) {
 		return (
 			<img

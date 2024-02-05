@@ -124,14 +124,14 @@ export default function Discussion() {
 								{post.media.length > 0 && (
 									<div className="grid xl:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-2 flex-wrap mt-2">
 										{post.media.map((media) => (
-											<div className="col-span-1">
+											<div className="col-span-1" key={media.id}>
 												<a
 													className="block"
 													href={media.url}
 													target="_blank"
 													rel="noreferrer"
 												>
-													<MediaItem key={media.id} media={media} />
+													<MediaItem media={media} />
 												</a>
 											</div>
 										))}

@@ -85,8 +85,8 @@ function PostItem({ post, level = 0 }: Props) {
 							{post.media.length > 0 && (
 								<div className="grid xl:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-2 flex-wrap mt-2">
 									{post.media.map((media) => (
-										<div className="col-span-1">
-											<MediaItem key={media.id} media={media} />
+										<div className="col-span-1" key={media.id}>
+											<MediaItem noPlay media={media} />
 										</div>
 									))}
 								</div>

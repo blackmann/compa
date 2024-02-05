@@ -1,4 +1,4 @@
-import { FieldValues, useForm } from "react-hook-form";
+import { FieldValues, get, useForm } from "react-hook-form";
 import { Button } from "./button";
 import { useFetcher } from "react-router-dom";
 import { Post } from "@prisma/client";
@@ -6,11 +6,15 @@ import React from "react";
 import { FileSelectItem } from "./file-select-item";
 import clsx from "clsx";
 import { uploadMedia } from "~/lib/upload-media";
+import { AudioRecorder } from "./audio-recorder";
 
 interface Props {
 	level?: number;
 	parent?: Post;
 }
+
+// 5MB limit
+const ATTACHMENT_LIMIT = 5 * 1024 * 1024;
 
 function PostInput({ level = 0, parent }: Props) {
 	const { handleSubmit, register, setValue, watch, reset } = useForm({
@@ -43,8 +47,30 @@ function PostInput({ level = 0, parent }: Props) {
 			return;
 		}
 
-		setValue("files", [...$files, ...Array.from(e.target.files)].slice(0, 5));
+		const files = Array.from(e.target.files);
+
+		if (files.some((file) => file.size > ATTACHMENT_LIMIT)) {
+			alert("Some files you selected are too large. Maximum 5MB per file.");
+			return;
+		}
+
+		setValue("files", [...$files, ...files].slice(0, 5));
 	}
+
+	const handleRecordComplete = React.useCallback(
+		(blob: Blob) => {
+			const name = getNextRecordingName($files);
+			const file = new File([blob], name, { type: "audio/webm" });
+
+			if (file.size > ATTACHMENT_LIMIT) {
+				alert("The recording is too large. Maximum 5MB per file.");
+				return;
+			}
+
+			setValue("files", [...$files, file].slice(0, 5));
+		},
+		[$files, setValue],
+	);
 
 	function removeFile(index: number) {
 		setValue(
@@ -89,13 +115,15 @@ function PostInput({ level = 0, parent }: Props) {
 				</div>
 
 				<div className="flex justify-between">
-					<div>
+					<div className="flex gap-2">
 						<label
 							className="flex items-center gap-2 rounded-lg px-2 py-1 font-medium bg-zinc-200 px-2 py-1 dark:bg-neutral-800 cursor-pointer"
 							htmlFor="files"
 						>
 							<div className="i-lucide-file-symlink opacity-50" /> Add files
 						</label>
+
+						<AudioRecorder onRecorded={handleRecordComplete} />
 					</div>
 
 					<div>
@@ -114,7 +142,7 @@ function PostInput({ level = 0, parent }: Props) {
 				</div>
 
 				<p className="text-sm text-secondary">
-					Maximum 5 files. Images and documents only.
+					Maximum 5 files. Images and docs only. 5MB limit per file.
 					<br />
 					<span className="i-lucide-file-code inline-block me-1" />
 					<a
@@ -138,9 +166,17 @@ function PostInput({ level = 0, parent }: Props) {
 				accept="image/png,image/jpeg,image/gif,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,audio/*"
 				className="opacity-0 absolute top-[-10rem] left-0"
 				onChange={handleFilesSelect}
+				disabled={posting || $files.length >= 5}
 			/>
 		</>
 	);
+}
+
+function getNextRecordingName(files: File[]) {
+	const nextNumber = files.filter((file) =>
+		file.name.startsWith("Recording"),
+	).length;
+	return `Recording-${nextNumber + 1}.webm`;
 }
 
 export { PostInput };
