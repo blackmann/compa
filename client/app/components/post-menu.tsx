@@ -2,6 +2,7 @@ import { Prisma } from "@prisma/client";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { useFetcher } from "@remix-run/react";
 import clsx from "clsx";
+import React from "react";
 import { useGlobalCtx } from "~/lib/global-ctx";
 
 interface Props {
@@ -27,7 +28,7 @@ function PostMenu({ post }: Props) {
 			);
 
 			if (yes) {
-				fetcher.submit('', {
+				fetcher.submit("", {
 					method: "DELETE",
 					action: `/discussions/${post.id}`,
 				});
@@ -57,10 +58,9 @@ function PostMenu({ post }: Props) {
 					className="bg-white dark:bg-neutral-900 border dark:border-neutral-800 rounded-lg p-1 shadow"
 				>
 					{menuItems.map((item, i) => (
-						<>
+						<React.Fragment key={item.id}>
 							<DropdownMenu.Item
 								className="px-2 py-1 rounded-lg hover:bg-zinc-100 dark:hover:bg-neutral-800 flex gap-2 items-center cursor-pointer"
-								key={item.id}
 								onClick={(e) => e.stopPropagation()}
 								onSelect={() => handleClick(item.id)}
 							>
@@ -70,7 +70,7 @@ function PostMenu({ post }: Props) {
 							{i !== menuItems.length - 1 && (
 								<DropdownMenu.Separator className="border-t ms-8 me-2" />
 							)}
-						</>
+						</React.Fragment>
 					))}
 				</DropdownMenu.Content>
 			</DropdownMenu.Portal>
