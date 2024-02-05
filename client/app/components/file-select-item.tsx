@@ -8,7 +8,7 @@ interface Props {
 
 function FileSelectItem({ file, onRemove }: Props) {
 	return (
-		<div className="flex border rounded-lg p-1 gap-2">
+		<div className="flex border dark:border-neutral-700 rounded-lg p-1 gap-2">
 			<div className=" shrink-0">
 				<Thumbnail file={file} />
 			</div>
@@ -25,7 +25,7 @@ function FileSelectItem({ file, onRemove }: Props) {
 			<div>
 				<button
 					type="button"
-					className="p-2 rounded-full bg-zinc-100 hover:bg-zinc-200 transition-[background] duration-200"
+					className="p-2 rounded-full bg-zinc-100 dark:bg-neutral-800 hover:bg-zinc-200 dark:hover:bg-neutral-700 transition-[background] duration-200"
 					onClick={onRemove}
 				>
 					<div className="i-lucide-x" />
@@ -42,7 +42,7 @@ function Thumbnail({ file }: Props) {
 				src={URL.createObjectURL(file)}
 				width={30}
 				alt={file.name}
-				className="size-10 object-cover rounded-lg border"
+				className="size-10 object-cover rounded-lg border dark:border-neutral-700"
 			/>
 		);
 	}

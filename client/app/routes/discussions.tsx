@@ -1,6 +1,7 @@
 import { Media } from "@prisma/client";
 import { ActionFunctionArgs, MetaFunction, json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
+import React from "react";
 import { PostInput } from "~/components/post-input";
 import { PostItem, PostItemProps } from "~/components/post-item";
 import { checkAuth } from "~/lib/check-auth";
@@ -43,11 +44,12 @@ export default function Discussions() {
 						<PostInput />
 					</div>
 
-					{posts.map((post) => (
-						<PostItem
-							post={post as unknown as PostItemProps["post"]}
-							key={post.id}
-						/>
+					{posts.map((post, i) => (
+						<React.Fragment key={post.id}>
+							<PostItem post={post as unknown as PostItemProps["post"]} />
+
+							{i < posts.length - 1 && <hr className="me-2 ms-12 dark:border-neutral-700" />}
+						</React.Fragment>
 					))}
 				</div>
 

@@ -8,6 +8,7 @@ import {
 import { useLoaderData } from "@remix-run/react";
 import { Avatar } from "~/components/avatar";
 import { LoginComment } from "~/components/login-comment";
+import { MediaItem } from "~/components/media-item";
 import { PostInput } from "~/components/post-input";
 import { PostItem, PostItemProps } from "~/components/post-item";
 import { PostMenu } from "~/components/post-menu";
@@ -120,9 +121,22 @@ export default function Discussion() {
 							<div className="-mt-2">
 								<p>{post.content}</p>
 
-								{/* <div className="flex mt-2">
-									<MediaItem />
-								</div> */}
+								{post.media.length > 0 && (
+									<div className="grid xl:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-2 flex-wrap mt-2">
+										{post.media.map((media) => (
+											<div className="col-span-1">
+												<a
+													className="block"
+													href={media.url}
+													target="_blank"
+													rel="noreferrer"
+												>
+													<MediaItem key={media.id} media={media} />
+												</a>
+											</div>
+										))}
+									</div>
+								)}
 							</div>
 
 							<footer className="mt-2 flex justify-between">
