@@ -51,6 +51,9 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 			const post = await prisma.post.findFirst({ where: { id: postId } });
 
 			await prisma.post.delete({ where: { id: postId, userId: userId } });
+			if (post?.parentId) {
+				await updatePostProps(post.parentId);
+			}
 
 			if (!post?.parentId) {
 				return redirect("/discussions");
@@ -63,19 +66,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 			const data = await request.json();
 
 			await createPost(data, userId);
-
-			const comments = await prisma.post.count({
-				where: { parentId: data.parentId },
-			});
-
-			const people = await prisma.user.count({
-				where: { Post: { every: { id: data.parentId } } },
-			});
-
-			await prisma.post.update({
-				where: { id: data.parentId },
-				data: { commentsCount: comments, people },
-			});
+			await updatePostProps(data.parentId);
 
 			return json({}, { status: 201 });
 		}
@@ -83,6 +74,25 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 
 	return json({}, { status: 405 });
 };
+
+async function updatePostProps(postId: number) {
+	const comments = await prisma.post.count({
+		where: { parentId: postId },
+	});
+
+	const people = await prisma.user.count({
+		where: {
+			Post: {
+				some: { OR: [{ id: postId }, { parentId: postId }], deleted: false },
+			},
+		},
+	});
+
+	await prisma.post.update({
+		where: { id: postId },
+		data: { commentsCount: comments, people },
+	});
+}
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
 	return [{ title: `Discussions | ${data?.schoolName} | compa` }];

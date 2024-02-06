@@ -1,8 +1,9 @@
 import { Prisma, PrismaClient } from "@prisma/client";
 
-let prisma: PrismaClient;
+let prisma: PrismaClient | ReturnType<typeof installMiddleware>;
 declare global {
-	var __db: ReturnType<typeof installMiddleware> | undefined;
+	// biome-ignore lint/style/noVar: <explanation>
+	var __db: typeof prisma | undefined;
 }
 
 if (process.env.NODE_ENV === "production") {
@@ -29,6 +30,12 @@ function installMiddleware(prisma: PrismaClient) {
 					},
 					async findMany({ args }) {
 						return prisma.post.findMany({
+							...args,
+							where: { ...args.where, deleted: false },
+						});
+					},
+					async count({ args }) {
+						return prisma.post.count({
 							...args,
 							where: { ...args.where, deleted: false },
 						});
