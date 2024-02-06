@@ -60,7 +60,8 @@ yarn dev:client
 
 ## Contributing
 
-Contributions are always welcome! We don't have a code of conduct right now, but we will soon!
+Contributions are always welcome! Please read the [contribution guidelines](CONTRIBUTING.md) first.
+Also, please adhere to the [code of conduct](https://compa.so/code-of-conduct).
 
 ## Roadmap
 
