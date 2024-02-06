@@ -22,6 +22,8 @@ The following are not tolerated:
   address, without their explicit permission
 - Other conduct which could reasonably be considered inappropriate in a
   professional setting
+- Uploading incorrect or misleading information
+- Using the platform to promote or sell products or services
 
 ## Enforcement Responsibilities
 
