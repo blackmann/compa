@@ -122,7 +122,8 @@ export default function CreateAccount() {
 										{emailState.error.message}
 									</small>
 								)}
-								{actionData?.type === "conflict" &&
+								{!emailState?.error &&
+									actionData?.type === "conflict" &&
 									actionData?.field === "email" && (
 										<small className="text-red-500 pl-2">
 											{actionData.message}
