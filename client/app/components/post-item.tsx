@@ -136,6 +136,7 @@ function PostContent({ full, post, active, level, limit }: PostContentProps) {
 									{limit ? (
 										<MediaItem noPlay={limit} media={media} />
 									) : (
+										// biome-ignore lint/a11y/useValidAnchor: <explanation>
 										<a
 											className="block"
 											href={media.url}

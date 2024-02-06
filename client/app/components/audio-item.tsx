@@ -1,7 +1,6 @@
 import clsx from "clsx";
 import React from "react";
 import { ellipsizeFilename, humanizeSize } from "~/lib/files";
-import { useMounted } from "~/lib/use-mounted";
 
 interface Props {
 	url: string;
@@ -11,30 +10,52 @@ interface Props {
 	noPlay?: boolean;
 }
 
+type DownloadState = "idle" | "downloading" | "downloaded";
+
 function AudioItem({ name, url, noPlay, onRemove, size }: Props) {
 	const [playing, setPlaying] = React.useState<boolean>();
-	const mounted = useMounted();
+	const [downloadState, setDownloadState] =
+		React.useState<DownloadState>("idle");
 
-	const audio = React.useMemo(() => {
-		if (!mounted) {
-			return;
-		}
-
-		const audio = new Audio(url);
-		audio.addEventListener("ended", () => setPlaying(undefined));
-
-		return audio;
-	}, [url, mounted]);
+	const audioRef = React.useRef<HTMLAudioElement>();
 
 	function togglePlay(e: React.MouseEvent<HTMLButtonElement>) {
-    e.preventDefault();
-		e.stopPropagation();
-
-		if (noPlay || !audio) {
+		if (noPlay) {
 			return;
 		}
 
-		playing ? audio.pause() : audio.play();
+		e.preventDefault();
+		e.stopPropagation();
+
+		if (downloadState === "downloading") {
+			return;
+		}
+
+		if (downloadState !== "downloaded") {
+			setDownloadState("downloading");
+
+			fetch(url, { mode: "no-cors" })
+				.then(async (res) => {
+					// this will bring the audio to cache
+					const audio = new Audio(url);
+					audioRef.current = audio;
+
+					audio.addEventListener("ended", () => {
+						setPlaying(false);
+					});
+
+					setDownloadState("downloaded");
+				})
+				.catch(() => setDownloadState("idle"));
+
+			return;
+		}
+
+		if (!audioRef.current) {
+			return;
+		}
+
+		playing ? audioRef.current.pause() : audioRef.current.play();
 		setPlaying(!playing);
 	}
 
@@ -47,9 +68,11 @@ function AudioItem({ name, url, noPlay, onRemove, size }: Props) {
 					onClick={togglePlay}
 				>
 					<div
-						className={clsx("i-lucide-music size-6", {
-							"i-lucide-play": playing === false,
-							"i-lucide-pause": playing === true,
+						className={clsx("i-lucide-play size-6", {
+							"!i-lucide-music": downloadState === "idle",
+							"!i-lucide-pause": playing === true,
+							"i-svg-spinners-180-ring-with-bg":
+								downloadState === "downloading",
 						})}
 					/>
 				</button>

@@ -126,14 +126,15 @@ function PostInput({ level = 0, parent }: Props) {
 				<div className="flex justify-between">
 					<div className="flex gap-2">
 						<label className="flex items-center gap-2 rounded-lg px-2 py-1 font-medium bg-zinc-200 px-2 py-1 dark:bg-neutral-800 cursor-pointer w-[7.2rem]">
-							<div className="i-lucide-file-symlink opacity-50" /> Add files
+							<div className="i-lucide-file-symlink opacity-50 shrink-0" />
+							Add files
 							<input
 								type="file"
 								name="files"
 								multiple
 								maxLength={4}
 								accept="image/png,image/jpeg,image/gif,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,audio/*"
-								className="opacity-0 h-0 w-0"
+								className="opacity-0 h-0 w-0 overflow-hidden"
 								onChange={handleFilesSelect}
 								disabled={posting || $files.length >= 5}
 							/>
