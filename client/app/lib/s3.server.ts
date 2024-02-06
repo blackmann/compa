@@ -3,7 +3,7 @@ import { Upload } from "@aws-sdk/lib-storage";
 import aws from "aws-sdk";
 import { Readable } from "stream";
 
-const endpoint = new aws.Endpoint("eu-central-1.linodeobjects.com");
+const endpoint = new aws.Endpoint(process.env.AWS_UPLOAD_ENDPOINT);
 
 // @ts-ignore
 const s3 = new S3Client({
@@ -12,7 +12,7 @@ const s3 = new S3Client({
 		accessKeyId: process.env.AWS_ACCESS_KEY_ID as string,
 		secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY as string,
 	},
-	region: "eu-central-1",
+	region: process.env.AWS_REGION as string,
 });
 
 async function upload(
@@ -25,7 +25,7 @@ async function upload(
 		leavePartsOnError: false,
 		params: {
 			ACL: "public-read",
-			Bucket: "compa",
+			Bucket: process.env.AWS_BUCKET as string,
 			Key: filename,
 			ContentType: contentType,
 			CacheControl: "max-age=31536000",
