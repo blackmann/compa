@@ -12,14 +12,8 @@
 		"start:client": "yarn workspace client start",
 		"setup:all": "yarn install && yarn workspace client prisma migrate deploy && yarn workspace client prisma generate"
 	},
-	"workspaces": [
-		"client",
-		"website"
-	],
+	"workspaces": ["client", "website"],
 	"devDependencies": {
 		"@biomejs/biome": "^1.5.3"
-	},
-	"dependencies": {
-		"sharp": "^0.33.2"
 	}
 }
