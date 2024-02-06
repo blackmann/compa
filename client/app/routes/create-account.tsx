@@ -36,6 +36,8 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
 	return [{ title: `Create Account | ${data?.school} | compa` }];
 };
 
+const USERNAME_REGEX = /^(?=[a-zA-Z0-9._]{4,20}$)(?!.*[_.]{2})[^_.].*[^_.]$/g;
+
 export default function CreateAccount() {
 	const { emailExtensions } = useLoaderData<typeof loader>();
 	const { formState, getFieldState, handleSubmit, register } = useForm();
@@ -49,6 +51,7 @@ export default function CreateAccount() {
 	}
 
 	const emailState = getFieldState("email", formState);
+	const usernameState = getFieldState("username", formState);
 
 	return (
 		<div className="container mx-auto">
@@ -61,15 +64,28 @@ export default function CreateAccount() {
 						<h1 className="font-bold text-2xl mb-2">Create Account</h1>
 
 						<label className="block">
-							Username
-							<Input {...register("username", { required: true })} />
+							<div>Username</div>
+							<Input
+								{...register("username", {
+									required: true,
+									pattern: USERNAME_REGEX,
+								})}
+							/>
 							<small className="text-secondary">
 								This can never be changed.
 							</small>
 						</label>
 
 						<label className="block mt-2">
-							Email
+							<div>
+								Email{" "}
+								{emailState.error?.message && (
+									<small className="text-red-500">
+										{emailState.error.message}
+									</small>
+								)}
+							</div>
+
 							<Input
 								{...register("email", {
 									required: true,
@@ -80,11 +96,6 @@ export default function CreateAccount() {
 							/>
 							<small className="text-secondary" style={{ lineHeight: "1rem" }}>
 								Your school email. You'll need to verify your account.{" "}
-								{emailState.error?.message && (
-									<span className="text-red-500">
-										{emailState.error.message}
-									</span>
-								)}
 							</small>
 						</label>
 
