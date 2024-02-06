@@ -9,7 +9,9 @@ interface Props {
 function NestedComments({ post }: Props) {
 	const comments = useComments({ postId: post.id });
 
-	return comments.map((comment) => <PostItem post={comment} level={2} />);
+	return comments.map((comment) => (
+		<PostItem post={comment} level={2} key={comment.id} />
+	));
 }
 
 export { NestedComments };

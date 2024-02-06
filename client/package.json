@@ -20,6 +20,7 @@
     "@remix-run/node": "^2.5.1",
     "@remix-run/react": "^2.5.1",
     "@remix-run/serve": "^2.5.1",
+    "audio-recorder-polyfill": "^0.4.1",
     "aws-sdk": "^2.1550.0",
     "bcrypt": "^5.1.1",
     "boring-avatars": "^1.10.1",

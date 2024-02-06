@@ -63,7 +63,7 @@ function PostInput({ level = 0, parent }: Props) {
 	const handleRecordComplete = React.useCallback(
 		(blob: Blob) => {
 			const name = getNextRecordingName($files);
-			const file = new File([blob], name, { type: "audio/webm" });
+			const file = new File([blob], name, { type: "audio/mp3" });
 
 			if (file.size > ATTACHMENT_LIMIT) {
 				alert("The recording is too large. Maximum 5MB per file.");
@@ -181,7 +181,7 @@ function getNextRecordingName(files: File[]) {
 	const nextNumber = files.filter((file) =>
 		file.name.startsWith("Recording"),
 	).length;
-	return `Recording-${nextNumber + 1}.webm`;
+	return `Recording-${nextNumber + 1}.mp3`;
 }
 
 export { PostInput };

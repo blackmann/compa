@@ -59,6 +59,12 @@ function AudioItem({ name, url, noPlay, onRemove, size }: Props) {
 		setPlaying(!playing);
 	}
 
+	React.useEffect(() => {
+		return () => {
+			audioRef.current?.pause();
+		};
+	}, []);
+
 	return (
 		<div className="flex border dark:border-neutral-700 rounded-lg p-1 gap-2">
 			<div className=" shrink-0">
