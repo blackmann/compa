@@ -11,7 +11,7 @@ const Button = React.forwardRef<HTMLButtonElement, Props>(
 			<button
 				ref={ref}
 				className={clsx(
-					"flex items-center gap-2 rounded-lg bg-blue-600 px-2 py-1 font-medium",
+					"inline-flex items-center gap-2 rounded-lg bg-blue-600 px-2 py-1 font-medium",
 					{
 						"bg-zinc-200 px-2 py-1 dark:bg-neutral-800": variant === "neutral",
 						"text-white": variant === "primary",
@@ -19,6 +19,7 @@ const Button = React.forwardRef<HTMLButtonElement, Props>(
 					},
 					className,
 				)}
+				type={props.type}
 				{...props}
 			/>
 		);

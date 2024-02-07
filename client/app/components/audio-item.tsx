@@ -66,7 +66,7 @@ function AudioItem({ name, url, noPlay, onRemove, size }: Props) {
 	}, []);
 
 	return (
-		<div className="flex border bg-white dark:bg-neutral-900 !bg-opacity-30 rounded-lg p-1 gap-2">
+		<div className="flex border dark:border-neutral-800 bg-white dark:bg-neutral-900 !bg-opacity-30 rounded-lg p-1 gap-2">
 			<div className=" shrink-0">
 				<button
 					type="button"

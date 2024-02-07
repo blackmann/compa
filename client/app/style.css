@@ -46,3 +46,7 @@ input {
 .post-content p + p {
   @apply mt-4;
 }
+
+input {
+  /* @apply focus:ring-2 */
+}

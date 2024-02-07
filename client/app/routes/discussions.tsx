@@ -59,7 +59,7 @@ export default function Discussions() {
 						<PostInput />
 					</div>
 
-					<hr className="mb-4" />
+					<hr className="mb-4 dark:border-t-neutral-800" />
 
 					{posts.map((post, i) => (
 						<React.Fragment key={post.id}>
