@@ -2,13 +2,16 @@ import { Programme } from "@prisma/client";
 import { useFetcher } from "@remix-run/react";
 import React from "react";
 import { RequestStatus } from "./request-status";
+import { loader as programmesLoader } from "~/routes/programmes";
 
 const cache: Programme[] = [];
 function useProgrammes() {
 	const [programmes, setProgrammes] = React.useState(cache);
-	const fetcher = useFetcher();
+	const fetcher = useFetcher<typeof programmesLoader>();
 
-	const [status, setStatus] = React.useState<RequestStatus>("loading");
+	const [status, setStatus] = React.useState<RequestStatus>(
+		cache.length ? "success" : "loading",
+	);
 
 	const refresh = React.useCallback(() => {
 		setStatus("loading");

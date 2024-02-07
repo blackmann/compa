@@ -1,20 +1,36 @@
-function TagSelect() {
+import { SelectionId, Selections } from "./tag-input";
+
+interface Props {
+	tags: Selections;
+	onRemove?: (id: SelectionId, value: string) => void;
+}
+
+function TagSelect({ onRemove, tags }: Props) {
+	const flatTags = Object.entries(tags).flatMap(([id, values]) =>
+		values.map((v) => [id, v]),
+	);
+
+	if (!flatTags.length) {
+		return null
+	}
+
 	return (
-		<div className="flex mb-1 gap-1 flex-wrap">
-			<div className="bg-zinc-200 dark:bg-neutral-800 rounded-full px-2 inline-flex items-center gap-1">
-				L200 <button className="i-lucide-x text-secondary" type="button" />
-			</div>
-
-			<div className="bg-zinc-200 dark:bg-neutral-800 rounded-full px-2 inline-flex items-center gap-1">
-				BSc. Statistics{" "}
-				<button className="i-lucide-x text-secondary" type="button" />
-			</div>
-
-			<div className="bg-zinc-200 dark:bg-neutral-800 rounded-full px-2 inline-flex items-center gap-1">
-				Logic + Set Theory{" "}
-				<button className="i-lucide-x text-secondary" type="button" />
-			</div>
-		</div>
+		<ul className="flex mb-1 gap-1 flex-wrap">
+			{flatTags.map(([id, tag]) => (
+				<li
+					key={`${id}:${tag}`}
+					className="bg-zinc-200 dark:bg-neutral-800 rounded-full px-2 inline-flex items-center gap-1"
+				>
+					{tag}{" "}
+					<button
+						className="i-lucide-x text-secondary"
+						type="button"
+						title={`Remove ${id}:${tag}`}
+						onClick={() => onRemove?.(id as SelectionId, tag)}
+					/>
+				</li>
+			))}
+		</ul>
 	);
 }
 

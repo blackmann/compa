@@ -2,13 +2,16 @@ import { Course } from "@prisma/client";
 import { useFetcher } from "@remix-run/react";
 import React from "react";
 import { RequestStatus } from "./request-status";
+import { loader as coursesLoader } from "~/routes/courses";
 
 const cache: Course[] = [];
 function useCourses() {
 	const [courses, setCourses] = React.useState(cache);
-	const fetcher = useFetcher();
+	const fetcher = useFetcher<typeof coursesLoader>();
 
-	const [status, setStatus] = React.useState<RequestStatus>("loading");
+	const [status, setStatus] = React.useState<RequestStatus>(
+		cache.length ? "success" : "loading",
+	);
 
 	const refresh = React.useCallback(() => {
 		setStatus("loading");
@@ -33,7 +36,7 @@ function useCourses() {
 		cache.push(...fetcher.data);
 
 		setStatus("success");
-	}, [fetcher]);
+	}, [fetcher.data]);
 
 	return { courses, refresh, status };
 }

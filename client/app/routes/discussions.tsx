@@ -1,4 +1,3 @@
-import { Media } from "@prisma/client";
 import { ActionFunctionArgs, MetaFunction, json } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
 import React from "react";
@@ -42,8 +41,6 @@ export default function Discussions() {
 				<div className="col-span-1"> </div>
 
 				<div className="col-span-1 lg:col-span-2">
-					<h1 className="font-bold text-2xl">Discussions</h1>
-
 					<div className="mb-4">
 						{!user && (
 							<div className="p-2">

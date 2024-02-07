@@ -5,16 +5,22 @@ import { Input } from "./input";
 import { useTagCourses } from "~/lib/use-tag-courses";
 import { useTagProgrammes } from "~/lib/use-tag-programmes";
 import { Link } from "@remix-run/react";
+import { UseData } from "~/lib/tag-use-data";
 
 // TODO: Add custom
 type SelectionStage = "type" | "course" | "programme" | "level";
 type SelectionId = Exclude<SelectionStage, "type">;
-type Selection = Record<SelectionId, string[]>;
+type Selections = Record<SelectionId, string[]>;
 
 const TAG_LIMIT = 4;
+const DEFAULT_SELECTIONS = {
+	course: [],
+	programme: [],
+	level: [],
+}
 
 const TagInputCtx = React.createContext<{
-	selections: Selection;
+	selections: Selections;
 	onChange: (id: SelectionId, values: string[]) => void;
 }>({
 	selections: {
@@ -29,17 +35,31 @@ function useTagInputCtx() {
 	return React.useContext(TagInputCtx);
 }
 
-function TagInput() {
+interface Props {
+	onDone?: (selections: Selections) => void
+	value?: Selections
+}
+
+function TagInput({ onDone, value }: Props) {
 	const [showModal, setShowModal] = React.useState(false);
-	const [selections, setSelections] = React.useState<Selection>({
-		course: [],
-		programme: [],
-		level: [],
-	});
+	const [selections, setSelections] = React.useState<Selections>(DEFAULT_SELECTIONS);
 
 	const handleSelection = React.useCallback((id: string, values: string[]) => {
 		setSelections((prev) => ({ ...prev, [id]: values }));
 	}, []);
+
+	function handleOnClose() {
+		setShowModal(false)
+		onDone?.(selections)
+	}
+
+	React.useEffect(() => {
+		if (!value) {
+			return
+		}
+
+		setSelections(value)
+	}, [value])
 
 	return (
 		<TagInputCtx.Provider value={{ selections, onChange: handleSelection }}>
@@ -58,7 +78,7 @@ function TagInput() {
 				onClose={() => setShowModal(false)}
 			>
 				<div className="bg-zinc-100 dark:bg-neutral-900 h-[24rem] flex flex-col">
-					<Selection onClose={() => setShowModal(false)} />
+					<Selection onClose={handleOnClose} />
 				</div>
 			</Modal>
 		</TagInputCtx.Provider>
@@ -146,12 +166,10 @@ function Stage1({ onSelect, onClose }: TagTypeSelectProps) {
 	);
 }
 
-function useLevels() {
+function useLevels(): ReturnType<UseData> {
 	return {
 		status: "ready",
 		items: ["L100", "L200", "L300", "L400", "L500", "L600"],
-		key: "level",
-		label: "Level",
 		update: () => {},
 		canAdd: false,
 	};
@@ -161,12 +179,7 @@ interface StageProps {
 	onSetStage: (type: SelectionStage) => void;
 	onReset: () => void;
 	onClose: VoidFunction;
-	useData: () => {
-		status: "updating" | "ready";
-		items: string[];
-		update: () => void;
-		canAdd: boolean;
-	};
+	useData: UseData;
 	id: SelectionId;
 }
 
@@ -178,7 +191,7 @@ function TypeSelect({ onReset, onClose, useData, id }: StageProps) {
 	const selection = selections[id];
 
 	const filteredItems = items.filter((item) =>
-		item.toLocaleLowerCase().includes(q.trim()),
+		item.toLocaleLowerCase().includes(q.toLowerCase().trim()),
 	);
 
 	function handleChange(item: string, checked: boolean) {
@@ -260,6 +273,6 @@ function TypeSelect({ onReset, onClose, useData, id }: StageProps) {
 	);
 }
 
-export { TagInput };
+export { TagInput, DEFAULT_SELECTIONS };
 
-export type { SelectionId, Selection };
+export type { SelectionId, Selections };

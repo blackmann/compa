@@ -9,7 +9,12 @@ import { uploadMedia } from "~/lib/upload-media";
 import { AudioRecorder } from "./audio-recorder";
 import { useGlobalCtx } from "~/lib/global-ctx";
 import { TagSelect } from "./tag-select";
-import { TagInput } from "./tag-input";
+import {
+	DEFAULT_SELECTIONS,
+	SelectionId,
+	Selections,
+	TagInput,
+} from "./tag-input";
 
 interface Props {
 	level?: number;
@@ -28,6 +33,7 @@ function PostInput({ level = 0, parent }: Props) {
 
 	const [isRecording, setIsRecording] = React.useState(false);
 	const [uploading, setUploading] = React.useState(false);
+	const [tags, setTags] = React.useState<Selections>(DEFAULT_SELECTIONS);
 
 	const fetcher = useFetcher();
 
@@ -60,6 +66,13 @@ function PostInput({ level = 0, parent }: Props) {
 		}
 
 		setValue("files", [...$files, ...files].slice(0, 5));
+	}
+
+	function handleTagRemove(id: SelectionId, value: string) {
+		setTags((tags) => {
+			const values = tags[id].filter((it) => it !== value);
+			return { ...tags, [id]: values };
+		});
 	}
 
 	const handleRecordComplete = React.useCallback(
@@ -97,7 +110,7 @@ function PostInput({ level = 0, parent }: Props) {
 			<form onSubmit={handleSubmit(createPost)}>
 				{!parent && (
 					<header>
-						<TagSelect />
+						<TagSelect tags={tags} onRemove={handleTagRemove} />
 					</header>
 				)}
 
@@ -154,7 +167,9 @@ function PostInput({ level = 0, parent }: Props) {
 								onRecording={setIsRecording}
 							/>
 
-							{!(isRecording || parent) && <TagInput />}
+							{!(isRecording || parent) && (
+								<TagInput value={tags} onDone={setTags} />
+							)}
 						</div>
 					</div>
 
