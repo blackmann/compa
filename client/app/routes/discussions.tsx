@@ -1,4 +1,9 @@
-import { ActionFunctionArgs, MetaFunction, json } from "@remix-run/node";
+import {
+	ActionFunctionArgs,
+	LoaderFunctionArgs,
+	MetaFunction,
+	json,
+} from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
 import React from "react";
 import { PostInput } from "~/components/post-input";
@@ -8,14 +13,23 @@ import { createPost } from "~/lib/create-post";
 import { useGlobalCtx } from "~/lib/global-ctx";
 import { prisma } from "~/lib/prisma.server";
 import { values } from "~/lib/values.server";
+import { withUserPrefs } from "~/lib/with-user-prefs";
 
-export const loader = async () => {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
 	const posts = await prisma.post.findMany({
 		where: { parentId: null },
 		include: { user: true, media: true },
 		orderBy: { createdAt: "desc" },
 	});
-	return json({ school: values.meta(), posts });
+
+	return json(
+		{ school: values.meta(), posts },
+		{
+			headers: {
+				"Set-Cookie": await withUserPrefs(request, { lastBase: "discussions" }),
+			},
+		},
+	);
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {

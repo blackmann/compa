@@ -20,7 +20,7 @@ function Tags({ post }: Props) {
 			{tags.map(([id, value]) => (
 				<li
 					key={`${id}:${value}`}
-					className="bg-zinc-100 [&:not(:last-child)]:border-e px-2 text-sm inline-flex items-center gap-1 first:rounded-s-lg last:rounded-e-lg"
+					className="bg-zinc-100 dark:bg-neutral-800 [&:not(:last-child)]:border-e px-2 text-sm inline-flex items-center gap-1 first:rounded-s-lg last:rounded-e-lg"
 				>
 					{value}
 				</li>
