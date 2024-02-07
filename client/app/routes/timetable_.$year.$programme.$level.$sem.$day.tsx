@@ -91,7 +91,12 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 };
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
-	return [{ title: `Timetable | ${data?.school.shortName} | compa` }];
+	const description = `See timetable for ${data?.programme}, L${data?.level} for the year ${data?.year}`;
+
+	return [
+		{ title: `Timetable | ${data?.school.shortName} | compa` },
+		{ name: "description", content: description },
+	];
 };
 
 export default function TimeTable() {

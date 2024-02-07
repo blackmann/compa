@@ -97,7 +97,13 @@ async function updatePostProps(postId: number) {
 }
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
-	return [{ title: `Discussions | ${data?.schoolName} | compa` }];
+	const summary = data?.post.content.substring(0, 72);
+	const description = [`Post from @${data?.post.user.username}: ${summary}…`];
+
+	return [
+		{ title: `Discussions | ${data?.schoolName} | compa` },
+		{ name: "description", content: description },
+	];
 };
 
 export default function Discussion() {
