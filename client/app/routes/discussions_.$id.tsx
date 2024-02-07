@@ -6,6 +6,7 @@ import {
 	redirect,
 } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
+import clsx from "clsx";
 import { Avatar } from "~/components/avatar";
 import { Content } from "~/components/content";
 import { LoginComment } from "~/components/login-comment";
@@ -15,6 +16,7 @@ import { PostItem, PostItemProps } from "~/components/post-item";
 import { PostMenu } from "~/components/post-menu";
 import { PostPeople } from "~/components/post-people";
 import { PostTime } from "~/components/post-time";
+import { Tags } from "~/components/tags";
 import { Votes } from "~/components/votes";
 import { checkAuth } from "~/lib/check-auth";
 import { createPost } from "~/lib/create-post";
@@ -128,6 +130,10 @@ export default function Discussion() {
 									<PostMenu post={post} />
 								</div>
 							</header>
+
+							<div className={clsx("mb-4", { hidden: !post.tags })}>
+								<Tags post={post} />
+							</div>
 
 							<div className="-mt-2">
 								<Content content={post.content} />

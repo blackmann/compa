@@ -129,8 +129,8 @@ function PostContent({ full, post, active, level, limit }: PostContentProps) {
 				</header>
 
 				{!post.parentId && (
-					<div className={clsx("mb-4", { hidden: !false })}>
-						<Tags />
+					<div className={clsx("mb-4", { hidden: !post.tags })}>
+						<Tags post={post} />
 					</div>
 				)}
 

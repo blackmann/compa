@@ -42,15 +42,26 @@ function PostInput({ level = 0, parent }: Props) {
 	const isComment = level > 0;
 	const $files = watch("files");
 
+	function getTags() {
+		return Object.entries(tags).flatMap(([id, values]) =>
+			values.map((v) => `${id}:${v}`),
+		);
+	}
+
 	async function createPost(data: FieldValues) {
 		setUploading(true);
 		const media = await Promise.all($files.map(uploadMedia));
 		setUploading(false);
 
-		fetcher.submit(JSON.stringify({ ...data, parentId: parent?.id, media }), {
-			encType: "application/json",
-			method: "POST",
-		});
+		const tags = JSON.stringify(getTags());
+
+		fetcher.submit(
+			JSON.stringify({ ...data, parentId: parent?.id, media, tags }),
+			{
+				encType: "application/json",
+				method: "POST",
+			},
+		);
 	}
 
 	function handleFilesSelect(e: React.ChangeEvent<HTMLInputElement>) {
@@ -100,6 +111,7 @@ function PostInput({ level = 0, parent }: Props) {
 	React.useEffect(() => {
 		if (fetcher.data) {
 			reset();
+			setTags(DEFAULT_SELECTIONS);
 		}
 	}, [fetcher.data, reset]);
 
