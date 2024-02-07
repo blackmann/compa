@@ -13,6 +13,8 @@ import { LoginComment } from "./login-comment";
 import { MediaItem } from "./media-item";
 import React from "react";
 import { Content } from "./content";
+import { TagSelect } from "./tag-select";
+import { Tags } from "./tags";
 
 interface Props {
 	level?: number;
@@ -126,9 +128,14 @@ function PostContent({ full, post, active, level, limit }: PostContentProps) {
 					</div>
 				</header>
 
+				{!post.parentId && (
+					<div className={clsx("mb-4", { hidden: !post.tags })}>
+						<Tags post={post} />
+					</div>
+				)}
+
 				<div className="-mt-3 post-content">
 					<Content content={post.content} limit={limit} />
-
 					{post.media?.length > 0 && (
 						<div className="grid xl:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-2 flex-wrap mt-2">
 							{post.media.map((media) => (

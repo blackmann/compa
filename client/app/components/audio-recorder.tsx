@@ -4,9 +4,10 @@ import { useAudioRecorder } from "~/lib/use-audio-recorder";
 
 interface Props {
 	onRecorded?: (blob: Blob) => void;
+	onRecording?: (recording: boolean) => void;
 }
 
-function AudioRecorder({ onRecorded }: Props) {
+function AudioRecorder({ onRecorded, onRecording }: Props) {
 	const {
 		isPaused,
 		isRecording,
@@ -27,13 +28,16 @@ function AudioRecorder({ onRecorded }: Props) {
 		}
 	}, [clear, recordingBlob, onRecorded]);
 
+	React.useEffect(() => {
+		onRecording?.(isRecording);
+	}, [isRecording, onRecording]);
+
 	return (
 		<div
 			className={clsx(
-				"size-8 rounded-full bg-zinc-200 dark:bg-neutral-700 inline-flex justify-center items-center transition-[width] duration-200 px-2 gap-2",
+				"size-8 bg-zinc-200 dark:bg-neutral-800 inline-flex justify-center items-center transition-[width] duration-200 px-2 gap-2",
 				{ "w-30 !justify-start !bg-red-500 text-white": isRecording },
 			)}
-			title="Record Audio"
 		>
 			{isRecording ? (
 				<>
@@ -59,7 +63,12 @@ function AudioRecorder({ onRecorded }: Props) {
 					</button>
 				</>
 			) : (
-				<button className="inline-flex" onClick={startRecording} type="button">
+				<button
+					className="inline-flex"
+					onClick={startRecording}
+					type="button"
+					title="Record audio"
+				>
 					<span className="i-lucide-mic inline-block" />
 				</button>
 			)}

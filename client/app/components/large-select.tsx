@@ -31,7 +31,7 @@ function LargeSelect({
 		setState("add");
 	}
 
-	const handleModalClose = React.useCallback(() => onToggle(false), []);
+	const handleModalClose = React.useCallback(() => onToggle(false), [onToggle]);
 
 	function hide() {
 		onToggle(false);
@@ -56,7 +56,7 @@ function LargeSelect({
 				onClick={() => onToggle(true)}
 			>
 				<span className="flex-1 line-clamp-1">{children}</span>
-				<div className="i-lucide-mouse-pointer-2 text-secondary"></div>
+				<div className="i-lucide-mouse-pointer-2 text-secondary" />
 			</button>
 
 			<Modal
@@ -114,7 +114,7 @@ function SelectState({
 		<>
 			<header className="p-2">
 				<div className="text-sm text-secondary flex gap-2 items-center mb-2 font-medium">
-					<div className="i-lucide-scan-search"></div> Select {label}
+					<div className="i-lucide-scan-search" /> Select {label}
 				</div>
 				<Input
 					type="text"
@@ -142,8 +142,13 @@ function SelectState({
 						className="px-2 py-1 hover:bg-zinc-200 dark:hover:bg-neutral-800 rounded-lg focus-within:bg-zinc-200 dark:focus-within:bg-neutral-800"
 						key={option.value}
 						onClick={() => onSelect(option.value)}
+						onKeyDown={(e) =>
+							["Enter", "Space"].includes(e.key) && onSelect(option.value)
+						}
 					>
-						<button className="block w-full text-start">{option.label}</button>
+						<button className="block w-full text-start" type="button">
+							{option.label}
+						</button>
 					</li>
 				))}
 			</ul>
@@ -152,6 +157,7 @@ function SelectState({
 				<button
 					className="inline-flex gap-2 items-center bg-zinc-200 dark:bg-neutral-800 px-2 rounded-md font-medium"
 					onClick={onShowAdd}
+					type="button"
 				>
 					<div className="i-lucide-list-plus text-secondary" /> Add new
 				</button>
@@ -159,6 +165,7 @@ function SelectState({
 				<button
 					className="px-2 py-1 hover:bg-zinc-200 dark:hover:bg-neutral-800 rounded-lg font-medium"
 					onClick={onHide}
+					type="button"
 				>
 					Cancel
 				</button>
@@ -194,7 +201,7 @@ function FormState({ form, label, onAdd, onCancel }: FormStateProps) {
 			<form className="flex flex-col h-full" onSubmit={handleSubmit(submit)}>
 				<header className="p-2">
 					<div className="text-sm text-secondary flex gap-2 items-center font-medium">
-						<div className="i-lucide-list-plus"></div> Add new {label}
+						<div className="i-lucide-list-plus" /> Add new {label}
 					</div>
 				</header>
 
@@ -209,7 +216,10 @@ function FormState({ form, label, onAdd, onCancel }: FormStateProps) {
 						Cancel
 					</button>
 
-					<button className="inline-flex gap-2 items-center bg-zinc-200 dark:bg-neutral-800 px-2 rounded-md font-medium">
+					<button
+						type="button"
+						className="inline-flex gap-2 items-center bg-zinc-200 dark:bg-neutral-800 px-2 rounded-md font-medium"
+					>
 						<div
 							className={clsx("text-secondary", {
 								"i-lucide-corner-down-left": status !== "loading",

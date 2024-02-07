@@ -66,7 +66,7 @@ function AudioItem({ name, url, noPlay, onRemove, size }: Props) {
 	}, []);
 
 	return (
-		<div className="flex border dark:border-neutral-700 rounded-lg p-1 gap-2">
+		<div className="flex border dark:border-neutral-800 bg-white dark:bg-neutral-900 !bg-opacity-30 rounded-lg p-1 gap-2">
 			<div className=" shrink-0">
 				<button
 					type="button"
@@ -85,7 +85,7 @@ function AudioItem({ name, url, noPlay, onRemove, size }: Props) {
 			</div>
 
 			<div className="flex-1">
-				<div className="font-mono leading-tight line-clamp-1">
+				<div className="font-mono leading-tight line-clamp-1 text-sm">
 					{ellipsizeFilename(name)}
 				</div>
 				<div className="text-secondary text-sm leading-none">

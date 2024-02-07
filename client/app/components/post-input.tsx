@@ -8,14 +8,20 @@ import clsx from "clsx";
 import { uploadMedia } from "~/lib/upload-media";
 import { AudioRecorder } from "./audio-recorder";
 import { useGlobalCtx } from "~/lib/global-ctx";
+import { TagSelect } from "./tag-select";
+import {
+	DEFAULT_SELECTIONS,
+	SelectionId,
+	Selections,
+	TagInput,
+} from "./tag-input";
 
 interface Props {
 	level?: number;
 	parent?: Post;
 }
 
-// 5MB limit
-const ATTACHMENT_LIMIT = 5 * 1024 * 1024;
+const ATTACHMENT_LIMIT = 5 * 1024 * 1024; // 5MB limit
 
 function PostInput({ level = 0, parent }: Props) {
 	const { handleSubmit, register, setValue, watch, reset } = useForm({
@@ -25,7 +31,9 @@ function PostInput({ level = 0, parent }: Props) {
 		},
 	});
 
+	const [isRecording, setIsRecording] = React.useState(false);
 	const [uploading, setUploading] = React.useState(false);
+	const [tags, setTags] = React.useState<Selections>(DEFAULT_SELECTIONS);
 
 	const fetcher = useFetcher();
 
@@ -34,15 +42,26 @@ function PostInput({ level = 0, parent }: Props) {
 	const isComment = level > 0;
 	const $files = watch("files");
 
+	function getTags() {
+		return Object.entries(tags).flatMap(([id, values]) =>
+			values.map((v) => `${id}:${v}`),
+		);
+	}
+
 	async function createPost(data: FieldValues) {
 		setUploading(true);
 		const media = await Promise.all($files.map(uploadMedia));
 		setUploading(false);
 
-		fetcher.submit(JSON.stringify({ ...data, parentId: parent?.id, media }), {
-			encType: "application/json",
-			method: "POST",
-		});
+		const tags = JSON.stringify(getTags());
+
+		fetcher.submit(
+			JSON.stringify({ ...data, parentId: parent?.id, media, tags }),
+			{
+				encType: "application/json",
+				method: "POST",
+			},
+		);
 	}
 
 	function handleFilesSelect(e: React.ChangeEvent<HTMLInputElement>) {
@@ -58,6 +77,13 @@ function PostInput({ level = 0, parent }: Props) {
 		}
 
 		setValue("files", [...$files, ...files].slice(0, 5));
+	}
+
+	function handleTagRemove(id: SelectionId, value: string) {
+		setTags((tags) => {
+			const values = tags[id].filter((it) => it !== value);
+			return { ...tags, [id]: values };
+		});
 	}
 
 	const handleRecordComplete = React.useCallback(
@@ -85,6 +111,7 @@ function PostInput({ level = 0, parent }: Props) {
 	React.useEffect(() => {
 		if (fetcher.data) {
 			reset();
+			setTags(DEFAULT_SELECTIONS);
 		}
 	}, [fetcher.data, reset]);
 
@@ -93,6 +120,12 @@ function PostInput({ level = 0, parent }: Props) {
 	return (
 		<>
 			<form onSubmit={handleSubmit(createPost)}>
+				{!parent && (
+					<header>
+						<TagSelect tags={tags} onRemove={handleTagRemove} />
+					</header>
+				)}
+
 				<textarea
 					className="w-full rounded-lg bg-zinc-100 dark:bg-neutral-800 border-zinc-200 dark:border-neutral-700 p-2 h-30"
 					placeholder={
@@ -140,7 +173,16 @@ function PostInput({ level = 0, parent }: Props) {
 							/>
 						</label>
 
-						<AudioRecorder onRecorded={handleRecordComplete} />
+						<div className="flex [&>*:last-child]:rounded-e-full [&>*:first-child]:rounded-s-full">
+							<AudioRecorder
+								onRecorded={handleRecordComplete}
+								onRecording={setIsRecording}
+							/>
+
+							{!(isRecording || parent) && (
+								<TagInput value={tags} onDone={setTags} />
+							)}
+						</div>
 					</div>
 
 					<div>
@@ -159,9 +201,8 @@ function PostInput({ level = 0, parent }: Props) {
 				</div>
 
 				<p className="text-sm text-secondary">
-					Maximum 5 files. Images and docs only. 5MB limit per file.
+					5 files max. Images and docs only. 5MB limit per file.
 					<br />
-					<span className="i-lucide-file-code inline-block me-1" />
 					<a
 						className="underline"
 						target="_blank"

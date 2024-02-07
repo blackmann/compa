@@ -5,10 +5,12 @@ const links = [
 	{
 		title: "Discussions",
 		href: "/discussions",
+		icon: "i-lucide-message-square-quote",
 	},
 	{
 		title: "Timetable",
 		href: "/timetable",
+		icon: "i-lucide-calendar-range",
 	},
 ];
 
@@ -30,11 +32,12 @@ function Navbar() {
 											to={link.href}
 											className={({ isActive }) =>
 												clsx(
-													"px-2 py-1 hover:bg-zinc-200 dark:hover:bg-neutral-800 rounded-lg font-medium",
+													"px-2 py-1 hover:bg-zinc-200 dark:hover:bg-neutral-800 rounded-lg font-medium flex items-center gap-2",
 													{ "!bg-blue-600 !text-white": isActive },
 												)
 											}
 										>
+											<div className={clsx("opacity-70", link.icon)} />{" "}
 											{link.title}
 										</NavLink>
 									</li>
