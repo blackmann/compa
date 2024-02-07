@@ -8,7 +8,11 @@ function postTime(time: Date | string) {
 		return dayjs(time).fromNow();
 	}
 
-	return dayjs(time).format("DD MMM YYYY, HH:mm a");
+	const format = dayjs(time).isSame(new Date(), "year")
+		? "DD MMM, HH:mma"
+		: "DD MMM 'YY, HH:mma";
+
+	return dayjs(time).format(format);
 }
 
 function PostTime({ time }: { time: Date | string }) {
