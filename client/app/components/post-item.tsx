@@ -169,7 +169,7 @@ function PostContent({ full, post, active, level, limit }: PostContentProps) {
 
 						<span className="inline-flex items-center gap-2 text-secondary">
 							<div className="i-lucide-users-2 inline-block" /> {post.people}{" "}
-							people
+							{post.people === 1 ? "person" : "people"}
 						</span>
 					</footer>
 				)}
