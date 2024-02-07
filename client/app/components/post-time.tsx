@@ -4,7 +4,7 @@ import relativeTime from "dayjs/plugin/relativeTime.js";
 dayjs.extend(relativeTime);
 
 function postTime(time: Date | string) {
-	if (dayjs(time).diff(dayjs(), "day") < 1) {
+	if (dayjs().diff(dayjs(time), "day") < 1) {
 		return dayjs(time).fromNow();
 	}
 

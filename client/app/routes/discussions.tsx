@@ -59,6 +59,8 @@ export default function Discussions() {
 						<PostInput />
 					</div>
 
+					<hr className="mb-4" />
+
 					{posts.map((post, i) => (
 						<React.Fragment key={post.id}>
 							<PostItem limit post={post as unknown as PostItemProps["post"]} />

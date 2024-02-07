@@ -8,14 +8,15 @@ import clsx from "clsx";
 import { uploadMedia } from "~/lib/upload-media";
 import { AudioRecorder } from "./audio-recorder";
 import { useGlobalCtx } from "~/lib/global-ctx";
+import { TagSelect } from "./tag-select";
+import { TagInput } from "./tag-input";
 
 interface Props {
 	level?: number;
 	parent?: Post;
 }
 
-// 5MB limit
-const ATTACHMENT_LIMIT = 5 * 1024 * 1024;
+const ATTACHMENT_LIMIT = 5 * 1024 * 1024; // 5MB limit
 
 function PostInput({ level = 0, parent }: Props) {
 	const { handleSubmit, register, setValue, watch, reset } = useForm({
@@ -25,6 +26,7 @@ function PostInput({ level = 0, parent }: Props) {
 		},
 	});
 
+	const [isRecording, setIsRecording] = React.useState(false);
 	const [uploading, setUploading] = React.useState(false);
 
 	const fetcher = useFetcher();
@@ -93,6 +95,12 @@ function PostInput({ level = 0, parent }: Props) {
 	return (
 		<>
 			<form onSubmit={handleSubmit(createPost)}>
+				{!parent && (
+					<header>
+						<TagSelect />
+					</header>
+				)}
+
 				<textarea
 					className="w-full rounded-lg bg-zinc-100 dark:bg-neutral-800 border-zinc-200 dark:border-neutral-700 p-2 h-30"
 					placeholder={
@@ -140,7 +148,14 @@ function PostInput({ level = 0, parent }: Props) {
 							/>
 						</label>
 
-						<AudioRecorder onRecorded={handleRecordComplete} />
+						<div className="flex [&>*:last-child]:rounded-e-full [&>*:first-child]:rounded-s-full">
+							<AudioRecorder
+								onRecorded={handleRecordComplete}
+								onRecording={setIsRecording}
+							/>
+
+							{!(isRecording || parent) && <TagInput />}
+						</div>
 					</div>
 
 					<div>
@@ -159,9 +174,8 @@ function PostInput({ level = 0, parent }: Props) {
 				</div>
 
 				<p className="text-sm text-secondary">
-					Maximum 5 files. Images and docs only. 5MB limit per file.
+					5 files max. Images and docs only. 5MB limit per file.
 					<br />
-					<span className="i-lucide-file-code inline-block me-1" />
 					<a
 						className="underline"
 						target="_blank"
