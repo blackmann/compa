@@ -170,7 +170,7 @@ export default function Discussion() {
 
 								<span className="inline-flex items-center gap-2 text-secondary">
 									<div className="i-lucide-users-2 inline-block" />{" "}
-									{post.people} people
+									{post.people} {post.people === 1 ? "person" : "people"}
 								</span>
 							</footer>
 						</div>
