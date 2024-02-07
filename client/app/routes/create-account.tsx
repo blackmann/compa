@@ -12,6 +12,7 @@ import {
 	useLoaderData,
 	useSubmit,
 } from "@remix-run/react";
+import React from "react";
 import { FieldValues, useForm } from "react-hook-form";
 import { Button } from "~/components/button";
 import { Input } from "~/components/input";
@@ -45,8 +46,9 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 				{ status: 403 },
 			);
 		}
+
 		return json(
-			{ type: "db-error", message: "something wrong happened" },
+			{ type: "unknown-error", message: "something wrong happened" },
 			{ status: 500 },
 		);
 	}
@@ -68,7 +70,8 @@ const USERNAME_REGEX = /^(?=[a-zA-Z0-9._]{4,20}$)(?!.*[_.]{2})[^_.].*[^_.]$/g;
 
 export default function CreateAccount() {
 	const { emailExtensions } = useLoaderData<typeof loader>();
-	const { formState, getFieldState, handleSubmit, register } = useForm();
+	const { formState, getFieldState, handleSubmit, register, setError } =
+		useForm();
 	const fetcher = useFetcher();
 	const actionData = useActionData<typeof action>();
 	const submit = useSubmit();
@@ -83,11 +86,15 @@ export default function CreateAccount() {
 	const emailState = getFieldState("email", formState);
 	const usernameState = getFieldState("username", formState);
 
-	const emailError =
-		emailState.error?.message ||
-		(actionData?.type === "conflict" &&
-			actionData.field === "email" &&
-			actionData.message);
+	React.useEffect(() => {
+		if (!actionData) {
+			return;
+		}
+
+		if (actionData.type === "conflict") {
+			setError(actionData.field, { message: actionData.message });
+		}
+	}, [actionData, setError]);
 
 	return (
 		<div className="container mx-auto">
@@ -102,12 +109,11 @@ export default function CreateAccount() {
 						<label className="block">
 							<div>
 								Username
-								{actionData?.type === "conflict" &&
-									actionData?.field === "username" && (
-										<small className="text-red-500 pl-2">
-											{actionData.message}
-										</small>
-									)}
+								{usernameState.error && (
+									<small className="text-red-500 pl-2">
+										{usernameState.error.message}
+									</small>
+								)}
 							</div>
 							<Input
 								{...register("username", {
@@ -123,8 +129,10 @@ export default function CreateAccount() {
 						<label className="block mt-2">
 							<div>
 								Email{" "}
-								{emailError && (
-									<small className="text-red-500 pl-2">{emailError}</small>
+								{emailState.error && (
+									<small className="text-red-500 pl-2">
+										{emailState.error.message}
+									</small>
 								)}
 							</div>
 
