@@ -222,7 +222,7 @@ function TypeSelect({ onReset, onClose, useData, id }: StageProps) {
 				/>
 			</header>
 
-			<ul className="px-2 flex-1 mt-2">
+			<ul className="px-2 flex-1 mt-2 overflow-y-auto">
 				{filteredItems.map((item) => (
 					<li key={item}>
 						<label className="flex items-center gap-2 px-2 py-1 hover:bg-zinc-200 dark:hover:bg-neutral-800 rounded-lg ">
