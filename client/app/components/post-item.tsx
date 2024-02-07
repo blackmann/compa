@@ -13,7 +13,6 @@ import { LoginComment } from "./login-comment";
 import { MediaItem } from "./media-item";
 import React from "react";
 import { Content } from "./content";
-import { TagSelect } from "./tag-select";
 import { Tags } from "./tags";
 
 interface Props {

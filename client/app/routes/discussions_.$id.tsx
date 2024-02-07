@@ -7,6 +7,7 @@ import {
 } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import clsx from "clsx";
+import React from "react";
 import { Avatar } from "~/components/avatar";
 import { Content } from "~/components/content";
 import { LoginComment } from "~/components/login-comment";
@@ -169,7 +170,7 @@ export default function Discussion() {
 								</span>
 
 								<span className="inline-flex items-center gap-2 text-secondary">
-									<div className="i-lucide-users-2 inline-block" />{" "}								
+									<div className="i-lucide-users-2 inline-block" />{" "}
 									{post.people} {post.people === 1 ? "person" : "people"}
 								</span>
 							</footer>
@@ -193,12 +194,16 @@ export default function Discussion() {
 					</div>
 
 					<div className="mt-2">
-						{comments.map((comment) => (
-							<PostItem
-								key={comment.id}
-								post={comment as unknown as PostItemProps["post"]}
-								level={1}
-							/>
+						{comments.map((comment, i) => (
+							<React.Fragment key={comment.id}>
+								<PostItem
+									post={comment as unknown as PostItemProps["post"]}
+									level={1}
+								/>
+								{i < comments.length - 1 && (
+									<hr className="me-2 ms-12 dark:border-neutral-800" />
+								)}
+							</React.Fragment>
 						))}
 					</div>
 				</div>
