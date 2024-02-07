@@ -17,7 +17,7 @@ const DEFAULT_SELECTIONS = {
 	course: [],
 	programme: [],
 	level: [],
-}
+};
 
 const TagInputCtx = React.createContext<{
 	selections: Selections;
@@ -36,30 +36,31 @@ function useTagInputCtx() {
 }
 
 interface Props {
-	onDone?: (selections: Selections) => void
-	value?: Selections
+	onDone?: (selections: Selections) => void;
+	value?: Selections;
 }
 
 function TagInput({ onDone, value }: Props) {
 	const [showModal, setShowModal] = React.useState(false);
-	const [selections, setSelections] = React.useState<Selections>(DEFAULT_SELECTIONS);
+	const [selections, setSelections] =
+		React.useState<Selections>(DEFAULT_SELECTIONS);
 
 	const handleSelection = React.useCallback((id: string, values: string[]) => {
 		setSelections((prev) => ({ ...prev, [id]: values }));
 	}, []);
 
 	function handleOnClose() {
-		setShowModal(false)
-		onDone?.(selections)
+		setShowModal(false);
+		onDone?.(selections);
 	}
 
 	React.useEffect(() => {
 		if (!value) {
-			return
+			return;
 		}
 
-		setSelections(value)
-	}, [value])
+		setSelections(value);
+	}, [value]);
 
 	return (
 		<TagInputCtx.Provider value={{ selections, onChange: handleSelection }}>
@@ -247,7 +248,10 @@ function TypeSelect({ onReset, onClose, useData, id }: StageProps) {
 			{canAdd && (
 				<div className="text-secondary p-2 text-sm">
 					Can't find a programme or course? Check{" "}
-					<Link className="text-blue-700 underline" to="/timetable">
+					<Link
+						className="text-blue-700 dark:text-blue-500 underline"
+						to="/timetable"
+					>
 						Timetable
 					</Link>{" "}
 					and add from there.
