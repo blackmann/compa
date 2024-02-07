@@ -83,6 +83,12 @@ export default function CreateAccount() {
 	const emailState = getFieldState("email", formState);
 	const usernameState = getFieldState("username", formState);
 
+	const emailError =
+		emailState.error?.message ||
+		(actionData?.type === "conflict" &&
+			actionData.field === "email" &&
+			actionData.message);
+
 	return (
 		<div className="container mx-auto">
 			<div className="min-h-[60vh]">
@@ -117,18 +123,9 @@ export default function CreateAccount() {
 						<label className="block mt-2">
 							<div>
 								Email{" "}
-								{emailState.error?.message && (
-									<small className="text-red-500">
-										{emailState.error.message}
-									</small>
+								{emailError && (
+									<small className="text-red-500 pl-2">{emailError}</small>
 								)}
-								{!emailState?.error &&
-									actionData?.type === "conflict" &&
-									actionData?.field === "email" && (
-										<small className="text-red-500 pl-2">
-											{actionData.message}
-										</small>
-									)}
 							</div>
 
 							<Input
