@@ -54,6 +54,8 @@ function TagInput({ onDone, value }: Props) {
 		onDone?.(selections);
 	}
 
+	const handleModalClose = React.useCallback(() => setShowModal(false), []);
+
 	React.useEffect(() => {
 		if (!value) {
 			return;
@@ -76,7 +78,7 @@ function TagInput({ onDone, value }: Props) {
 			<Modal
 				className="w-full max-w-[24rem]"
 				open={showModal}
-				onClose={() => setShowModal(false)}
+				onClose={handleModalClose}
 			>
 				<div className="bg-zinc-100 dark:bg-neutral-900 h-[24rem] flex flex-col">
 					<Selection onClose={handleOnClose} />
