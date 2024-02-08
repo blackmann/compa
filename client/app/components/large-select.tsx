@@ -217,7 +217,7 @@ function FormState({ form, label, onAdd, onCancel }: FormStateProps) {
 					</button>
 
 					<button
-						type="button"
+						type="submit"
 						className="inline-flex gap-2 items-center bg-zinc-200 dark:bg-neutral-800 px-2 rounded-md font-medium"
 					>
 						<div
