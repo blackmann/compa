@@ -152,7 +152,7 @@ function Stage1({ onSelect, onClose }: TagTypeSelectProps) {
 							>
 								{type}{" "}
 								{selected.length > 0 && (
-									<span className="bg-zinc-300 rounded-lg px-2 text-sm">
+									<span className="bg-zinc-300 dark:bg-neutral-800 rounded-lg px-2 text-sm">
 										{selected.length}
 									</span>
 								)}
