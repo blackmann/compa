@@ -16,11 +16,11 @@ function Tags({ post }: Props) {
 	}, [post]);
 
 	return (
-		<ul className="flex text-secondary font-medium">
+		<ul className="flex text-secondary font-medium flex-wrap">
 			{tags.map(([id, value]) => (
 				<li
 					key={`${id}:${value}`}
-					className="bg-zinc-100 dark:bg-neutral-800 [&:not(:last-child)]:border-e dark:border-neutral-700 px-2 text-sm inline-flex items-center gap-1 first:rounded-s-lg last:rounded-e-lg"
+					className="bg-zinc-100 dark:bg-neutral-800 [&:not(:last-child)]:border-e dark:border-neutral-700 px-2 text-sm inline-flex items-center gap-1 whitespace-nowrap first:rounded-s-lg last:rounded-e-lg"
 				>
 					{value}
 				</li>
