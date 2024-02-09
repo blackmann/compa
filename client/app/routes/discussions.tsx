@@ -6,6 +6,7 @@ import {
 } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
 import React from "react";
+import { PostFilter } from "~/components/post-filter";
 import { PostInput } from "~/components/post-input";
 import { PostItem, PostItemProps } from "~/components/post-item";
 import { checkAuth } from "~/lib/check-auth";
@@ -14,10 +15,28 @@ import { useGlobalCtx } from "~/lib/global-ctx";
 import { prisma } from "~/lib/prisma.server";
 import { values } from "~/lib/values.server";
 import { withUserPrefs } from "~/lib/with-user-prefs";
+import qs from "qs";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
+	const searchQuery = new URL(request.url).search.substring(1);
+	const queryParams = qs.parse(searchQuery);
+
+	const tags = Object.entries(queryParams.tags || {}).flatMap(
+		([id, selection]) => {
+			if (Array.isArray(selection)) {
+				return selection.map((s) => ({
+					tags: { contains: `${id}:${selection}` },
+				}));
+			}
+
+			return { tags: { contains: `${id}:${selection}` } };
+		},
+	);
+
+	const tagsFilter = tags.length ? { AND: tags } : {};
+
 	const posts = await prisma.post.findMany({
-		where: { parentId: null },
+		where: { parentId: null, ...tagsFilter, },
 		include: { user: true, media: true },
 		orderBy: { createdAt: "desc" },
 	});
@@ -77,6 +96,10 @@ export default function Discussions() {
 					</div>
 
 					<hr className="mb-4 dark:border-t-neutral-800" />
+
+					<div>
+						<PostFilter />
+					</div>
 
 					{posts.map((post, i) => (
 						<React.Fragment key={post.id}>

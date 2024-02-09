@@ -26,7 +26,6 @@ import { prisma } from "~/lib/prisma.server";
 import { values } from "~/lib/values.server";
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
-	const schoolName = values.get("shortName");
 	const postId = Number(params.id as string);
 
 	const post = await prisma.post.findFirst({
@@ -43,7 +42,7 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
 		include: { user: true, media: true },
 	});
 
-	return json({ comments, schoolName, post });
+	return json({ comments, meta: values.meta(), post });
 };
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {
@@ -99,11 +98,12 @@ async function updatePostProps(postId: number) {
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
 	const summary = data?.post.content.substring(0, 72);
-	const description = [`Post from @${data?.post.user.username}: ${summary}…`];
 
 	return [
-		{ title: `Discussions | ${data?.schoolName} | compa` },
-		{ name: "description", content: description },
+		{
+			title: `@${data?.post.user.username} posted in Discussions | ${data?.meta.shortName} | compa`,
+		},
+		{ name: "description", content: `${summary}…` },
 	];
 };
 
