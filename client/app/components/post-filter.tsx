@@ -1,27 +1,46 @@
 import React from "react";
 import { DEFAULT_SELECTIONS, Selections, TagInput } from "./tag-input";
-import { useNavigate } from "@remix-run/react";
+import { useLoaderData, useNavigate } from "@remix-run/react";
 import clsx from "clsx";
+import { loader } from "~/routes/discussions";
 
 function PostFilter() {
 	const [filters, setFilters] = React.useState<Selections>(DEFAULT_SELECTIONS);
 	const navigate = useNavigate();
+	const { queryParams } = useLoaderData<typeof loader>();
 
 	const filterCount = React.useMemo(
 		() => Object.values(filters).flat().length,
 		[filters],
 	);
 
-	React.useEffect(() => {
-		const q = Object.entries(filters)
-			.filter((e) => e[1].length > 0)
-			.flatMap(([id, values]) =>
-				values.map((v, i) => `tags[${id}]=${encodeURIComponent(v)}`),
-			)
-			.join("&");
+	const q = React.useMemo(
+		() =>
+			Object.entries(filters)
+				.filter((e) => e[1].length > 0)
+				.flatMap(([id, values]) =>
+					values.map((v, i) => `tags[${id}]=${encodeURIComponent(v)}`),
+				)
+				.join("&"),
+		[filters],
+	);
 
+	React.useEffect(() => {
+		const tags = queryParams.tags;
+		if (!tags) {
+			return;
+		}
+
+		const currentTags = Object.fromEntries(
+			Object.entries(tags).map(([k, v]) => [k, Array.isArray(v) ? v : [v]]),
+		);
+
+		setFilters({ ...DEFAULT_SELECTIONS, ...currentTags });
+	}, [queryParams]);
+
+	React.useEffect(() => {
 		navigate(`/discussions?${q}`);
-	}, [filters, navigate]);
+	}, [q, navigate]);
 
 	return (
 		<div className="flex justify-between mb-2">

@@ -16,6 +16,7 @@ import { prisma } from "~/lib/prisma.server";
 import { values } from "~/lib/values.server";
 import { withUserPrefs } from "~/lib/with-user-prefs";
 import qs from "qs";
+import { DiscussionsEmpty } from "~/components/discussions-empty";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
 	const searchQuery = new URL(request.url).search.substring(1);
@@ -36,13 +37,13 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 	const tagsFilter = tags.length ? { AND: tags } : {};
 
 	const posts = await prisma.post.findMany({
-		where: { parentId: null, ...tagsFilter, },
+		where: { parentId: null, ...tagsFilter },
 		include: { user: true, media: true },
 		orderBy: { createdAt: "desc" },
 	});
 
 	return json(
-		{ school: values.meta(), posts },
+		{ school: values.meta(), posts, queryParams },
 		{
 			headers: {
 				"Set-Cookie": await withUserPrefs(request, { lastBase: "discussions" }),
@@ -110,6 +111,19 @@ export default function Discussions() {
 							)}
 						</React.Fragment>
 					))}
+
+					{posts.length === 0 && (
+						<div className="min-h-[40vh] flex flex-col items-center text-secondary">
+							<div className="max-w-[20rem] w-full">
+								<DiscussionsEmpty />
+							</div>
+
+							<div className="font-mono">Nothing here!</div>
+							<div className="text-sm">
+								If anyone is gonna start talking, it's you.
+							</div>
+						</div>
+					)}
 				</div>
 
 				<div className="cols-span-1">
