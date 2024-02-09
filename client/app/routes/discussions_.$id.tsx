@@ -9,7 +9,6 @@ import { useLoaderData } from "@remix-run/react";
 import clsx from "clsx";
 import React from "react";
 import { Avatar } from "~/components/avatar";
-import { Content } from "~/components/content";
 import { LoginComment } from "~/components/login-comment";
 import { MediaItem } from "~/components/media-item";
 import { PostInput } from "~/components/post-input";
@@ -23,7 +22,9 @@ import { checkAuth } from "~/lib/check-auth";
 import { createPost } from "~/lib/create-post";
 import { useGlobalCtx } from "~/lib/global-ctx";
 import { prisma } from "~/lib/prisma.server";
+import { render } from "~/lib/render.server";
 import { values } from "~/lib/values.server";
+import { FullContent } from "~/components/full-content";
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
 	const postId = Number(params.id as string);
@@ -37,12 +38,23 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
 		throw new Response("Not found", { status: 404 });
 	}
 
+	const content = await render(post.content);
+
 	const comments = await prisma.post.findMany({
 		where: { parentId: post.id },
 		include: { user: true, media: true },
 	});
 
-	return json({ comments, meta: values.meta(), post });
+	for (const comment of comments) {
+		comment.content = await render(comment.content)
+	}
+
+	return json({
+		comments,
+		meta: values.meta(),
+		post,
+		content: content,
+	});
 };
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {
@@ -108,7 +120,7 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
 };
 
 export default function Discussion() {
-	const { comments, post } = useLoaderData<typeof loader>();
+	const { comments, post, content } = useLoaderData<typeof loader>();
 	const { user } = useGlobalCtx();
 
 	return (
@@ -138,12 +150,10 @@ export default function Discussion() {
 								</div>
 							</header>
 
-							<div className={clsx("mb-4", { hidden: !post.tags })}>
-								<Tags post={post} />
-							</div>
+							<Tags className="mb-4" post={post} />
 
 							<div className="-mt-2">
-								<Content content={post.content} />
+								<FullContent content={content} />
 
 								{post.media.length > 0 && (
 									<div className="grid xl:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-2 flex-wrap mt-2">

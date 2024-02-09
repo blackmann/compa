@@ -17,6 +17,7 @@ import { values } from "~/lib/values.server";
 import { withUserPrefs } from "~/lib/with-user-prefs";
 import qs from "qs";
 import { DiscussionsEmpty } from "~/components/discussions-empty";
+import { renderSummary } from "~/lib/render-summary.server";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
 	const searchQuery = new URL(request.url).search.substring(1);
@@ -41,6 +42,10 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 		include: { user: true, media: true },
 		orderBy: { createdAt: "desc" },
 	});
+
+	for (const post of posts) {
+		post.content = await renderSummary(post.content);
+	}
 
 	return json(
 		{ school: values.meta(), posts, queryParams },

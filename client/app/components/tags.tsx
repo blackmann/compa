@@ -1,11 +1,13 @@
 import { Post } from "@prisma/client";
+import clsx from "clsx";
 import React from "react";
 
 interface Props {
+	className?: string;
 	post: Post;
 }
 
-function Tags({ post }: Props) {
+function Tags({ className, post }: Props) {
 	const tags = React.useMemo(() => {
 		const parsed =
 			(JSON.parse(post.tags || "null") as string[] | undefined) || [];
@@ -15,8 +17,17 @@ function Tags({ post }: Props) {
 		});
 	}, [post]);
 
+	if (!tags.length) {
+		return null;
+	}
+
 	return (
-		<ul className="flex text-secondary font-medium flex-wrap gap-y-1">
+		<ul
+			className={clsx(
+				"flex text-secondary font-medium flex-wrap gap-y-1",
+				className,
+			)}
+		>
 			{tags.map(([id, value]) => (
 				<li
 					key={`${id}:${value}`}
