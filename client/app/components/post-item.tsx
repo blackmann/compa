@@ -116,7 +116,7 @@ function PostContent({ full, post, active, level, limit }: PostContentProps) {
 
 				<Votes post={post} />
 			</div>
-			<div className="flex-1">
+			<div className="flex-1 w-0">
 				<header className="flex gap-2 justify-between">
 					<span className="font-mono text-secondary text-sm">
 						@{post.user.username} &bull; <PostTime time={post.createdAt} />

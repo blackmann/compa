@@ -91,6 +91,10 @@ input {
   @apply mt-2
 }
 
+.article pre {
+  @apply overflow-x-auto;
+}
+
 .shiki {
   counter-reset: step;
   counter-increment: step 0;

@@ -138,7 +138,7 @@ export default function Discussion() {
 							<Votes post={post} />
 						</div>
 
-						<div className="border-b dark:border-neutral-700 pb-2 flex-1">
+						<div className="border-b dark:border-neutral-700 pb-2 flex-1 w-0">
 							<header className="flex justify-between">
 								<span className="font-mono text-secondary">
 									@{post.user.username} &bull;{" "}
