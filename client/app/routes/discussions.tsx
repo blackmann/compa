@@ -6,6 +6,7 @@ import {
 } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
 import React from "react";
+import { PostFilter } from "~/components/post-filter";
 import { PostInput } from "~/components/post-input";
 import { PostItem, PostItemProps } from "~/components/post-item";
 import { checkAuth } from "~/lib/check-auth";
@@ -14,16 +15,35 @@ import { useGlobalCtx } from "~/lib/global-ctx";
 import { prisma } from "~/lib/prisma.server";
 import { values } from "~/lib/values.server";
 import { withUserPrefs } from "~/lib/with-user-prefs";
+import qs from "qs";
+import { DiscussionsEmpty } from "~/components/discussions-empty";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
+	const searchQuery = new URL(request.url).search.substring(1);
+	const queryParams = qs.parse(searchQuery);
+
+	const tags = Object.entries(queryParams.tags || {}).flatMap(
+		([id, selection]) => {
+			if (Array.isArray(selection)) {
+				return selection.map((s) => ({
+					tags: { contains: `${id}:${selection}` },
+				}));
+			}
+
+			return { tags: { contains: `${id}:${selection}` } };
+		},
+	);
+
+	const tagsFilter = tags.length ? { AND: tags } : {};
+
 	const posts = await prisma.post.findMany({
-		where: { parentId: null },
+		where: { parentId: null, ...tagsFilter },
 		include: { user: true, media: true },
 		orderBy: { createdAt: "desc" },
 	});
 
 	return json(
-		{ school: values.meta(), posts },
+		{ school: values.meta(), posts, queryParams },
 		{
 			headers: {
 				"Set-Cookie": await withUserPrefs(request, { lastBase: "discussions" }),
@@ -78,6 +98,10 @@ export default function Discussions() {
 
 					<hr className="mb-4 dark:border-t-neutral-800" />
 
+					<div>
+						<PostFilter />
+					</div>
+
 					{posts.map((post, i) => (
 						<React.Fragment key={post.id}>
 							<PostItem limit post={post as unknown as PostItemProps["post"]} />
@@ -87,6 +111,19 @@ export default function Discussions() {
 							)}
 						</React.Fragment>
 					))}
+
+					{posts.length === 0 && (
+						<div className="min-h-[40vh] flex flex-col items-center text-secondary">
+							<div className="max-w-[20rem] w-full">
+								<DiscussionsEmpty />
+							</div>
+
+							<div className="font-mono">Nothing here!</div>
+							<div className="text-sm">
+								If anyone is gonna start talking, it's you.
+							</div>
+						</div>
+					)}
 				</div>
 
 				<div className="cols-span-1">

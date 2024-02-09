@@ -16,6 +16,7 @@ const values = {
 	},
 	meta() {
 		return {
+			id: this.get("id"),
 			shortName: this.get("shortName"),
 		};
 	},

@@ -23,6 +23,7 @@ const DEFAULT_SELECTIONS = {
 const TagInputCtx = React.createContext<{
 	selections: Selections;
 	onChange: (id: SelectionId, values: string[]) => void;
+	reset: VoidFunction;
 }>({
 	selections: {
 		course: [],
@@ -30,6 +31,7 @@ const TagInputCtx = React.createContext<{
 		level: [],
 	},
 	onChange: () => {},
+	reset: () => {},
 });
 
 function useTagInputCtx() {
@@ -58,6 +60,8 @@ function TagInput({ children, className, onDone, value }: Props) {
 
 	const handleModalClose = React.useCallback(() => setShowModal(false), []);
 
+	const reset = React.useCallback(() => setSelections(DEFAULT_SELECTIONS), []);
+
 	React.useEffect(() => {
 		if (!value) {
 			return;
@@ -67,7 +71,9 @@ function TagInput({ children, className, onDone, value }: Props) {
 	}, [value]);
 
 	return (
-		<TagInputCtx.Provider value={{ selections, onChange: handleSelection }}>
+		<TagInputCtx.Provider
+			value={{ selections, onChange: handleSelection, reset }}
+		>
 			<button
 				type="button"
 				className={clsx(
@@ -135,16 +141,34 @@ interface TagTypeSelectProps {
 }
 
 function Stage1({ onSelect, onClose }: TagTypeSelectProps) {
-	const { selections } = useTagInputCtx();
+	const { selections, reset } = useTagInputCtx();
+
+	const filterCount = React.useMemo(
+		() => Object.values(selections).flat().length,
+		[selections],
+	);
+
 	return (
 		<>
 			<header className="p-2 pb-0">
-				<div className="text-sm text-secondary flex gap-2 items-center mb-2 font-medium">
-					<div className="i-lucide-hash" /> Select tag type
+				<div className="text-sm text-secondary flex items-center justify-between mb-2 font-medium">
+					<div className="flex  gap-2">
+						<div className="i-lucide-hash" /> Select tag type
+					</div>
+
+					{filterCount > 0 && (
+						<button
+							className="bg-red-500 text-white px-1 rounded-md inline-flex items-center gap-1"
+							type="button"
+							onClick={() => reset()}
+						>
+							<span className="i-lucide-x inline-block" /> Clear selections
+						</button>
+					)}
 				</div>
 			</header>
 
-			<ul className="p-2 pt-0 flex-1">
+			<ul className="p-2 pt-0 flex-1 overflow-y-auto">
 				{types.map((type) => {
 					const selected = selections[type.toLowerCase() as SelectionId];
 
@@ -166,6 +190,11 @@ function Stage1({ onSelect, onClose }: TagTypeSelectProps) {
 					);
 				})}
 			</ul>
+
+			<div className="mx-2 text-secondary text-sm flex items-center gap-1">
+				<span className="i-lucide-menu-square inline-block" />
+				You can select tags from different types.
+			</div>
 
 			<footer className="p-2 border-t dark:border-t-neutral-700 flex justify-end">
 				<Button onClick={onClose}>Done</Button>
