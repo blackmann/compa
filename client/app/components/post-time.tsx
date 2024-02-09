@@ -9,8 +9,8 @@ function postTime(time: Date | string) {
 	}
 
 	const format = dayjs(time).isSame(new Date(), "year")
-		? "DD MMM, HH:mma"
-		: "DD MMM 'YY, HH:mma";
+		? "DD MMM, hh:mma"
+		: "DD MMM 'YY, hh:mma";
 
 	return dayjs(time).format(format);
 }
@@ -18,7 +18,7 @@ function postTime(time: Date | string) {
 function PostTime({ time }: { time: Date | string }) {
 	return (
 		<time
-			title={dayjs(time).format("DD MMM YYYY, HH:mm a")}
+			title={dayjs(time).format("DD MMM YYYY, hh:mm a")}
 			dateTime={typeof time === "string" ? time : time.toISOString()}
 		>
 			{postTime(time)}

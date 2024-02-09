@@ -6,6 +6,7 @@ import { useTagCourses } from "~/lib/use-tag-courses";
 import { useTagProgrammes } from "~/lib/use-tag-programmes";
 import { Link } from "@remix-run/react";
 import { UseData } from "~/lib/tag-use-data";
+import clsx from "clsx";
 
 // TODO: Add custom
 type SelectionStage = "type" | "course" | "programme" | "level";
@@ -35,12 +36,13 @@ function useTagInputCtx() {
 	return React.useContext(TagInputCtx);
 }
 
-interface Props {
+interface Props extends React.PropsWithChildren {
 	onDone?: (selections: Selections) => void;
 	value?: Selections;
+	className?: string;
 }
 
-function TagInput({ onDone, value }: Props) {
+function TagInput({ children, className, onDone, value }: Props) {
 	const [showModal, setShowModal] = React.useState(false);
 	const [selections, setSelections] =
 		React.useState<Selections>(DEFAULT_SELECTIONS);
@@ -68,11 +70,14 @@ function TagInput({ onDone, value }: Props) {
 		<TagInputCtx.Provider value={{ selections, onChange: handleSelection }}>
 			<button
 				type="button"
-				className="size-8 bg-zinc-200 dark:bg-neutral-800 inline-flex justify-center items-center transition-[width] duration-200 px-2 gap-2"
+				className={clsx(
+					"size-8 bg-zinc-200 dark:bg-neutral-800 inline-flex justify-center items-center transition-[width] duration-200 px-2 gap-2",
+					className,
+				)}
 				title="Add tag"
 				onClick={() => setShowModal(true)}
 			>
-				<div className="i-lucide-hash" />
+				{children || <div className="i-lucide-hash" />}
 			</button>
 
 			<Modal

@@ -16,7 +16,7 @@ function Tags({ post }: Props) {
 	}, [post]);
 
 	return (
-		<ul className="flex text-secondary font-medium flex-wrap">
+		<ul className="flex text-secondary font-medium flex-wrap gap-y-1">
 			{tags.map(([id, value]) => (
 				<li
 					key={`${id}:${value}`}
