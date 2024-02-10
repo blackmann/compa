@@ -38,8 +38,7 @@ function removeLinks(): ReturnType<Plugin> {
 		visit(tree, "element", (child, index, parent) => {
 			if (child.tagName === "a") {
 				child.tagName = "span";
-				console.log(child.properties.className);
-				child.properties.className = "underline"
+				child.properties.className = "underline hyphens-auto";
 			}
 		});
 	};
@@ -83,7 +82,12 @@ function reduce(): ReturnType<Plugin> {
 						properties: { className: "tag" },
 						children: [{ type: "text", value: tagName }],
 					},
-					...child.children,
+					{
+						type: "element",
+						tagName: "div",
+						properties: {},
+						children: child.children,
+					},
 				];
 			}
 		});

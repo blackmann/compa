@@ -156,7 +156,7 @@ function PostInput({ level = 0, parent }: Props) {
 					))}
 				</div>
 
-				<div className="flex justify-between">
+				<div className="flex justify-between flex-wrap gap-y-2">
 					<div className="flex gap-2">
 						<label className="flex items-center gap-2 rounded-lg px-2 py-1 font-medium bg-zinc-200 px-2 py-1 dark:bg-neutral-800 cursor-pointer w-[7.2rem]">
 							<div className="i-lucide-file-symlink opacity-50 shrink-0" />

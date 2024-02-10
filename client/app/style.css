@@ -56,7 +56,7 @@ input {
 }
 
 .post-content .reduce-heading :nth-child(2) {
-  @apply flex-1;
+  @apply flex-1 w-0 hyphens-auto;
 }
 
 .article :is(p, pre, h1, h2, h3, h4, h5, h6, blockquote):not(:last-child) {
@@ -96,7 +96,7 @@ input {
 }
 
 .article a {
-  @apply text-blue-600 dark:text-blue-500 underline;
+  @apply text-blue-600 dark:text-blue-500 underline hyphens-auto;
 }
 
 .article:first-child {
