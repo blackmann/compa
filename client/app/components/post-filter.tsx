@@ -1,6 +1,6 @@
 import React from "react";
 import { DEFAULT_SELECTIONS, Selections, TagInput } from "./tag-input";
-import { useLoaderData, useNavigate } from "@remix-run/react";
+import { useLoaderData, useLocation, useNavigate } from "@remix-run/react";
 import clsx from "clsx";
 import { loader } from "~/routes/discussions";
 
@@ -8,6 +8,7 @@ function PostFilter() {
 	const [filters, setFilters] = React.useState<Selections>(DEFAULT_SELECTIONS);
 	const navigate = useNavigate();
 	const { queryParams } = useLoaderData<typeof loader>();
+	const location = useLocation();
 
 	const filterCount = React.useMemo(
 		() => Object.values(filters).flat().length,
@@ -39,8 +40,19 @@ function PostFilter() {
 	}, [queryParams]);
 
 	React.useEffect(() => {
-		navigate(`/discussions?${q}`);
-	}, [q, navigate]);
+		const timeout = setTimeout(() => {
+			const to = `/discussions?${q}`;
+			const from = `${location.pathname}${location.search || "?"}`;
+
+			if (from === to) {
+				return;
+			}
+
+			navigate(to);
+		}, 50);
+
+		return () => clearTimeout(timeout);
+	}, [q, navigate, location.pathname, location.search]);
 
 	return (
 		<div className="flex justify-between mb-2">
