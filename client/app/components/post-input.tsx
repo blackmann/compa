@@ -197,7 +197,7 @@ function PostInput({ level = 0, parent }: Props) {
 						<FullContent content={previewFetcher.data?.rendered} />
 					</div>
 
-					<div className="bg-zinc-200 bg-opacity-50 text-secondary inline-block text-sm rounded-lg px-2 mb-1 ms-2 font-medium">
+					<div className="bg-zinc-200 dark:bg-neutral-700 bg-opacity-50 text-secondary inline-block text-sm rounded-lg px-2 mb-1 ms-2 font-medium">
 						Tap <span className="inline-block i-lucide-pen" /> to go back to
 						edit mode.
 					</div>
