@@ -188,7 +188,7 @@ function PostInput({ level = 0, parent }: Props) {
 					)}
 				>
 					<div className="-mt-1">
-						<div className="text-sm bg-blue-600 text-white inline-block px-2 rounded-rb-lg rounded-tl-sm font-medium">
+						<div className="text-sm bg-blue-600 text-white inline-block px-2 rounded-rb-lg rounded-tl-md font-medium">
 							Preview mode
 						</div>
 					</div>
