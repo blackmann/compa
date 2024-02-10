@@ -5,6 +5,8 @@ interface Props {
 }
 
 function FullContent({ content }: Props) {
+	if (!content) return null;
+
 	return <article className="article">{parse(content)}</article>;
 }
 

@@ -2,7 +2,7 @@ import "@unocss/reset/tailwind.css";
 import "./style.css";
 
 import { cssBundleHref } from "@remix-run/css-bundle";
-import type { LinksFunction, LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
+import type { LinksFunction, LoaderFunctionArgs } from "@remix-run/node";
 import {
 	Links,
 	LiveReload,

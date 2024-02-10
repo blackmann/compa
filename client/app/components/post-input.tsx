@@ -1,4 +1,4 @@
-import { FieldValues, get, useForm } from "react-hook-form";
+import { FieldValues, useForm } from "react-hook-form";
 import { Button } from "./button";
 import { useFetcher } from "react-router-dom";
 import { Post } from "@prisma/client";
@@ -15,6 +15,7 @@ import {
 	Selections,
 	TagInput,
 } from "./tag-input";
+import { FullContent } from "./full-content";
 
 interface Props {
 	level?: number;
@@ -24,18 +25,22 @@ interface Props {
 const ATTACHMENT_LIMIT = 5 * 1024 * 1024; // 5MB limit
 
 function PostInput({ level = 0, parent }: Props) {
-	const { handleSubmit, register, setValue, watch, reset } = useForm({
-		defaultValues: {
-			content: "",
-			files: [] as File[],
+	const { getValues, handleSubmit, register, setValue, watch, reset } = useForm(
+		{
+			defaultValues: {
+				content: "",
+				files: [] as File[],
+			},
 		},
-	});
+	);
 
 	const [isRecording, setIsRecording] = React.useState(false);
 	const [uploading, setUploading] = React.useState(false);
 	const [tags, setTags] = React.useState<Selections>(DEFAULT_SELECTIONS);
+	const [isPreviewing, setIsPreviewing] = React.useState(false);
 
 	const fetcher = useFetcher();
+	const previewFetcher = useFetcher();
 
 	const { user } = useGlobalCtx();
 
@@ -46,6 +51,20 @@ function PostInput({ level = 0, parent }: Props) {
 		return Object.entries(tags).flatMap(([id, values]) =>
 			values.map((v) => `${id}:${v}`),
 		);
+	}
+
+	function loadPreview() {
+		const content = getValues("content");
+
+		if (!content.trim()) {
+			return;
+		}
+
+		previewFetcher.submit(JSON.stringify({ content }), {
+			method: "POST",
+			action: "/md",
+			encType: "application/json",
+		});
 	}
 
 	async function createPost(data: FieldValues) {
@@ -108,14 +127,30 @@ function PostInput({ level = 0, parent }: Props) {
 		);
 	}
 
+	function togglePreview() {
+		if (!isPreviewing) {
+			const content = getValues("content");
+			if (!content.trim()) {
+				return;
+			}
+
+			loadPreview();
+		}
+
+		setIsPreviewing(!isPreviewing);
+	}
+
 	React.useEffect(() => {
 		if (fetcher.data) {
 			reset();
 			setTags(DEFAULT_SELECTIONS);
+			setIsPreviewing(false);
 		}
 	}, [fetcher.data, reset]);
 
 	const posting = fetcher.state === "submitting" || uploading;
+
+	const hidePreview = previewFetcher.state !== "idle" || !isPreviewing;
 
 	return (
 		<>
@@ -127,7 +162,10 @@ function PostInput({ level = 0, parent }: Props) {
 				)}
 
 				<textarea
-					className="w-full rounded-lg bg-zinc-100 dark:bg-neutral-800 border-zinc-200 dark:border-neutral-700 p-2 h-30"
+					className={clsx(
+						"w-full rounded-lg bg-zinc-100 dark:bg-neutral-800 border-zinc-200 dark:border-neutral-700 p-2 h-30",
+						{ hidden: !hidePreview },
+					)}
 					placeholder={
 						isComment ? "What do you think?" : "What have you got to share?"
 					}
@@ -138,7 +176,32 @@ function PostInput({ level = 0, parent }: Props) {
 							return value.trim();
 						},
 					})}
+					disabled={posting || isPreviewing}
 				/>
+
+				<div
+					className={clsx(
+						"min-h-[5rem] bg-zinc-100 dark:bg-neutral-800 rounded-lg pt-0 mb-2 border-2 border-blue-600",
+						{
+							hidden: hidePreview,
+						},
+					)}
+				>
+					<div className="-mt-1">
+						<div className="text-sm bg-blue-600 text-white inline-block px-2 rounded-rb-lg rounded-tl-sm font-medium">
+							Preview mode
+						</div>
+					</div>
+
+					<div className="px-2 py-1">
+						<FullContent content={previewFetcher.data?.rendered} />
+					</div>
+
+					<div className="bg-zinc-200 bg-opacity-50 text-secondary inline-block text-sm rounded-lg px-2 mb-1 ms-2 font-medium">
+						Tap <span className="inline-block i-lucide-pen" /> to go back to
+						edit mode.
+					</div>
+				</div>
 
 				<div
 					className={clsx(
@@ -179,8 +242,26 @@ function PostInput({ level = 0, parent }: Props) {
 								onRecording={setIsRecording}
 							/>
 
-							{!(isRecording || parent) && (
-								<TagInput value={tags} onDone={setTags} />
+							{!isRecording && (
+								<>
+									{!parent && <TagInput value={tags} onDone={setTags} />}
+
+									<button
+										className="size-8 bg-zinc-200 dark:bg-neutral-800 inline-flex justify-center items-center"
+										type="button"
+										title={isPreviewing ? "Edit mode" : "Preview mode"}
+										onClick={togglePreview}
+									>
+										<span
+											className={clsx("inline-block i-lucide-eye", {
+												"!i-svg-spinners-180-ring-with-bg":
+													previewFetcher.state !== "idle",
+												"i-lucide-pencil":
+													previewFetcher.state === "idle" && isPreviewing,
+											})}
+										/>
+									</button>
+								</>
 							)}
 						</div>
 					</div>

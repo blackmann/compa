@@ -7,7 +7,9 @@ function PendingUI() {
 	const divRef = React.useRef<HTMLDivElement>(null);
 
 	React.useEffect(() => {
-		const loader = divRef.current!;
+		if (!divRef.current) return;
+
+		const loader = divRef.current;
 		if (["loading", "submitting"].includes(navigation.state)) {
 			intervalRef.current = setInterval(() => {
 				const previous = parseInt(loader.style.width);
@@ -39,7 +41,7 @@ function PendingUI() {
 			className="loader sticky left-0 top-0 h-1 -mb-1 bg-blue-500 transition-[width] duration-200 transition-ease-in"
 			style={{ width: "0%" }}
 			ref={divRef}
-		></div>
+		/>
 	);
 }
 
