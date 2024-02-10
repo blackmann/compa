@@ -11,7 +11,6 @@ import { PostMenu } from "./post-menu";
 import { useGlobalCtx } from "~/lib/global-ctx";
 import { LoginComment } from "./login-comment";
 import { MediaItem } from "./media-item";
-import React from "react";
 import { Tags } from "./tags";
 import { FullContent } from "./full-content";
 
@@ -27,17 +26,17 @@ function PostItem({ post, limit, level = 0 }: Props) {
 
 	const { user } = useGlobalCtx();
 
-	function handleLinkClick(e: React.MouseEvent<HTMLAnchorElement>) {
-		if (level > 1) {
-			e.preventDefault();
+	function handleItemClick() {
+		if (level >= 2) {
 			return;
 		}
 
 		if (location.hash === `#${post.id}`) {
-			e.preventDefault();
-			e.stopPropagation();
 			window.location.hash = "";
+			return;
 		}
+
+		window.location.hash = `#${post.id}`;
 	}
 
 	const link = post.parentId
@@ -61,17 +60,26 @@ function PostItem({ post, limit, level = 0 }: Props) {
 
 	return (
 		<>
-			{level < 2 ? (
+			{level === 0 ? (
 				<Link
 					to={level < 2 ? link : ""}
 					className="block"
 					id={post.id.toString()}
-					onClick={handleLinkClick}
 				>
 					{content}
 				</Link>
 			) : (
-				content
+				<div
+					className="cursor-pointer"
+					id={post.id.toString()}
+					tabIndex={0}
+					onClick={handleItemClick}
+					onKeyDown={(e) => {
+						if (["Space", "Enter"].includes(e.key)) handleItemClick();
+					}}
+				>
+					{content}
+				</div>
 			)}
 
 			{showCommentInput && mounted && (

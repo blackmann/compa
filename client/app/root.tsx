@@ -50,6 +50,7 @@ export default function App() {
 				/>
 				<link rel="manifest" href="/manifest.webmanifest" />
 				<link rel="icon" type="image/x-icon" href="/favicon.ico" />
+				<link href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" rel="stylesheet" />
 				<Meta />
 				<Links />
 			</head>

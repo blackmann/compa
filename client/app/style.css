@@ -47,12 +47,24 @@ input {
   @apply mt-2;
 }
 
+.post-content .reduce-heading {
+  @apply flex gap-2;
+}
+
+.post-content .tag {
+  @apply bg-zinc-200 dark:bg-neutral-800 text-zinc-500 dark:text-neutral-400 p-0.5 rounded-md text-sm font-mono self-start;
+}
+
+.post-content .reduce-heading :nth-child(2) {
+  @apply flex-1;
+}
+
 .article :is(p, pre, h1, h2, h3, h4, h5, h6, blockquote):not(:last-child) {
   @apply mb-3;
 }
 
 .article :is(h1, h2, h3, h4, h5, h6) {
-  @apply font-bold;
+  @apply font-bold hyphens-auto;
 }
 
 .article h1 {

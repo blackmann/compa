@@ -1,4 +1,4 @@
-import { unified } from "unified";
+import { unified, type Plugin } from "unified";
 import remarkParse from "remark-parse";
 import remarkRehype from "remark-rehype";
 import rehypeSanitize from "rehype-sanitize";
@@ -6,7 +6,7 @@ import rehypeStringify from "rehype-stringify";
 import remarkGfm from "remark-gfm";
 import rehypeShiki from "@shikijs/rehype";
 import smartypants from "remark-smartypants";
-import rehypeDocument from "rehype-document";
+import { visit } from "unist-util-visit";
 import rehypeKatex from "rehype-katex";
 import remarkMath from "remark-math";
 import { removeCodeTrail } from "./remove-code-trail";
@@ -18,10 +18,39 @@ const processor = unified()
 	.use(remarkGfm)
 	.use(remarkRehype)
 	.use(rehypeSanitize)
-	.use(() => (tree) => {
+	.use(reduce)
+	.use(removeLinks)
+	.use(remarkMath)
+	.use(rehypeKatex)
+	.use(removeCodeTrail)
+	.use(rehypeShiki, {
+		themes: { light: "vitesse-light", dark: "vitesse-dark" },
+	})
+	.use(smartypants)
+	.use(rehypeStringify);
+
+async function renderSummary(content: string) {
+	return (await processor.process(content)).toString();
+}
+
+function removeLinks(): ReturnType<Plugin> {
+	return (tree) => {
+		visit(tree, "element", (child, index, parent) => {
+			if (child.tagName === "a") {
+				child.tagName = "span";
+				console.log(child.properties.className);
+				child.properties.className = "underline"
+			}
+		});
+	};
+}
+
+function reduce(): ReturnType<Plugin> {
+	return (tree) => {
 		// Some improvements include:
 		// Shortening code blocks
 		// Using paragraph length
+		// Render h tags as div
 		const count = tree.children.length;
 		tree.children.splice(5);
 
@@ -33,22 +62,32 @@ const processor = unified()
 				children: [],
 			});
 		}
-	})
-	.use(remarkMath)
-	.use(rehypeDocument, {
-		// Get the latest one from: <https://katex.org/docs/browser>.
-		css: "https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css",
-	})
-	.use(rehypeKatex)
-	.use(removeCodeTrail)
-	.use(rehypeShiki, {
-		themes: { light: "vitesse-light", dark: "vitesse-dark" },
-	})
-	.use(smartypants)
-	.use(rehypeStringify);
 
-async function renderSummary(content: string) {
-	return (await processor.process(content)).toString();
+		visit(tree, "element", (child) => {
+			const tagName = child.tagName;
+			if (
+				child.type === "element" &&
+				["h1", "h2", "h3", "h4", "h5", "h6"].includes(tagName)
+			) {
+				child.tagName = "div";
+
+				child.properties = {
+					...child.properties,
+					className: "reduce-heading",
+				};
+
+				child.children = [
+					{
+						type: "element",
+						tagName: "div",
+						properties: { className: "tag" },
+						children: [{ type: "text", value: tagName }],
+					},
+					...child.children,
+				];
+			}
+		});
+	};
 }
 
 export { renderSummary };
