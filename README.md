@@ -27,7 +27,7 @@ Your open, compact, companion and compass. That is _Compa_.
 
 - [x] Timetable: See the lecture schedule for a semester and import it to your calendar. ❇️
 
-- [ ] Discussions: Ask questions, share ideas and interact with other students.
+- [x] Discussions: Ask questions, share ideas and interact with other students.
 
 - [ ] Communities: Find and join groups that interest you.
 
