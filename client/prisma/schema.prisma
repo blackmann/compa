@@ -105,6 +105,7 @@ model Post {
   media         Media[]
   Vote          Vote[]
   deleted       Boolean  @default(false)
+  tags          String   @default("") // JSON stringified array of tags
 }
 
 model Vote {

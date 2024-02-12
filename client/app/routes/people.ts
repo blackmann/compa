@@ -10,7 +10,11 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 	const postId = Number(post);
 
 	const people = await prisma.user.findMany({
-		where: { Post: { some: { OR: [{ id: postId }, { parentId: postId }] } } },
+		where: {
+			Post: {
+				some: { OR: [{ id: postId }, { parentId: postId }], deleted: false },
+			},
+		},
 	});
 
 	return json({ people });

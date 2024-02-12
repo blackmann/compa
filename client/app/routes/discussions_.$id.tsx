@@ -6,8 +6,9 @@ import {
 	redirect,
 } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
+import clsx from "clsx";
+import React from "react";
 import { Avatar } from "~/components/avatar";
-import { Content } from "~/components/content";
 import { LoginComment } from "~/components/login-comment";
 import { MediaItem } from "~/components/media-item";
 import { PostInput } from "~/components/post-input";
@@ -15,15 +16,17 @@ import { PostItem, PostItemProps } from "~/components/post-item";
 import { PostMenu } from "~/components/post-menu";
 import { PostPeople } from "~/components/post-people";
 import { PostTime } from "~/components/post-time";
+import { Tags } from "~/components/tags";
 import { Votes } from "~/components/votes";
 import { checkAuth } from "~/lib/check-auth";
 import { createPost } from "~/lib/create-post";
 import { useGlobalCtx } from "~/lib/global-ctx";
 import { prisma } from "~/lib/prisma.server";
+import { render } from "~/lib/render.server";
 import { values } from "~/lib/values.server";
+import { FullContent } from "~/components/full-content";
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
-	const schoolName = values.get("shortName");
 	const postId = Number(params.id as string);
 
 	const post = await prisma.post.findFirst({
@@ -35,12 +38,23 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
 		throw new Response("Not found", { status: 404 });
 	}
 
+	const content = await render(post.content);
+
 	const comments = await prisma.post.findMany({
 		where: { parentId: post.id },
 		include: { user: true, media: true },
 	});
 
-	return json({ comments, schoolName, post });
+	for (const comment of comments) {
+		comment.content = await render(comment.content);
+	}
+
+	return json({
+		comments,
+		meta: values.meta(),
+		post,
+		content: content,
+	});
 };
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {
@@ -51,31 +65,22 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 			const post = await prisma.post.findFirst({ where: { id: postId } });
 
 			await prisma.post.delete({ where: { id: postId, userId: userId } });
+			if (post?.parentId) {
+				await updatePostProps(post.parentId);
+			}
 
 			if (!post?.parentId) {
 				return redirect("/discussions");
 			}
 
-			return redirect(`/discussions/${post.parentId}`);
+			return null;
 		}
 
 		case "POST": {
 			const data = await request.json();
 
 			await createPost(data, userId);
-
-			const comments = await prisma.post.count({
-				where: { parentId: data.parentId },
-			});
-
-			const people = await prisma.user.count({
-				where: { Post: { every: { id: data.parentId } } },
-			});
-
-			await prisma.post.update({
-				where: { id: data.parentId },
-				data: { commentsCount: comments, people },
-			});
+			await updatePostProps(data.parentId);
 
 			return json({}, { status: 201 });
 		}
@@ -84,12 +89,38 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 	return json({}, { status: 405 });
 };
 
+async function updatePostProps(postId: number) {
+	const comments = await prisma.post.count({
+		where: { parentId: postId },
+	});
+
+	const people = await prisma.user.count({
+		where: {
+			Post: {
+				some: { OR: [{ id: postId }, { parentId: postId }], deleted: false },
+			},
+		},
+	});
+
+	await prisma.post.update({
+		where: { id: postId },
+		data: { commentsCount: comments, people },
+	});
+}
+
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
-	return [{ title: `Discussions | ${data?.schoolName} | compa` }];
+	const summary = data?.post.content.substring(0, 72);
+
+	return [
+		{
+			title: `@${data?.post.user.username} posted in Discussions | ${data?.meta.shortName} | compa`,
+		},
+		{ name: "description", content: `${summary}…` },
+	];
 };
 
 export default function Discussion() {
-	const { comments, post } = useLoaderData<typeof loader>();
+	const { comments, post, content } = useLoaderData<typeof loader>();
 	const { user } = useGlobalCtx();
 
 	return (
@@ -107,7 +138,7 @@ export default function Discussion() {
 							<Votes post={post} />
 						</div>
 
-						<div className="border-b dark:border-neutral-700 pb-2 flex-1">
+						<div className="border-b dark:border-neutral-700 pb-2 flex-1 w-0">
 							<header className="flex justify-between">
 								<span className="font-mono text-secondary">
 									@{post.user.username} &bull;{" "}
@@ -119,8 +150,10 @@ export default function Discussion() {
 								</div>
 							</header>
 
+							<Tags className="mb-4" post={post} />
+
 							<div className="-mt-2">
-								<Content content={post.content} />
+								<FullContent content={content} />
 
 								{post.media.length > 0 && (
 									<div className="grid xl:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-2 flex-wrap mt-2">
@@ -148,7 +181,7 @@ export default function Discussion() {
 
 								<span className="inline-flex items-center gap-2 text-secondary">
 									<div className="i-lucide-users-2 inline-block" />{" "}
-									{post.people} people
+									{post.people} {post.people === 1 ? "person" : "people"}
 								</span>
 							</footer>
 						</div>
@@ -171,12 +204,16 @@ export default function Discussion() {
 					</div>
 
 					<div className="mt-2">
-						{comments.map((comment) => (
-							<PostItem
-								key={comment.id}
-								post={comment as unknown as PostItemProps["post"]}
-								level={1}
-							/>
+						{comments.map((comment, i) => (
+							<React.Fragment key={comment.id}>
+								<PostItem
+									post={comment as unknown as PostItemProps["post"]}
+									level={1}
+								/>
+								{i < comments.length - 1 && (
+									<hr className="me-2 ms-12 dark:border-neutral-800" />
+								)}
+							</React.Fragment>
 						))}
 					</div>
 				</div>

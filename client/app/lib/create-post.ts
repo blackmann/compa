@@ -11,6 +11,7 @@ async function createPost(data: Record<string, any>, userId: number) {
 			upvotes: 1,
 			parentId: data.parentId,
 			people: 1,
+			tags: data.tags
 		},
 	});
 

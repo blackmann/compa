@@ -11,8 +11,8 @@ import { PostMenu } from "./post-menu";
 import { useGlobalCtx } from "~/lib/global-ctx";
 import { LoginComment } from "./login-comment";
 import { MediaItem } from "./media-item";
-import React from "react";
-import { Content } from "./content";
+import { Tags } from "./tags";
+import { FullContent } from "./full-content";
 
 interface Props {
 	level?: number;
@@ -26,17 +26,17 @@ function PostItem({ post, limit, level = 0 }: Props) {
 
 	const { user } = useGlobalCtx();
 
-	function handleLinkClick(e: React.MouseEvent<HTMLAnchorElement>) {
-		if (level > 1) {
-			e.preventDefault();
+	function handleItemClick() {
+		if (level >= 2) {
 			return;
 		}
 
 		if (location.hash === `#${post.id}`) {
-			e.preventDefault();
-			e.stopPropagation();
 			window.location.hash = "";
+			return;
 		}
+
+		window.location.hash = `#${post.id}`;
 	}
 
 	const link = post.parentId
@@ -60,17 +60,26 @@ function PostItem({ post, limit, level = 0 }: Props) {
 
 	return (
 		<>
-			{level < 2 ? (
+			{level === 0 ? (
 				<Link
 					to={level < 2 ? link : ""}
 					className="block"
 					id={post.id.toString()}
-					onClick={handleLinkClick}
 				>
 					{content}
 				</Link>
 			) : (
-				content
+				<div
+					className="cursor-pointer"
+					id={post.id.toString()}
+					tabIndex={0}
+					onClick={handleItemClick}
+					onKeyDown={(e) => {
+						if (["Space", "Enter"].includes(e.key)) handleItemClick();
+					}}
+				>
+					{content}
+				</div>
 			)}
 
 			{showCommentInput && mounted && (
@@ -115,7 +124,7 @@ function PostContent({ full, post, active, level, limit }: PostContentProps) {
 
 				<Votes post={post} />
 			</div>
-			<div className="flex-1">
+			<div className="flex-1 w-0">
 				<header className="flex gap-2 justify-between">
 					<span className="font-mono text-secondary text-sm">
 						@{post.user.username} &bull; <PostTime time={post.createdAt} />
@@ -126,9 +135,10 @@ function PostContent({ full, post, active, level, limit }: PostContentProps) {
 					</div>
 				</header>
 
-				<div className="-mt-3 post-content">
-					<Content content={post.content} limit={limit} />
+				{!post.parentId && <Tags className="mb-4" post={post} />}
 
+				<div className="-mt-3 post-content">
+					<FullContent content={post.content} />
 					{post.media?.length > 0 && (
 						<div className="grid xl:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-2 flex-wrap mt-2">
 							{post.media.map((media) => (
@@ -162,7 +172,7 @@ function PostContent({ full, post, active, level, limit }: PostContentProps) {
 
 						<span className="inline-flex items-center gap-2 text-secondary">
 							<div className="i-lucide-users-2 inline-block" /> {post.people}{" "}
-							people
+							{post.people === 1 ? "person" : "people"}
 						</span>
 					</footer>
 				)}

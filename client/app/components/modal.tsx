@@ -1,6 +1,7 @@
 import clsx from "clsx";
 import React from "react";
 import ReactDOM from "react-dom";
+import { useMounted } from "~/lib/use-mounted";
 
 interface Props extends React.PropsWithChildren {
 	className?: string;
@@ -10,7 +11,7 @@ interface Props extends React.PropsWithChildren {
 
 function Modal({ children, className, onClose, open }: Props) {
 	const ref = React.useRef<HTMLDialogElement>(null);
-	const [mounted, setMounted] = React.useState(false);
+	const mounted = useMounted()
 
 	React.useEffect(() => {
 		if (open) {
@@ -23,10 +24,6 @@ function Modal({ children, className, onClose, open }: Props) {
 			onClose?.();
 		});
 	}, [open, onClose]);
-
-	React.useEffect(() => {
-		setMounted(true);
-	}, []);
 
 	if (!mounted) {
 		return null;

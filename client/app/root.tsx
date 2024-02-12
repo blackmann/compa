@@ -10,6 +10,7 @@ import {
 	Outlet,
 	Scripts,
 	ScrollRestoration,
+	json,
 	useLoaderData,
 } from "@remix-run/react";
 import { Navbar } from "./components/navbar";
@@ -18,18 +19,18 @@ import { PendingUI } from "./components/pending-ui";
 import { checkAuth } from "./lib/check-auth";
 import { prisma } from "./lib/prisma.server";
 import { GlobalCtx } from "./lib/global-ctx";
+import { User } from "@prisma/client";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
+	let user: User | undefined | null;
 	try {
 		const userId = await checkAuth(request);
-		const user = await prisma.user.findFirst({ where: { id: userId } });
-
-		return { user };
+		user = await prisma.user.findFirst({ where: { id: userId } });
 	} catch (error) {
 		//
 	}
 
-	return { user: null };
+	return json({ user });
 };
 
 export const links: LinksFunction = () => [
@@ -48,6 +49,8 @@ export default function App() {
 					content="width=device-width,initial-scale=1,maximum-scale=1"
 				/>
 				<link rel="manifest" href="/manifest.webmanifest" />
+				<link rel="icon" type="image/x-icon" href="/favicon.ico" />
+				<link href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" rel="stylesheet" />
 				<Meta />
 				<Links />
 			</head>

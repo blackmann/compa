@@ -1,5 +1,18 @@
-import { ActionFunctionArgs, MetaFunction, redirect } from "@remix-run/node";
-import { Link, useFetcher, useLoaderData } from "@remix-run/react";
+import { Prisma, User } from "@prisma/client";
+import {
+	ActionFunctionArgs,
+	MetaFunction,
+	json,
+	redirect,
+} from "@remix-run/node";
+import {
+	Link,
+	useActionData,
+	useFetcher,
+	useLoaderData,
+	useSubmit,
+} from "@remix-run/react";
+import React from "react";
 import { FieldValues, useForm } from "react-hook-form";
 import { Button } from "~/components/button";
 import { Input } from "~/components/input";
@@ -22,7 +35,24 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
 	const { password, email, username } = await request.json();
 
-	const user = await prisma.user.create({ data: { email, username } });
+	let user: User;
+	try {
+		user = await prisma.user.create({ data: { email, username } });
+	} catch (error) {
+		if (error instanceof Prisma.PrismaClientKnownRequestError) {
+			const [field] = error.meta?.target as string[];
+			return json(
+				{ type: "conflict", field, message: `${field} already exists` },
+				{ status: 403 },
+			);
+		}
+
+		return json(
+			{ type: "unknown-error", message: "something wrong happened" },
+			{ status: 500 },
+		);
+	}
+
 	await prisma.authCredential.create({
 		data: { password: await hash(password), userId: user.id },
 	});
@@ -36,19 +66,35 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
 	return [{ title: `Create Account | ${data?.school} | compa` }];
 };
 
+const USERNAME_REGEX = /^(?=[a-zA-Z0-9._]{4,20}$)(?!.*[_.]{2})[^_.].*[^_.]$/g;
+
 export default function CreateAccount() {
 	const { emailExtensions } = useLoaderData<typeof loader>();
-	const { formState, getFieldState, handleSubmit, register } = useForm();
+	const { formState, getFieldState, handleSubmit, register, setError } =
+		useForm();
 	const fetcher = useFetcher();
+	const actionData = useActionData<typeof action>();
+	const submit = useSubmit();
 
 	function createAccount(data: FieldValues) {
-		fetcher.submit(JSON.stringify(data), {
+		submit(JSON.stringify(data), {
 			method: "POST",
 			encType: "application/json",
 		});
 	}
 
 	const emailState = getFieldState("email", formState);
+	const usernameState = getFieldState("username", formState);
+
+	React.useEffect(() => {
+		if (!actionData) {
+			return;
+		}
+
+		if (actionData.type === "conflict") {
+			setError(actionData.field, { message: actionData.message });
+		}
+	}, [actionData, setError]);
 
 	return (
 		<div className="container mx-auto">
@@ -61,15 +107,35 @@ export default function CreateAccount() {
 						<h1 className="font-bold text-2xl mb-2">Create Account</h1>
 
 						<label className="block">
-							Username
-							<Input {...register("username", { required: true })} />
+							<div>
+								Username
+								{usernameState.error && (
+									<small className="text-red-500 pl-2">
+										{usernameState.error.message}
+									</small>
+								)}
+							</div>
+							<Input
+								{...register("username", {
+									required: true,
+									pattern: USERNAME_REGEX,
+								})}
+							/>
 							<small className="text-secondary">
 								This can never be changed.
 							</small>
 						</label>
 
 						<label className="block mt-2">
-							Email
+							<div>
+								Email{" "}
+								{emailState.error && (
+									<small className="text-red-500 pl-2">
+										{emailState.error.message}
+									</small>
+								)}
+							</div>
+
 							<Input
 								{...register("email", {
 									required: true,
@@ -80,11 +146,6 @@ export default function CreateAccount() {
 							/>
 							<small className="text-secondary" style={{ lineHeight: "1rem" }}>
 								Your school email. You'll need to verify your account.{" "}
-								{emailState.error?.message && (
-									<span className="text-red-500">
-										{emailState.error.message}
-									</span>
-								)}
 							</small>
 						</label>
 

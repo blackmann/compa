@@ -4,17 +4,21 @@ import relativeTime from "dayjs/plugin/relativeTime.js";
 dayjs.extend(relativeTime);
 
 function postTime(time: Date | string) {
-	if (dayjs(time).diff(dayjs(), "day") < 1) {
+	if (dayjs().diff(dayjs(time), "day") < 1) {
 		return dayjs(time).fromNow();
 	}
 
-	return dayjs(time).format("DD MMM YYYY, HH:mm a");
+	const format = dayjs(time).isSame(new Date(), "year")
+		? "DD MMM, hh:mma"
+		: "DD MMM 'YY, hh:mma";
+
+	return dayjs(time).format(format);
 }
 
 function PostTime({ time }: { time: Date | string }) {
 	return (
 		<time
-			title={dayjs(time).format("DD MMM YYYY, HH:mm a")}
+			title={dayjs(time).format("DD MMM YYYY, hh:mm a")}
 			dateTime={typeof time === "string" ? time : time.toISOString()}
 		>
 			{postTime(time)}
