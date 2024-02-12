@@ -1,6 +1,6 @@
 # Code of Conduct
 
-Compa aims to provide resources to students across the world. Diversity is one of our strengths and we want to ensure that everyone feels welcome and included. This code applies to everyone in our community, across all platforms.
+Compa aims to provide resources to students across the world. The information on Compa is provided by our users, and we want to ensure that everyone feels welcome and included. This code applies to everyone in our community, across all platforms.
 
 This is not an exhaustive list but instead a guideline for you. Use your best judgement and consider the impact of your actions on others, and the community as whole as you use Compa.
 
