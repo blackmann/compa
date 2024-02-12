@@ -10,13 +10,9 @@ This website track basic information about their users. This information include
 
 Where necessary, this website uses cookies to store information about a visitor’s preferences and history in order to better serve the user and/or present the user with customized content.
 
-## Advertisement and Other Third Parties
-
-Advertising partners and other third parties may use cookies, scripts and/or web beacons to track user activities on this website in order to display advertisements and other useful information. Such tracking is done directly by the third parties through their own servers and is subject to their own privacy policies. This website has no access or control over these cookies, scripts and/or web beacons that may be used by third parties. Learn how to [opt out of Google’s cookie usage](http://www.google.com/privacy_ads.html).
-
 ## Links to Third Party Websites
 
-We have included links on this website for your use and reference. We are not responsible for the privacy policies on these websites. You should be aware that the privacy policies of these websites may differ from our own.
+We have included links on this website for your use and reference. Links may also be shared by other users in discussions, communities or other places on Compa. We are not responsible for the privacy policies on these websites. You should be aware that the privacy policies of these websites may differ from our own.
 
 ## Security
 
