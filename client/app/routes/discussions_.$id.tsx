@@ -46,7 +46,7 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
 	});
 
 	for (const comment of comments) {
-		comment.content = await render(comment.content)
+		comment.content = await render(comment.content);
 	}
 
 	return json({
@@ -73,7 +73,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 				return redirect("/discussions");
 			}
 
-			return redirect(`/discussions/${post.parentId}`);
+			return null;
 		}
 
 		case "POST": {
