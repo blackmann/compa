@@ -8,7 +8,7 @@ Whether code or lesson notes or a helpful comment in a discussion thread, **all*
 
 Similar to other open-source communities, we have a [Code of Conduct](https://compa.so/code-of-conduct) which we expect all contributors to follow. In simple terms, don't be an asshole, it will not be tolerated.
 
-## Crowd Sourcing Ethics
+## Crowdsourcing Ethics
 
 We want to ensure that all the content on Compa is of the highest quality. We expect all contributors to follow these guidelines:
 
@@ -27,6 +27,7 @@ There are many ways to contribute to Compa. Here are a few examples:
 - **Code**: If you're a developer, you can contribute code to Compa. This could be a new feature, a bug fix, or even a typo correction.
 - **Documentation**: If you're good at writing, you can contribute to the documentation. This could be a new guide, a tutorial, or even a correction to an existing document.
 - **Discussion**: If you're not a developer or a writer, you can still contribute by participating in discussions. You can help answer questions, provide feedback, or even just say hi.
+- **Design/Art**: If you're a designer or an artist, you can contribute by suggesting new designs or art for the platform. This could be a new logo, UI design, or even a new color scheme. The possibilities are endless.
 
 ## Code Contributions
 
