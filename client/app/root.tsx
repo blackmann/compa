@@ -51,7 +51,7 @@ export function ErrorBoundary() {
 						<img src="/sym.svg" width={240} className="block" alt="Compa" />
 						<h1 className="font-bold text-3xl">Sorry, Unexpected Error</h1>
 						<p className="text-gray-500 max-w-2xl text-center">
-							We are facing an internal server error. Our expects are trying to
+							We are facing an internal server error. Our experts are trying to
 							fix the problem. Please try again or wait for sometime
 						</p>
 						<a
