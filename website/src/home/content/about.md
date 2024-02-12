@@ -1,6 +1,6 @@
 # About
 
-Compa is a companion application for students to manage and access resources at their higher education institution.
+Compa is an open initiative to promote collaboration and knowledge sharing among students at higher education institutions.
 
 As a fresher, settling into school could be easier. You usually need to find:
 
