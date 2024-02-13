@@ -20,7 +20,7 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
 		},
 	});
 
-	const semesterEnd = values.get("semester.end").replace(/-/g, "");
+	const semesterEnd = (values.get("semester.end") as string).replace(/-/g, "");
 	const schoolId = values.get("id");
 
 	const events: ics.EventAttributes[] = schedule.map((lesson) => {
@@ -47,6 +47,16 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
 			title: `${lesson.course.code} ${lesson.course.name}`,
 			duration: { hours: Math.floor(hours), minutes: Math.floor(minutes) },
 			location: lesson.location,
+			alarms: [
+				{
+					trigger: { before: true, minutes: 30 },
+					action: "audio",
+				},
+				{
+					trigger: { before: true, minutes: 5 },
+					action: "audio",
+				},
+			],
 			start: [
 				date.year(),
 				date.month() + 1,
@@ -63,7 +73,7 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
 
 	const fn = `${programme}-${year}-${sem}.ics`;
 
-	const cal = new File([icsRender!], fn, {});
+	const cal = new File([icsRender as string], fn, {});
 
 	return new Response(cal, {
 		headers: {
