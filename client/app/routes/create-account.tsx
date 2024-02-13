@@ -141,7 +141,7 @@ export default function CreateAccount() {
 									required: true,
 									validate: (email) =>
 										emailExtensions.some((ext) => email.endsWith(ext)) ||
-										"Invalid email",
+										"Invalid email. Use your school email.",
 								})}
 							/>
 							<small className="text-secondary" style={{ lineHeight: "1rem" }}>
