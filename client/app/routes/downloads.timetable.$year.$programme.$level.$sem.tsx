@@ -43,18 +43,22 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
 		const id = [schoolId, programme, year, level, sem, lesson.id].join("-");
 		const eventId = crypto.createHash("md5").update(id).digest("hex");
 
+		const title = `${lesson.course.code} ${lesson.course.name}`;
+
 		return {
-			title: `${lesson.course.code} ${lesson.course.name}`,
+			title,
 			duration: { hours: Math.floor(hours), minutes: Math.floor(minutes) },
 			location: lesson.location,
 			alarms: [
 				{
 					trigger: { before: true, minutes: 30 },
 					action: "audio",
+					description: title,
 				},
 				{
 					trigger: { before: true, minutes: 5 },
 					action: "audio",
+					description: title,
 				},
 			],
 			start: [
