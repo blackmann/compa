@@ -10,8 +10,10 @@ import {
 	Outlet,
 	Scripts,
 	ScrollRestoration,
+	isRouteErrorResponse,
 	json,
 	useLoaderData,
+	useRouteError,
 } from "@remix-run/react";
 import { Navbar } from "./components/navbar";
 import { Footer } from "./components/footer";
@@ -20,6 +22,7 @@ import { checkAuth } from "./lib/check-auth";
 import { prisma } from "./lib/prisma.server";
 import { GlobalCtx } from "./lib/global-ctx";
 import { User } from "@prisma/client";
+import { Anchor } from "./components/anchor";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
 	let user: User | undefined | null;
@@ -38,31 +41,43 @@ export const links: LinksFunction = () => [
 ];
 
 export function ErrorBoundary() {
+	const error = useRouteError();
+	const isError404 = isRouteErrorResponse(error) && error.status === 404;
+
 	return (
 		<html lang="en">
 			<head>
-				<title>Oh no!</title>
+				<title>
+					{isError404 ? "404 Not Found" : "500 Internal Server Error"}
+				</title>
 				<Meta />
 				<Links />
 			</head>
-			<body>
-				<div className="flex items-center max-w-4xl  mx-auto h-screen justify-center">
-					<div className="flex flex-col items-center space-y-3">
-						<img src="/sym.svg" width={240} className="block" alt="Compa" />
-						<h1 className="font-bold text-3xl">Sorry, Unexpected Error</h1>
-						<p className="text-gray-500 max-w-2xl text-center">
-							We are facing an internal server error. Our experts are trying to
-							fix the problem. Please try again or wait for sometime
-						</p>
-						<a
-							href="/discussions"
-							className="bg-gray-800 px-3 py-4 rounded-md tracking-wide font-bold text-gray-500"
-						>
-							{" "}
-							TAKE ME HOME
-						</a>
+			<body className="flex flex-col min-h-screen">
+				<div className="flex-1">
+					<div className="flex items-start justify-center space-x-4 p-3  py-38">
+						<img src="/sym.svg" width={80} alt="Compa" />
+
+						<div className="flex flex-col items-start space-y-4 ">
+							<h1 className="font-bold">
+								{isError404
+									? "404 : Not found"
+									: "500 : An unknown error occured"}
+							</h1>
+							<p className="text-gray-500 w-1/2">
+								{isError404
+									? "There is nothing on this page. Perhaps, what was on this page is long gone. Sorry!"
+									: "This must be strange to you. It's strange to us too. we will look into this and resolve it as soon as possible"}
+							</p>
+							<Anchor href="/discussions">
+								Go Home <div className="i-lucide-arrow-right  opacity-50"></div>
+							</Anchor>
+						</div>
 					</div>
 				</div>
+
+				<Footer />
+
 				<Scripts />
 			</body>
 		</html>
