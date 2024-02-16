@@ -168,28 +168,26 @@ function Stage1({ onSelect, onClose }: TagTypeSelectProps) {
 				</div>
 			</header>
 
-			<ul className="p-2 pt-1 flex-1 overflow-y-auto">
+			<ul className="p-2 pt-1 flex-1 overflow-y-auto [&>:last-child]:[&>:last-child]:hidden">
 				{types.map((type) => {
 					const selected = selections[type.toLowerCase() as SelectionId];
 
 					return (
-						<>
-							<li key={type}>
-								<button
-									type="button"
-									className="block w-full px-2 py-1 text-start rounded-lg hover:bg-zinc-200 dark:hover:bg-neutral-800"
-									onClick={() => onSelect(type.toLowerCase() as SelectionStage)}
-								>
-									{type}{" "}
-									{selected.length > 0 && (
-										<span className="bg-zinc-300 dark:bg-neutral-800 rounded-lg px-2 text-sm">
-											{selected.length}
-										</span>
-									)}
-								</button>
-							</li>
-							<hr className="dark:border-neutral-700 last:hidden me-2 ms-2" />
-						</>
+						<li key={type}>
+							<button
+								type="button"
+								className="block w-full px-2 py-1 text-start rounded-lg hover:bg-zinc-200 dark:hover:bg-neutral-800"
+								onClick={() => onSelect(type.toLowerCase() as SelectionStage)}
+							>
+								{type}{" "}
+								{selected.length > 0 && (
+									<span className="bg-zinc-300 dark:bg-neutral-800 rounded-lg px-2 text-sm">
+										{selected.length}
+									</span>
+								)}
+							</button>
+							<hr className="dark:border-neutral-700 me-2 ms-2" />
+						</li>
 					);
 				})}
 			</ul>
