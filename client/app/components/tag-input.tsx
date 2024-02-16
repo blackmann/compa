@@ -168,12 +168,12 @@ function Stage1({ onSelect, onClose }: TagTypeSelectProps) {
 				</div>
 			</header>
 
-			<ul className="p-2 pt-1 flex-1 overflow-y-auto [&>:last-child]:[&>:last-child]:hidden">
+			<ul className="p-2 pt-1 flex-1 overflow-y-auto">
 				{types.map((type) => {
 					const selected = selections[type.toLowerCase() as SelectionId];
 
 					return (
-						<li key={type}>
+						<li key={type} className="group">
 							<button
 								type="button"
 								className="block w-full px-2 py-1 text-start rounded-lg hover:bg-zinc-200 dark:hover:bg-neutral-800"
@@ -186,7 +186,10 @@ function Stage1({ onSelect, onClose }: TagTypeSelectProps) {
 									</span>
 								)}
 							</button>
-							<hr aria-hidden className="dark:border-neutral-700 me-2 ms-2" />
+							<hr
+								aria-hidden
+								className="dark:border-neutral-700 me-2 ms-2 group-last:hidden"
+							/>
 						</li>
 					);
 				})}
