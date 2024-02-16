@@ -186,7 +186,7 @@ function Stage1({ onSelect, onClose }: TagTypeSelectProps) {
 									</span>
 								)}
 							</button>
-							<hr className="dark:border-neutral-700 me-2 ms-2" />
+							<hr aria-hidden className="dark:border-neutral-700 me-2 ms-2" />
 						</li>
 					);
 				})}
