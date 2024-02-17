@@ -23,6 +23,8 @@ import { prisma } from "./lib/prisma.server";
 import { GlobalCtx } from "./lib/global-ctx";
 import { User } from "@prisma/client";
 import { Anchor } from "./components/anchor";
+import posthog from "posthog-js";
+import { useEffect } from "react";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
 	let user: User | undefined | null;
@@ -42,13 +44,24 @@ export const links: LinksFunction = () => [
 
 export function ErrorBoundary() {
 	const error = useRouteError();
-	const isError404 = isRouteErrorResponse(error) && error.status === 404;
+	const statusCode = (isRouteErrorResponse(error) && error.status) || 500;
+	const errorMessage =
+		(isRouteErrorResponse(error) && error.data) || "An unknown error";
+
+	useEffect(() => {
+		posthog.capture("route_error", {
+			statusCode,
+			errorMessage,
+		});
+	}, [statusCode, errorMessage]);
 
 	return (
 		<html lang="en">
 			<head>
 				<title>
-					{isError404 ? "404 Not Found" : "500 Internal Server Error"}
+					{statusCode === 404
+						? "404 Not Found"
+						: `${statusCode} Internal Server Error`}
 				</title>
 				<Meta />
 				<Links />
@@ -60,12 +73,12 @@ export function ErrorBoundary() {
 
 						<div className="flex flex-col items-start space-y-4 ">
 							<h1 className="font-bold">
-								{isError404
+								{statusCode === 404
 									? "404 : Not found"
-									: "500 : An unknown error occured"}
+									: `${statusCode} : An unknown error occured`}
 							</h1>
 							<p className="text-gray-500 w-1/2">
-								{isError404
+								{statusCode === 404
 									? "There is nothing on this page. Perhaps, what was on this page is long gone. Sorry!"
 									: "This must be strange to you. It's strange to us too. we will look into this and resolve it as soon as possible"}
 							</p>
