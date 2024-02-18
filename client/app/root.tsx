@@ -13,6 +13,7 @@ import {
 	isRouteErrorResponse,
 	json,
 	useLoaderData,
+	useLocation,
 	useRouteError,
 } from "@remix-run/react";
 import { Navbar } from "./components/navbar";
@@ -44,16 +45,23 @@ export const links: LinksFunction = () => [
 
 export function ErrorBoundary() {
 	const error = useRouteError();
-	const statusCode = (isRouteErrorResponse(error) && error.status) || 500;
-	const errorMessage =
-		(isRouteErrorResponse(error) && error.data) || "An unknown error";
+	const location = useLocation();
+	const statusCode = isRouteErrorResponse(error) ? error.status : 600;
 
 	useEffect(() => {
-		posthog.capture("route_error", {
-			statusCode,
-			errorMessage,
-		});
-	}, [statusCode, errorMessage]);
+		if (isRouteErrorResponse(error)) {
+			posthog.capture("route-error-response", {
+				data: error.data,
+				statusCode,
+				page: location.pathname,
+			});
+		} else {
+			posthog.capture("application-error", {
+				stack: (error as Error).stack,
+				page: location.pathname,
+			});
+		}
+	}, [error, statusCode, location]);
 
 	return (
 		<html lang="en">
@@ -61,7 +69,7 @@ export function ErrorBoundary() {
 				<title>
 					{statusCode === 404
 						? "404 Not Found"
-						: `${statusCode} Internal Server Error`}
+						: `${statusCode} An unexpected Error`}
 				</title>
 				<Meta />
 				<Links />
@@ -75,7 +83,7 @@ export function ErrorBoundary() {
 							<h1 className="font-bold">
 								{statusCode === 404
 									? "404 : Not found"
-									: `${statusCode} : An unknown error occured`}
+									: `${statusCode} : An unexpected error occured`}
 							</h1>
 							<p className="text-gray-500 w-1/2">
 								{statusCode === 404
