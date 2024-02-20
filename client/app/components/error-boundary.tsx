@@ -30,7 +30,7 @@ function ErrorBoundary() {
 			});
 		} else {
 			posthog.capture("application-error", {
-				stack: (error as Error).stack,
+				stack: (error as Error).stack || (error as Error).message,
 				page: location.pathname,
 			});
 		}
