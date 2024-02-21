@@ -108,7 +108,7 @@ input {
 }
 
 .article table {
-  @apply w-full border;
+  @apply w-full block border-zinc-300 dark:border-neutral-600 overflow-y-auto;
 }
 
 .article table :is(th, td) {
