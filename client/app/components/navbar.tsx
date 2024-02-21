@@ -22,7 +22,7 @@ function Navbar() {
 	return (
 		<header className="container mx-auto">
 			<div className="p-2 bg-zinc-100 dark:bg-neutral-800 rounded-xl mt-2 mb-5 ">
-				<div className="flex justify-between">
+				<div className="flex justify-between items-center">
 					<div>
 						<div className="flex gap-4 items-center">
 							<a className="block shrink-0" href="/">
