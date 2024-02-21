@@ -12,7 +12,7 @@ import { useGlobalCtx } from "~/lib/global-ctx";
 import { LoginComment } from "./login-comment";
 import { MediaItem } from "./media-item";
 import { Tags } from "./tags";
-import { FullContent } from "./full-content";
+import { Content } from "./content";
 
 interface Props {
 	level?: number;
@@ -138,7 +138,7 @@ function PostContent({ full, post, active, level, limit }: PostContentProps) {
 				{!post.parentId && <Tags className="mb-4" post={post} />}
 
 				<div className="-mt-3 post-content">
-					<FullContent content={post.content} />
+					<Content content={post.content} />
 					{post.media?.length > 0 && (
 						<div className="grid xl:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-2 flex-wrap mt-2">
 							{post.media.map((media) => (

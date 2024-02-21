@@ -24,7 +24,7 @@ import { useGlobalCtx } from "~/lib/global-ctx";
 import { prisma } from "~/lib/prisma.server";
 import { render } from "~/lib/render.server";
 import { values } from "~/lib/values.server";
-import { FullContent } from "~/components/full-content";
+import { Content } from "~/components/content";
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
 	const postId = Number(params.id as string);
@@ -153,7 +153,7 @@ export default function Discussion() {
 							<Tags className="mb-4" post={post} />
 
 							<div className="-mt-2">
-								<FullContent content={content} />
+								<Content content={content} />
 
 								{post.media.length > 0 && (
 									<div className="grid xl:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-2 flex-wrap mt-2">

@@ -107,6 +107,18 @@ input {
   @apply overflow-x-auto;
 }
 
+.article table {
+  @apply w-full border;
+}
+
+.article table :is(th, td) {
+  @apply text-start px-2 py-1 border border-zinc-300 dark:border-neutral-600;
+}
+
+.article th {
+  @apply font-medium;
+}
+
 .shiki {
   counter-reset: step;
   counter-increment: step 0;

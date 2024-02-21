@@ -1,20 +1,13 @@
 import parse from "html-react-parser";
-import React from "react";
-import renderContent from "~/lib/render-content";
 
 interface Props {
 	content: string;
-	limit?: boolean;
 }
 
-function Content({ content, limit }: Props) {
-	return (
-		<div className="post-content">
-			{renderContent(content, limit ? 2 : undefined).map((c, i) => (
-				<React.Fragment key={i}>{parse(c)}</React.Fragment>
-			))}
-		</div>
-	);
+function Content({ content }: Props) {
+	if (!content) return null;
+
+	return <article className="article">{parse(content)}</article>;
 }
 
 export { Content };
