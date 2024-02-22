@@ -8,6 +8,7 @@ import {
 import { useLoaderData } from "@remix-run/react";
 import clsx from "clsx";
 import React from "react";
+import { Anchor } from "~/components/anchor";
 import { Avatar } from "~/components/avatar";
 import { LoginComment } from "~/components/login-comment";
 import { MediaItem } from "~/components/media-item";
@@ -25,7 +26,6 @@ import { prisma } from "~/lib/prisma.server";
 import { render } from "~/lib/render.server";
 import { values } from "~/lib/values.server";
 import { Content } from "~/components/content";
-import { Anchor } from "~/components/anchor";
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
 	const postId = Number(params.id as string);
