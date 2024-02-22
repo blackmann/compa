@@ -1,7 +1,6 @@
 import { Prisma } from "@prisma/client";
 import { usePostPeople } from "~/lib/use-post-people";
 import { Avatar } from "./avatar";
-import { Anchor } from "./anchor";
 
 interface Props {
 	post: Prisma.PostGetPayload<{ include: { user: true } }>;
@@ -23,9 +22,9 @@ function PostPeople({ post }: Props) {
 				{people.map((person) => (
 					<li key={person.id}>
 						<div className="flex gap-2 py-1 px-2 rounded-lg hover:bg-zinc-100 items-center hover-bg-light">
-							<Anchor href={`/p/${person.username}`}> 
+							<a href={`/p/${person.username}`}> 
                                 <Avatar size={22} name={person.username} />
-                            </Anchor>
+                            </a>
 
 							<div>
 								{person.username}{" "}

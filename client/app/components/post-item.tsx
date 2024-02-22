@@ -1,6 +1,5 @@
 import { Link, useLocation } from "@remix-run/react";
 import { Avatar } from "./avatar";
-import { Anchor } from "./anchor";
 import { Prisma } from "@prisma/client";
 import { PostTime } from "~/components/post-time";
 import { PostInput } from "./post-input";
@@ -119,9 +118,9 @@ function PostContent({ full, post, active, level, limit }: PostContentProps) {
 			<div className="flex flex-col items-center">
 				{full && (
 					<div className="mb-2">
-						<Anchor href={`/p/${post.user.username}`}>   
+						<a href={`/p/${post.user.username}`}>   
                         <Avatar name={post.user.username} />
-                        </Anchor>
+                        </a>
 					</div>
 				)}
 

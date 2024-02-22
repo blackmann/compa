@@ -12,7 +12,6 @@ import { PostTime } from "~/components/post-time";
 import { prisma } from "~/lib/prisma.server";
 import { renderSummary } from "~/lib/render-summary.server";
 import { values } from "~/lib/values.server";
-import { Anchor } from "~/components/anchor";
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
 	const user = await prisma.user.findFirst({
@@ -62,9 +61,9 @@ export default function Profile() {
 			<div className="grid lg:grid-cols-4">
 				<div className="col-span-1 lg:col-span-2 lg:col-start-2">
 					<div className="flex gap-2 pb-5 border-b dark:border-neutral-800">
-						<Anchor href={`/p/${user.username}`}>
+						<a href={`/p/${user.username}`}>
                             <Avatar name={user.username} />
-                        </Anchor>
+                        </a>
 
 						<div>
 							<div className="font-mono">@{user.username}</div>

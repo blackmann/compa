@@ -8,7 +8,6 @@ import {
 import { useLoaderData } from "@remix-run/react";
 import clsx from "clsx";
 import React from "react";
-import { Anchor } from "~/components/anchor";
 import { Avatar } from "~/components/avatar";
 import { LoginComment } from "~/components/login-comment";
 import { MediaItem } from "~/components/media-item";
@@ -133,9 +132,9 @@ export default function Discussion() {
 					<div className="flex gap-2">
 						<div className="flex flex-col items-center">
 							<div className="mb-2">
-                                <Anchor href={`/p/${post.user.username}`}>
+                                <a href={`/p/${post.user.username}`}>
 								    <Avatar name={post.user.username} />
-                                </Anchor>
+                                </a>
 							</div>
 
 							<Votes post={post} />
