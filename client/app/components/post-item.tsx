@@ -13,6 +13,7 @@ import { LoginComment } from "./login-comment";
 import { MediaItem } from "./media-item";
 import { Tags } from "./tags";
 import { Content } from "./content";
+import { Username } from "./username";
 
 interface Props {
 	level?: number;
@@ -127,7 +128,8 @@ function PostContent({ full, post, active, level, limit }: PostContentProps) {
 			<div className="flex-1 w-0">
 				<header className="flex gap-2 justify-between">
 					<span className="font-mono text-secondary text-sm">
-						@{post.user.username} &bull; <PostTime time={post.createdAt} />
+						<Username user={post.user} /> &bull;{" "}
+						<PostTime time={post.createdAt} />
 					</span>
 
 					<div>

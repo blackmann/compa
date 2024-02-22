@@ -1,14 +1,11 @@
-import {
-	LoaderFunctionArgs,
-	MetaFunction,
-	json,
-} from "@remix-run/node";
+import { LoaderFunctionArgs, MetaFunction, json } from "@remix-run/node";
 import { NavLink, useLoaderData, useOutlet } from "@remix-run/react";
 import clsx from "clsx";
 import React from "react";
 import { Avatar } from "~/components/avatar";
 import { PostItem, PostItemProps } from "~/components/post-item";
 import { PostTime } from "~/components/post-time";
+import { Username } from "~/components/username";
 import { prisma } from "~/lib/prisma.server";
 import { renderSummary } from "~/lib/render-summary.server";
 import { values } from "~/lib/values.server";
@@ -64,13 +61,15 @@ export default function Profile() {
 						<Avatar name={user.username} />
 
 						<div>
-							<div className="font-mono">@{user.username}</div>
+							<div className="font-mono font-medium">
+								<Username user={user} showVerfied />
+							</div>
 
-							<div className="text-secondary">
+							<div className="text-secondary text-sm font-medium">
 								joined <PostTime time={user.createdAt} />
 							</div>
 
-							<div className="text-secondary bg-zinc-200 dark:bg-neutral-800 inline px-1 py-0.5 rounded-lg font-medium">
+							<div className="text-secondary bg-zinc-200 dark:bg-neutral-800 inline px-1 py-0.5 rounded-lg font-medium text-sm">
 								{posts.length} discussions
 							</div>
 						</div>

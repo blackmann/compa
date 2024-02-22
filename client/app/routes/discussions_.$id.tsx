@@ -25,6 +25,7 @@ import { prisma } from "~/lib/prisma.server";
 import { render } from "~/lib/render.server";
 import { values } from "~/lib/values.server";
 import { Content } from "~/components/content";
+import { Username } from "~/components/username";
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
 	const postId = Number(params.id as string);
@@ -141,7 +142,7 @@ export default function Discussion() {
 						<div className="border-b dark:border-neutral-700 pb-2 flex-1 w-0">
 							<header className="flex justify-between">
 								<span className="font-mono text-secondary">
-									@{post.user.username} &bull;{" "}
+									<Username user={post.user} /> &bull;{" "}
 									<PostTime time={post.createdAt} />
 								</span>
 
