@@ -25,6 +25,7 @@ import { prisma } from "~/lib/prisma.server";
 import { render } from "~/lib/render.server";
 import { values } from "~/lib/values.server";
 import { Content } from "~/components/content";
+import { Anchor } from "~/components/anchor";
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
 	const postId = Number(params.id as string);
@@ -132,7 +133,9 @@ export default function Discussion() {
 					<div className="flex gap-2">
 						<div className="flex flex-col items-center">
 							<div className="mb-2">
-								<Avatar name={post.user.username} />
+                                <Anchor href={`/p/${post.user.username}`}>
+								    <Avatar name={post.user.username} />
+                                </Anchor>
 							</div>
 
 							<Votes post={post} />
