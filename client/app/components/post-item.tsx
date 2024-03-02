@@ -14,6 +14,7 @@ import { MediaItem } from "./media-item";
 import { Tags } from "./tags";
 import { Content } from "./content";
 import { Username } from "./username";
+import React from "react";
 
 interface Props {
 	level?: number;
@@ -22,37 +23,26 @@ interface Props {
 }
 
 function PostItem({ post, limit, level = 0 }: Props) {
-	const location = useLocation();
 	const mounted = useMounted();
 
-	const { user } = useGlobalCtx();
+	const [expanded, setExpanded] = React.useState(false);
 
 	function handleItemClick() {
-		if (level >= 2) {
-			return;
-		}
-
-		if (location.hash === `#${post.id}`) {
-			window.location.hash = "";
-			return;
-		}
-
-		window.location.hash = `#${post.id}`;
+		setExpanded((expanded) => !expanded);
 	}
 
 	const link = post.parentId
 		? `/discussions/${post.parentId}#${post.id}`
 		: `/discussions/${post.id}`;
 
-	const active = location.hash === `#${post.id}`;
-	const showCommentInput = active && level > 0 && level < 2;
+	const showCommentInput = expanded && level > 0 && level < 2;
 
 	const full = level < 2;
 
 	const content = (
 		<PostContent
 			full={full}
-			active={active}
+			active={expanded}
 			post={post}
 			level={level}
 			limit={limit}
@@ -63,7 +53,7 @@ function PostItem({ post, limit, level = 0 }: Props) {
 		<>
 			{level === 0 ? (
 				<Link
-					to={level < 2 ? link : ""}
+					to={level < 1 ? link : ""}
 					className="block"
 					id={post.id.toString()}
 				>
@@ -83,19 +73,7 @@ function PostItem({ post, limit, level = 0 }: Props) {
 				</div>
 			)}
 
-			{showCommentInput && mounted && (
-				<div className="ms-12 border-s-2 ps-2 dark:border-neutral-700">
-					{user ? (
-						<div className="p-2">
-							<PostInput parent={post} level={1} />
-						</div>
-					) : (
-						<LoginComment />
-					)}
-
-					<NestedComments post={post} />
-				</div>
-			)}
+			{showCommentInput && mounted && <SubComment post={post} />}
 		</>
 	);
 }
@@ -179,6 +157,24 @@ function PostContent({ full, post, active, level, limit }: PostContentProps) {
 					</footer>
 				)}
 			</div>
+		</div>
+	);
+}
+
+function SubComment({ post }: { post: Props["post"] }) {
+	const { user } = useGlobalCtx();
+
+	return (
+		<div className="ms-12 border-s-2 ps-2 dark:border-neutral-700">
+			{user ? (
+				<div className="p-2">
+					<PostInput parent={post} level={1} />
+				</div>
+			) : (
+				<LoginComment />
+			)}
+
+			<NestedComments post={post} />
 		</div>
 	);
 }

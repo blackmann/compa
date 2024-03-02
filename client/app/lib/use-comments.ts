@@ -11,19 +11,19 @@ function useComments({ postId }: Args) {
 		Prisma.PostGetPayload<{ include: { user: true } }>[]
 	>([]);
 
-  const fetcher = useFetcher();
+	const fetcher = useFetcher();
 
-  React.useEffect(() => {
-    fetcher.load(`/comments?postId=${postId}`)
-  }, [fetcher.load, postId])
+	React.useEffect(() => {
+		fetcher.load(`/comments?postId=${postId}`);
+	}, [fetcher.load, postId]);
 
-  React.useEffect(() => {
-    if (fetcher.data) {
-      setComments(fetcher.data.comments);
-    }
-  }, [fetcher.data])
+	React.useEffect(() => {
+		if (fetcher.data) {
+			setComments(fetcher.data.comments);
+		}
+	}, [fetcher.data]);
 
-	return comments;
+	return { comments, status: fetcher.state };
 }
 
 export { useComments };
