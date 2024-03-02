@@ -1,6 +1,7 @@
 import { Prisma } from "@prisma/client";
 import { useFetcher } from "@remix-run/react";
 import React from "react";
+import { loader } from "~/routes/comments";
 
 interface Args {
 	postId: number;
@@ -11,7 +12,7 @@ function useComments({ postId }: Args) {
 		Prisma.PostGetPayload<{ include: { user: true } }>[]
 	>([]);
 
-	const fetcher = useFetcher();
+	const fetcher = useFetcher<typeof loader>();
 
 	React.useEffect(() => {
 		fetcher.load(`/comments?postId=${postId}`);

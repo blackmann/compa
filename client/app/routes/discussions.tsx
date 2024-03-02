@@ -4,7 +4,7 @@ import {
 	MetaFunction,
 	json,
 } from "@remix-run/node";
-import { Link, useLoaderData } from "@remix-run/react";
+import { Link, useFetcher, useLoaderData } from "@remix-run/react";
 import React from "react";
 import { PostFilter } from "~/components/post-filter";
 import { PostInput } from "~/components/post-input";
@@ -18,6 +18,8 @@ import { withUserPrefs } from "~/lib/with-user-prefs";
 import qs from "qs";
 import { DiscussionsEmpty } from "~/components/discussions-empty";
 import { renderSummary } from "~/lib/render-summary.server";
+
+const PAGE_SIZE = 30;
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
 	const searchQuery = new URL(request.url).search.substring(1);
@@ -36,9 +38,13 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 	);
 
 	const tagsFilter = tags.length ? { AND: tags } : {};
+	const timestampFilter = queryParams.createdAt?.["$lt"]
+		? { createdAt: { lt: new Date(queryParams.createdAt?.["$lt"]) } }
+		: {};
 
 	const posts = await prisma.post.findMany({
-		where: { parentId: null, ...tagsFilter },
+		take: PAGE_SIZE,
+		where: { parentId: null, ...tagsFilter, ...timestampFilter },
 		include: { user: true, media: true },
 		orderBy: { createdAt: "desc" },
 	});
@@ -117,6 +123,8 @@ export default function Discussions() {
 						</React.Fragment>
 					))}
 
+					<Paginated fromDate={posts[posts.length - 1]?.createdAt} />
+
 					{posts.length === 0 && (
 						<div className="min-h-[40vh] flex flex-col items-center text-secondary">
 							<div className="max-w-[20rem] w-full">
@@ -135,6 +143,67 @@ export default function Discussions() {
 					<div> </div>
 				</div>
 			</div>
+		</div>
+	);
+}
+
+interface PaginatedProps {
+	fromDate?: Date | string;
+}
+
+function Paginated({ fromDate }: PaginatedProps) {
+	const fetcher = useFetcher<typeof loader>();
+
+	function handleLoadMore() {
+		fetcher.load(`/discussions?createdAt[$lt]=${fromDate}`);
+	}
+
+	if (!fromDate) {
+		return null;
+	}
+
+	if (fetcher.data) {
+		const done = fetcher.data.posts.length < PAGE_SIZE;
+		const posts = fetcher.data.posts;
+
+		return (
+			<>
+				{posts.map((post, i) => (
+					<React.Fragment key={post.id}>
+						<PostItem limit post={post as unknown as PostItemProps["post"]} />
+
+						{i < posts.length - 1 && (
+							<hr className="me-2 ms-12 dark:border-neutral-700" />
+						)}
+					</React.Fragment>
+				))}
+
+				{done ? (
+					<div className="flex justify-center items-center gap-2 text-secondary">
+						<div className="i-lucide-arrow-down-right-square" /> fin
+					</div>
+				) : (
+					<Paginated fromDate={posts[posts.length - 1]?.createdAt} />
+				)}
+			</>
+		);
+	}
+
+	return (
+		<div className="flex justify-center mt-2">
+			{fetcher.state === "loading" ? (
+				<div className="flex justify-center items-center gap-2 text-secondary">
+					<span className="i-svg-spinners-180-ring-with-bg" /> Loading more…
+				</div>
+			) : (
+				<button
+					className="px-2 py-1 rounded-lg border font-medium inline-flex items-center gap-2 text-secondary hover:bg-zinc-100 transition-[background] duration-200"
+					onClick={handleLoadMore}
+					type="button"
+				>
+					<div className="i-lucide-chevron-down" /> Load more…
+				</button>
+			)}
 		</div>
 	);
 }
