@@ -1,22 +1,51 @@
-import { MetaFunction } from "@remix-run/node";
+import { LoaderFunctionArgs, MetaFunction, json } from "@remix-run/node";
+import { useLoaderData } from "@remix-run/react";
 import { Button } from "~/components/button";
+import { PostTime } from "~/components/post-time";
+import { Username } from "~/components/username";
+import { prisma } from "~/lib/prisma.server";
+import { values } from "~/lib/values.server";
 
-export const meta: MetaFunction = () => {
-	return [{ title: "Event detail | compa" }];
+export const loader = async ({ request, params }: LoaderFunctionArgs) => {
+	const eventId = Number(params.id);
+	try {
+		const event = await prisma.eventItem.findUnique({
+			where: { id: eventId },
+			include: { poster: true, user: true },
+		});
+
+		return { event, school: values.meta() };
+	} catch (err) {
+		throw json({}, { status: 404 });
+	}
+};
+
+export const meta: MetaFunction<typeof loader> = ({ data }) => {
+	return [
+		{ title: `${data?.event?.title} | ${data?.school.shortName} | compa` },
+		{
+			name: "description",
+			content:
+				data?.event?.shortDescription ||
+				data?.event?.description.substring(0, 30),
+		},
+		{ name: "og:image", content: data?.event?.poster?.url },
+	];
 };
 
 export default function EventDetail() {
+	const { event } = useLoaderData<typeof loader>();
+
 	return (
 		<div className="container mx-auto min-h-[60vh]">
 			<div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
 				<article className="col-span-1 lg:col-span-2 lg:col-start-2">
 					<div className="text-xs font-mono mt-2 text-secondary">
-						Posted 3 mins ago by @notgr
+						Posted <PostTime time={event?.createdAt} /> by{" "}
+						<Username user={event?.user} />
 					</div>
-					<h1 className="font-bold text-2xl">Lienda hostel block party</h1>
-					<h2 className="text-secondary">
-						Students' Biggest Carnival Experience
-					</h2>
+					<h1 className="font-bold text-2xl">{event?.title}</h1>
+					<h2 className="text-secondary">{event?.shortDescription}</h2>
 
 					<div className="grid grid-cols-1 lg:grid-cols-2 mt-4">
 						<div className="col-span-1">
@@ -32,10 +61,17 @@ export default function EventDetail() {
 
 							<div className="flex gap-2 font-medium text-secondary items-center">
 								<div className="i-lucide-map" />
-								Lienda host{" "}
-								<a href="/" className="underline text-secondary">
-									View on map
-								</a>
+								{event?.venue}
+								{event?.mapsLink && (
+									<a
+										target="_blank"
+										href={event.mapsLink}
+										className="underline text-secondary"
+										rel="noreferrer"
+									>
+										View on map
+									</a>
+								)}
 							</div>
 						</div>
 
@@ -52,31 +88,33 @@ export default function EventDetail() {
 						</div>
 					</div>
 
-					<p className="mt-2">
-						This is a free ticketed event but you need to register below. Pop-up
-						slots available. Text 0247812093 to secure yours now.
-					</p>
+					<p className="mt-2">{event?.description}</p>
 
-					<h3 className="mt-2 text-secondary font-medium">Event link</h3>
-					<p>
-						<a
-							className="underline"
-							href="https://twitter.com/blackmann/status/89008999"
-						>
-							https://twitter.com/blackmann/status/89008999
-						</a>
-					</p>
+					{event?.eventLink && (
+						<>
+							<h3 className="mt-2 text-secondary font-medium">Event link</h3>
+							<p>
+								<a className="underline" href={event.eventLink}>
+									{event.eventLink}
+								</a>
+							</p>
+						</>
+					)}
 
-					<h3 className="text-secondary font-medium mt-4">Poster</h3>
-					<div className="grid lg:grid-cols-2">
-						<div className="col-span-1">
-							<img
-								src="https://compa.eu-central-1.linodeobjects.com/20210807-mb_gclass_crazycolors_153_online-scaled-1707145599780_lYFd.jpg"
-								alt="img"
-								className="rounded-lg"
-							/>
-						</div>
-					</div>
+					{event?.poster && (
+						<>
+							<h3 className="text-secondary font-medium mt-4">Poster</h3>
+							<div className="grid lg:grid-cols-2">
+								<div className="col-span-1">
+									<img
+										src={event.poster.url}
+										alt={event.title}
+										className="rounded-lg"
+									/>
+								</div>
+							</div>
+						</>
+					)}
 				</article>
 			</div>
 		</div>

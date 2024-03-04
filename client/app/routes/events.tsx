@@ -1,12 +1,19 @@
+import { Prisma } from "@prisma/client";
 import { ActionFunctionArgs, MetaFunction, redirect } from "@remix-run/node";
-import { Link } from "@remix-run/react";
+import { Link, useLoaderData } from "@remix-run/react";
 import { Anchor } from "~/components/anchor";
+import { PostTime, postTime } from "~/components/post-time";
+import { Username } from "~/components/username";
 import { checkAuth } from "~/lib/check-auth";
 import { prisma } from "~/lib/prisma.server";
 import { values } from "~/lib/values.server";
 
 export const loader = async () => {
-	return { school: values.meta() };
+	const events = await prisma.eventItem.findMany({
+		include: { user: true, poster: true },
+	});
+
+	return { events, school: values.meta() };
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
@@ -31,6 +38,8 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
 };
 
 export default function Events() {
+	const { events } = useLoaderData<typeof loader>();
+
 	return (
 		<div className="container mx-auto min-h-[60vh]">
 			<div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
@@ -40,7 +49,7 @@ export default function Events() {
 					<header className="mb-2 flex justify-between">
 						<div>
 							<div className="bg-zinc-200 dark:bg-neutral-800 rounded-full px-2 py-0.5 inline font-medium text-sm">
-								3 events
+								{events.length} events
 							</div>
 						</div>
 
@@ -52,9 +61,11 @@ export default function Events() {
 					</header>
 
 					<ul>
-						<li>
-							<EventItem />
-						</li>
+						{events.map((event) => (
+							<li key={event.id}>
+								<EventItem event={event} />
+							</li>
+						))}
 					</ul>
 				</div>
 			</div>
@@ -62,7 +73,13 @@ export default function Events() {
 	);
 }
 
-function EventItem() {
+interface EventItemProps {
+	event: Prisma.EventItemGetPayload<{
+		include: { user: true; poster: true };
+	}>;
+}
+
+function EventItem({ event }: EventItemProps) {
 	return (
 		<Link
 			to="/events/1"
@@ -76,23 +93,19 @@ function EventItem() {
 			<div className="flex-1 mb-8">
 				<header className="font-mono text-secondary text-sm">
 					Fri, 3 Mar. 9.00pm till you drop
-					<br />
-					@Lienda hostel
+					<br />@{event.venue}
 				</header>
 
-				<h2 className="font-bold mt-2">Lienda hostel block party</h2>
+				<h2 className="font-bold mt-2">{event.title}</h2>
 
-				<p className="text-secondary">Students' Biggest Carnival Experience</p>
+				<p className="text-secondary">{event.shortDescription}</p>
 
 				<div className="size-30 rounded-lg bg-zinc-200 dark:bg-neutral-800 md:hidden" />
 
-				<p className="mt-2">
-					This is a free ticketed event but you need to register below. Pop-up
-					slots available. Text 0247812093 to secure yours now.
-				</p>
+				<p className="mt-2">{ellipsize(event.description, 80)}</p>
 
 				<div className="text-xs font-mono mt-2 text-secondary">
-					Posted 3 mins ago by @notgr
+					Posted <PostTime time={event.createdAt} /> by <Username user={event.user} />
 				</div>
 			</div>
 
@@ -101,4 +114,8 @@ function EventItem() {
 			</div>
 		</Link>
 	);
+}
+
+function ellipsize(str: string, length: number) {
+	return str.length > length ? `${str.slice(0, length)}…` : str;
 }
