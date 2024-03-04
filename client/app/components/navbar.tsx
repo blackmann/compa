@@ -93,7 +93,7 @@ function Navbar() {
 function BottomNav() {
 	return (
 		<div className="fixed left-0 bottom-0 w-full md:hidden">
-			<nav className="border-t border-zinc-100 dark:border-neutral-700 bg-zinc-50 dark:bg-zinc-800 static z-10">
+			<nav className="border-t border-zinc-200 dark:border-neutral-700 bg-zinc-50 dark:bg-zinc-800 static z-10">
 				<ul className="flex p-2 justify-around">
 					{links.map((link) => (
 						<li key={link.href}>
