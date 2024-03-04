@@ -1,6 +1,7 @@
 import { MetaFunction } from "@remix-run/node";
 import { useNavigation, useSubmit } from "@remix-run/react";
 import clsx from "clsx";
+import dayjs from "dayjs";
 import React from "react";
 import { FieldValues, useForm } from "react-hook-form";
 import { Button } from "~/components/button";
@@ -30,11 +31,17 @@ export default function AddEvent() {
 			setUploading(false);
 		}
 
-		submit(JSON.stringify(data), {
-			method: "post",
-			encType: "application/json",
-			action: "/events",
-		});
+		submit(
+			JSON.stringify({
+				...data,
+				date: dayjs(data.date).startOf("day").toDate(),
+			}),
+			{
+				method: "post",
+				encType: "application/json",
+				action: "/events",
+			},
+		);
 	}
 
 	function handleFileSelect(e: React.ChangeEvent<HTMLInputElement>) {

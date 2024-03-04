@@ -12,13 +12,11 @@ import { prisma } from "~/lib/prisma.server";
 import { timeToString } from "~/lib/time";
 import { values } from "~/lib/values.server";
 
-// [ ] Date filter (start of week)
-// [ ] Delete event
-// [ ] Add to calendar
 export const loader = async () => {
 	const events = await prisma.eventItem.findMany({
+		where: { date: { gt: dayjs().startOf("week").toDate() } },
 		orderBy: { date: "asc" },
-		include: { user: true, poster: true, },
+		include: { user: true, poster: true },
 	});
 
 	return { events, school: values.meta() };
@@ -91,6 +89,13 @@ export default function Events() {
 							</li>
 						))}
 					</ul>
+
+					{events.length === 0 && (
+						<div className="text-center text-secondary mt-8">
+							No events at the moment. You can add an event if you spotted any
+							so every can see.
+						</div>
+					)}
 				</div>
 			</div>
 		</div>
@@ -104,14 +109,29 @@ interface EventItemProps {
 }
 
 function EventItem({ event }: EventItemProps) {
+	const isPast = dayjs(event.date)
+		.startOf("day")
+		.add(event.startTime, "seconds")
+		.isBefore(dayjs());
+
+	console.log(
+		dayjs(event.date)
+			.startOf("day")
+			.add(event.endTime || event.startTime, "seconds")
+			.toDate(),
+	);
+
 	return (
 		<Link
 			to={`/events/${event.id}`}
-			className="flex gap-4 hover:bg-zinc-100 dark:hover:bg-neutral-800 dark:hover:bg-opacity-50 px-2 rounded-lg"
+			className={clsx(
+				"flex gap-4 hover:bg-zinc-100 dark:hover:bg-neutral-800 dark:hover:bg-opacity-50 px-2 rounded-lg",
+				{ "opacity-60": isPast },
+			)}
 		>
 			<div className="w-4 relative">
-				<div className="h-full bg-zinc-200 dark:bg-neutral-800 w-[3px] mx-auto" />
-				<div className="absolute top-0 bg-zinc-100 dark:bg-zinc-900 border-2 border-zinc-300 dark:border-neutral-700 size-4 rounded-full" />
+				<div className="h-full bg-zinc-200 dark:bg-neutral-700 w-[2px] mx-auto" />
+				<div className="absolute top-0 bg-zinc-100 dark:bg-zinc-900 border-2 border-zinc-200 dark:border-neutral-700 size-4 rounded-full" />
 			</div>
 
 			<div className="flex-1 mb-8">
@@ -120,6 +140,7 @@ function EventItem({ event }: EventItemProps) {
 					{timeToString(event.startTime)} —{" "}
 					{event.endTime ? timeToString(event.endTime) : "till you drop"}
 					<br />@{event.venue}
+					{isPast && "past"}
 				</header>
 
 				<h2 className="font-bold mt-2">{event.title}</h2>
