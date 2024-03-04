@@ -1,4 +1,5 @@
-function timeFromString(time: string): number {
+function timeFromString(time?: string): number {
+	if (!time) return 0;
 	const [hour, minute] = time.split(":").map((t) => parseInt(t, 10));
 	return (hour * 60 + minute) * 60;
 }

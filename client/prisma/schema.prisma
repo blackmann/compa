@@ -60,6 +60,7 @@ model User {
   Post                 Post[]
   Vote                 Vote[]
   Media                Media[]
+  EventItem            EventItem[]
 }
 
 model AuthCredential {
@@ -123,17 +124,37 @@ model Vote {
 }
 
 model Media {
-  id          Int      @id @default(autoincrement())
+  id          Int         @id @default(autoincrement())
   filename    String
-  user        User     @relation(fields: [userId], references: [id])
+  user        User        @relation(fields: [userId], references: [id])
   userId      Int
   thumbnail   String?
   url         String
   contentType String
   size        Int
   duration    Int?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  Post        Post?    @relation(fields: [postId], references: [id])
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  Post        Post?       @relation(fields: [postId], references: [id])
   postId      Int?
+  EventItem   EventItem[]
+}
+
+model EventItem {
+  id               Int      @id @default(autoincrement())
+  user             User     @relation(fields: [userId], references: [id])
+  title            String
+  description      String
+  shortDescription String?
+  date             DateTime
+  startTime        Int
+  endTime          Int?
+  venue            String
+  mapsLink         String?
+  eventLink        String?
+  poster           Media?   @relation(fields: [mediaId], references: [id])
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  mediaId          Int?
+  userId           Int
 }
