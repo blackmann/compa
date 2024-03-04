@@ -13,7 +13,7 @@ import {
 	json,
 	useLoaderData,
 } from "@remix-run/react";
-import { Navbar } from "./components/navbar";
+import { BottomNav, Navbar } from "./components/navbar";
 import { Footer } from "./components/footer";
 import { PendingUI } from "./components/pending-ui";
 import { checkAuth } from "./lib/check-auth";
@@ -61,8 +61,8 @@ export default function App() {
 				<ScrollRestoration />
 				<Scripts />
 				<LiveReload />
-
 				<Footer />
+				<BottomNav />
 			</body>
 		</html>
 	);
