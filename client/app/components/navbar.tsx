@@ -26,8 +26,8 @@ function Navbar() {
 	const { user } = useGlobalCtx();
 
 	return (
-		<header className="container mx-auto">
-			<div className="rounded-xl mt-2 mb-5 ">
+		<header className="container mx-auto md:border-b border-zinc-200 dark:border-zinc-800 mb-4">
+			<div className="rounded-xl my-2">
 				<div className="flex justify-between items-center">
 					<div>
 						<div className="flex gap-4 items-center">

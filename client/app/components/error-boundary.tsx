@@ -81,7 +81,7 @@ function ErrorBoundary() {
 					</div>
 
 					{process.env.NODE_ENV === "development" && stackTrace && (
-						<div className="p-4 border-t mt-8">
+						<div className="p-4 border-t dark:border-neutral-800 mt-8 overflow-y-auto">
 							<header className="flex font-mono bg-red-600 text-white items-center inline-flex rounded-lg px-2 text-sm gap-2">
 								<div className="i-lucide-eye opacity-70" /> Dev only
 							</header>
