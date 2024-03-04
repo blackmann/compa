@@ -110,7 +110,7 @@ export default function Discussions() {
 					<hr className="mb-4 dark:border-t-neutral-800" />
 
 					<div>
-						<PostFilter />
+						<PostFilter label="Filter discussions" path="/discussions" />
 					</div>
 
 					{posts.map((post, i) => (

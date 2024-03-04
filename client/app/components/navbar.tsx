@@ -14,6 +14,11 @@ const links = [
 		href: "/timetable",
 		icon: "i-lucide-calendar-range",
 	},
+	{
+		title: "Resources",
+		href: "/resources",
+		icon: "i-lucide-folder-search-2",
+	},
 ];
 
 function Navbar() {

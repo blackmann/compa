@@ -2,12 +2,17 @@ import React from "react";
 import { DEFAULT_SELECTIONS, Selections, TagInput } from "./tag-input";
 import { useLoaderData, useLocation, useNavigate } from "@remix-run/react";
 import clsx from "clsx";
-import { loader } from "~/routes/discussions";
+import { ParsedQs } from "qs";
 
-function PostFilter() {
+interface Props {
+	label: React.ReactNode;
+	path: string;
+}
+
+function PostFilter({ label, path }: Props) {
 	const [filters, setFilters] = React.useState<Selections>(DEFAULT_SELECTIONS);
 	const navigate = useNavigate();
-	const { queryParams } = useLoaderData<typeof loader>();
+	const { queryParams = {} } = useLoaderData<{ queryParams: ParsedQs }>();
 	const location = useLocation();
 
 	const filterCount = React.useMemo(
@@ -41,7 +46,7 @@ function PostFilter() {
 
 	React.useEffect(() => {
 		const timeout = setTimeout(() => {
-			const to = `/discussions?${q}`;
+			const to = [path, q].join("?");
 			const from = `${location.pathname}${location.search || "?"}`;
 
 			if (from === to) {
@@ -52,7 +57,7 @@ function PostFilter() {
 		}, 50);
 
 		return () => clearTimeout(timeout);
-	}, [q, navigate, location.pathname, location.search]);
+	}, [path, q, navigate, location.pathname, location.search]);
 
 	return (
 		<div className="flex justify-between mb-2">
@@ -65,7 +70,7 @@ function PostFilter() {
 			>
 				<div className="flex gap-2 items-center">
 					<div className="inline-block i-lucide-list-filter opacity-60" />{" "}
-					Filter discussions{" "}
+					{label}{" "}
 					{filterCount > 0 && (
 						<span className="px-2 rounded-full bg-blue-800 text-sm">
 							{filterCount}
