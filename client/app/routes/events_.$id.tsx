@@ -36,6 +36,16 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
 export default function EventDetail() {
 	const { event } = useLoaderData<typeof loader>();
 
+	function shareEvent() {
+		if (navigator.share) {
+			navigator.share({
+				title: event?.title,
+				text: event?.shortDescription || undefined,
+				url: window.location.href,
+			});
+		}
+	}
+
 	return (
 		<div className="container mx-auto min-h-[60vh]">
 			<div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
@@ -81,7 +91,11 @@ export default function EventDetail() {
 								Add to calendar
 							</Button>
 
-							<Button className="shrink-0" variant="primary">
+							<Button
+								className="shrink-0"
+								variant="primary"
+								onClick={shareEvent}
+							>
 								<div className="i-lucide-share opacity-50" />
 								Share event
 							</Button>

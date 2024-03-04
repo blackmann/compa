@@ -23,8 +23,10 @@ export default function AddEvent() {
 	async function createPost(data: FieldValues) {
 		if (data.poster) {
 			setUploading(true);
-			const poster = await uploadMedia(data.poster);
-			data.posterId = poster.id;
+
+			const media = await uploadMedia(data.poster);
+			data.poster = media;
+
 			setUploading(false);
 		}
 

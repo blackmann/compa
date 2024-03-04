@@ -1,16 +1,24 @@
 import { Prisma } from "@prisma/client";
 import { ActionFunctionArgs, MetaFunction, redirect } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
+import clsx from "clsx";
+import dayjs from "dayjs";
 import { Anchor } from "~/components/anchor";
-import { PostTime, postTime } from "~/components/post-time";
+import { PostTime } from "~/components/post-time";
 import { Username } from "~/components/username";
 import { checkAuth } from "~/lib/check-auth";
+import { useGlobalCtx } from "~/lib/global-ctx";
 import { prisma } from "~/lib/prisma.server";
+import { timeToString } from "~/lib/time";
 import { values } from "~/lib/values.server";
 
+// [ ] Date filter (start of week)
+// [ ] Delete event
+// [ ] Add to calendar
 export const loader = async () => {
 	const events = await prisma.eventItem.findMany({
-		include: { user: true, poster: true },
+		orderBy: { date: "asc" },
+		include: { user: true, poster: true, },
 	});
 
 	return { events, school: values.meta() };
@@ -18,7 +26,12 @@ export const loader = async () => {
 
 export const action = async ({ request }: ActionFunctionArgs) => {
 	const userId = await checkAuth(request);
-	const data = await request.json();
+	const { poster, ...data } = await request.json();
+
+	if (poster) {
+		const media = await prisma.media.create({ data: poster });
+		data.posterId = media.id;
+	}
 
 	const event = await prisma.eventItem.create({
 		data: { ...data, date: new Date(data.date), userId },
@@ -39,6 +52,7 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
 
 export default function Events() {
 	const { events } = useLoaderData<typeof loader>();
+	const { user } = useGlobalCtx();
 
 	return (
 		<div className="container mx-auto min-h-[60vh]">
@@ -54,11 +68,21 @@ export default function Events() {
 						</div>
 
 						<div>
-							<Anchor href="/events/add">
+							<Anchor href="/events/add" className={clsx({ "!hidden": !user })}>
 								<div className="i-lucide-plus opacity-60" /> Add event
 							</Anchor>
 						</div>
 					</header>
+
+					{!user && (
+						<p className="text-secondary mb-2">
+							You must be{" "}
+							<Link className="underline text-reset" to="/login">
+								logged in
+							</Link>{" "}
+							to add an event.
+						</p>
+					)}
 
 					<ul>
 						{events.map((event) => (
@@ -82,7 +106,7 @@ interface EventItemProps {
 function EventItem({ event }: EventItemProps) {
 	return (
 		<Link
-			to="/events/1"
+			to={`/events/${event.id}`}
 			className="flex gap-4 hover:bg-zinc-100 dark:hover:bg-neutral-800 dark:hover:bg-opacity-50 px-2 rounded-lg"
 		>
 			<div className="w-4 relative">
@@ -92,7 +116,9 @@ function EventItem({ event }: EventItemProps) {
 
 			<div className="flex-1 mb-8">
 				<header className="font-mono text-secondary text-sm">
-					Fri, 3 Mar. 9.00pm till you drop
+					{dayjs(event.date).format("ddd, DD MMM[.]")}{" "}
+					{timeToString(event.startTime)} —{" "}
+					{event.endTime ? timeToString(event.endTime) : "till you drop"}
 					<br />@{event.venue}
 				</header>
 
@@ -100,17 +126,34 @@ function EventItem({ event }: EventItemProps) {
 
 				<p className="text-secondary">{event.shortDescription}</p>
 
-				<div className="size-30 rounded-lg bg-zinc-200 dark:bg-neutral-800 md:hidden" />
+				{event.poster && (
+					<div className="size-30 rounded-lg bg-zinc-200 dark:bg-neutral-800 md:hidden">
+						<img
+							src={event.poster.url}
+							alt={event.title}
+							className="object-cover w-full h-full rounded-lg"
+						/>
+					</div>
+				)}
 
 				<p className="mt-2">{ellipsize(event.description, 80)}</p>
 
 				<div className="text-xs font-mono mt-2 text-secondary">
-					Posted <PostTime time={event.createdAt} /> by <Username user={event.user} />
+					Posted <PostTime time={event.createdAt} /> by{" "}
+					<Username user={event.user} />
 				</div>
 			</div>
 
 			<div className="max-md:hidden">
-				<div className="size-24 rounded-lg bg-zinc-200 dark:bg-neutral-800" />
+				{event.poster && (
+					<div className="size-24 rounded-lg bg-zinc-200 dark:bg-neutral-800">
+						<img
+							src={event.poster.url}
+							alt={event.title}
+							className="object-cover w-full h-full rounded-lg"
+						/>
+					</div>
+				)}
 			</div>
 		</Link>
 	);

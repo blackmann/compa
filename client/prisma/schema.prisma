@@ -152,9 +152,9 @@ model EventItem {
   venue            String
   mapsLink         String?
   eventLink        String?
-  poster           Media?   @relation(fields: [mediaId], references: [id])
+  poster           Media?   @relation(fields: [posterId], references: [id])
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
-  mediaId          Int?
+  posterId          Int?
   userId           Int
 }
