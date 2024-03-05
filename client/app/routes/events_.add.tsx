@@ -14,7 +14,8 @@ export const meta: MetaFunction = () => {
 };
 
 export default function AddEvent() {
-	const { register, handleSubmit, setValue, watch } = useForm();
+	const { register, handleSubmit, setValue, watch, getFieldState, formState } =
+		useForm();
 	const [showOptional, setShowOptional] = React.useState(true);
 	const [uploading, setUploading] = React.useState(false);
 
@@ -52,6 +53,7 @@ export default function AddEvent() {
 	}
 
 	const posterFile = watch("poster");
+	const dateField = getFieldState("date", formState);
 
 	return (
 		<div className="container mx-auto min-h-[60vh]">
@@ -98,8 +100,22 @@ export default function AddEvent() {
 							Date*
 							<Input
 								type="date"
-								{...register("date", { required: true, valueAsDate: true })}
+								{...register("date", {
+									required: true,
+									valueAsDate: true,
+									validate(date) {
+										return (
+											dayjs(date).isAfter(dayjs().startOf("day")) ||
+											"Date must be in the future"
+										);
+									},
+								})}
 							/>
+							{dateField.error && (
+								<span className="text-xs text-red-600 dark:text-red-400">
+									{dateField.error.message}
+								</span>
+							)}
 						</label>
 
 						<div className="grid grid-cols-2 gap-4 mt-2">
