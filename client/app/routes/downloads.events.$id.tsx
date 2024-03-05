@@ -10,6 +10,7 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
 		where: { id: Number(params.id) },
 	});
 
+	// [ ] Remove addition of startTime in future
 	const when = dayjs(event.date).startOf("day").add(event.startTime, "seconds");
 
 	const render = ics.createEvent({

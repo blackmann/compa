@@ -109,17 +109,11 @@ interface EventItemProps {
 }
 
 function EventItem({ event }: EventItemProps) {
+	// [ ] Remove addition of startTime in future
 	const isPast = dayjs(event.date)
 		.startOf("day")
 		.add(event.startTime, "seconds")
 		.isBefore(dayjs());
-
-	console.log(
-		dayjs(event.date)
-			.startOf("day")
-			.add(event.endTime || event.startTime, "seconds")
-			.toDate(),
-	);
 
 	return (
 		<Link

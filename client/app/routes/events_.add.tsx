@@ -35,7 +35,10 @@ export default function AddEvent() {
 		submit(
 			JSON.stringify({
 				...data,
-				date: dayjs(data.date).startOf("day").toDate(),
+				date: dayjs(data.date)
+					.startOf("day")
+					.add(data.startTime, "seconds")
+					.toDate(),
 			}),
 			{
 				method: "post",
