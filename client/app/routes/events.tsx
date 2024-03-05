@@ -157,7 +157,9 @@ function EventItem({ event }: EventItemProps) {
 					</div>
 				)}
 
-				<p className="mt-2">{ellipsize(event.description, 80)}</p>
+				<p className="mt-2 whitespace-pre-wrap">
+					{ellipsize(event.description, 80)}
+				</p>
 
 				<div className="text-xs font-mono mt-2 text-secondary">
 					Posted <PostTime time={event.createdAt} /> by{" "}
