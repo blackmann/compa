@@ -145,7 +145,7 @@ export default function EventDetail() {
 						</div>
 					</div>
 
-					<p className="mt-2 whitespace-pre-wrap">{event.description}</p>
+					<p className="mt-4 whitespace-pre-wrap">{event.description}</p>
 
 					{event.eventLink && (
 						<>
