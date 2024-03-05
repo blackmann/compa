@@ -6,6 +6,7 @@ import {
 	redirect,
 } from "@remix-run/node";
 import { useLoaderData, useSubmit } from "@remix-run/react";
+import dayjs from "dayjs";
 import { Anchor } from "~/components/anchor";
 import { Button } from "~/components/button";
 import { PostTime } from "~/components/post-time";
@@ -13,6 +14,7 @@ import { Username } from "~/components/username";
 import { checkAuth } from "~/lib/check-auth";
 import { useGlobalCtx } from "~/lib/global-ctx";
 import { prisma } from "~/lib/prisma.server";
+import { timeToString } from "~/lib/time";
 import { values } from "~/lib/values.server";
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
@@ -97,12 +99,13 @@ export default function EventDetail() {
 						<div className="col-span-1">
 							<div className="flex gap-2 font-medium text-secondary items-center">
 								<div className="i-lucide-calendar" />
-								Friday, 3rd March
+								{dayjs(event.date).format("dddd, DD MMM[.]")}
 							</div>
 
 							<div className="flex gap-2 font-medium text-secondary items-center">
 								<div className="i-lucide-clock" />
-								9.00pm — 01.40am
+								{timeToString(event.startTime)} — {/* [ ] DRY */}
+								{event.endTime ? timeToString(event.endTime) : "till you drop"}
 							</div>
 
 							<div className="flex gap-2 font-medium text-secondary items-center">
@@ -142,7 +145,7 @@ export default function EventDetail() {
 						</div>
 					</div>
 
-					<p className="mt-2">{event.description}</p>
+					<p className="mt-2 whitespace-pre-wrap">{event.description}</p>
 
 					{event.eventLink && (
 						<>
