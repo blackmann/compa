@@ -1,57 +1,100 @@
 ---
-
+import Shell from '../layouts/Shell.astro'
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/x-icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Welcome | COMPA</title>
-
-		<style>
-			:root {
-				font-family: system-ui, sans-serif;
-				--home-bg-color: #212121;
-				--primary-color: #F5F4F4
-			}
-
-			body {
-				@media (prefers-color-scheme: dark) {
-					background-color: var(--home-bg-color);
-					color: var(--primary-color)
-				}
-			}
-
-			@keyframes ping {
-				75%, 100% {
-					transform: scale(2);
-					opacity: 0;
-				}
-			}
-			.animate-ping {
-				animation: ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite;
-			}
-
-		</style>
-	</head>
-	<body class="flex flex-col items-center justify-center h-screen">
-		<div class="fixed -z-10 blur-xl animate-ping">
-			<div class="w-[400px] h-[400px] rounded-[50%] bg-yellow-400 dark:bg-indigo-700" />
+<Shell title="Home">
+	<div class="container mx-auto">
+		<div class="grid lg:grid-cols-2 my-8">
+			<div class="col-span-1">
+				<h1 class="font-medium text-4xl">
+					It's all on compa. An open initiative to promote collaboration and knowledge sharing among students of higher education.
+				</h1>
+			</div>
 		</div>
-		<h1 class="font-bold text-[3rem]">Welcome to COMPA!</h1>
-		<p class="text-neutral-400 text-md">We're still setting things up. Check again later!</p>
 
-		<h2 class="font-medium text-[2rem] mt-4">Schools</h2>
+		<section class="mt-8">
+			<h2 class="font-bold ms-2 text-slate-600">Features</h2>
 
-		<table>
-			<tbody>
-				<tr>
-					<td>Kwame Nkrumah University of Science and Technology</td>
-					<td><a class="cursor-pointer underline ml-1 text-blue-600" href="https://knust.compa.so">knust.compa.so</a></td>
-				</tr>
-			</tbody>
-		</table>
-	</body>
-</html>
+			<div class="grid md:grid-cols-2 lg:grid-cols-4 mt-4 gap-4">
+				<div class="col-span-1">
+					<div class=" bg-slate-100 bg-opacity- rounded-xl p-4">
+						<h3 class="font-bold text-slate-700 text-lg">Discussions</h3>
+
+						<p class=" mt-2">Talk about anything with anyone. You can ask for help, share a discovery, make a notice; anything! Everybody else is allowed to make comments under conversations.</p>
+
+						<p class="mt-2 text-slate-500">You can attach files, audio recordings and images to your posts.</p>
+					</div>
+				</div>
+
+				<div class="col-span-1">
+					<div class=" bg-slate-100 bg-opacity- rounded-xl p-4">
+						<h3 class="font-bold text-slate-700 text-lg">Events</h3>
+
+						<p class=" mt-2">Find upcoming events around campus. Don't miss out on any fun or lecture!</p>
+
+						<p class="mt-2 text-slate-500">Anyone can post events for the visibility of everyone else.</p>
+					</div>
+				</div>
+
+				<div class="col-span-1">
+					<div class=" bg-slate-100 bg-opacity- rounded-xl p-4">
+						<h3 class="font-bold text-slate-700 text-lg">Timetable</h3>
+
+						<p class=" mt-2">The timetable is also a crowdsourced attempt to gather schedule for all courses, programmes and level.</p>
+
+						<p class="mt-2 text-slate-500">You can attach files, audio recordings and images to your posts.</p>
+					</div>
+				</div>
+
+				<div class="col-span-1">
+					<div class=" bg-slate-100 bg-opacity- rounded-xl p-4">
+						<h3 class="font-bold text-slate-700 text-lg">Communities</h3>
+
+						<p class=" mt-2">Wondering how to join like minded individuals? The upcoming Communities feature will allow to discover and join interest groups and interact with them.</p>
+
+						<p class="mt-2 text-slate-500">This is going to be exciting!</p>
+					</div>
+				</div>
+
+				<div class="col-span-1">
+					<div class=" bg-slate-100 bg-opacity- rounded-xl p-4">
+						<h3 class="font-bold text-slate-700 text-lg">Resources</h3>
+
+						<p class=" mt-2">No more scattered documents! Compa will provide an intuitive way to organize documents for lessons, courses and programmes.</p>
+
+						<p class="mt-2 text-slate-500">We shouldn't be shuffling through many chatrooms looking for files!</p>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<section class="mt-8">
+			<h2 class="text-3xl font-medium">compa is designed and developed for every school.</h2>
+			<p class="text-amber-600">We're working on ways to easily deploy an instance for your school. Stay tuned!</p>
+
+			<div class="grid md:grid-cols-2">
+				<div class="col-span-1">
+					<p class="mt-4">compa is designed agnostic of any school. The features are meant to be in their simplest form so they work accross many school structures. However, we have an instance live for KNUST. You can check it out.</p>
+				</div>
+			</div>
+			<div class="mt-4">
+				<a href="https://knust.compa.so" target="_blank" class="inline-block bg-slate-200 rounded-lg px-2 py-1 font-medium">
+					knust.compa.so
+				</a>
+			</div>
+		</section>
+
+		<section class="mt-8">
+			<h2 class="text-3xl font-medium">Opensource</h2>
+			<p class="text-amber-600">Yes, compa is open all through — even its source code.</p>
+
+			<div class="mt-4">
+				<a href="https://github.com/blackmann/compa" target="_blank" class="inline-block bg-slate-200 rounded-lg px-2 py-1 font-medium">
+					github.com/blackmann/compa
+				</a>
+			</div>
+		</section>
+
+		<footer class="mt-12"></footer>
+	</div>
+</Shell>

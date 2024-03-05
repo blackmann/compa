@@ -1,0 +1,24 @@
+---
+import '../styles.css'
+import Navbar from '../components/Navbar.astro'
+
+interface Props {
+  title: string
+}
+---
+
+<html lang="en" class="bg-slate-50">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/x-icon" href="/favicon.ico" />
+		<meta name="viewport" content="width=device-width" />
+		<meta name="generator" content={Astro.generator} />
+		<title>{Astro.props.title} | compa</title>
+
+    <slot name="head" />
+	</head>
+	<body>
+		<Navbar />
+    <slot />
+	</body>
+</html>
