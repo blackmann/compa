@@ -60,7 +60,7 @@ function Navbar() {
 						</ul>
 					</nav>
 
-					<div className="font-medium bg-zinc-100 dark:bg-neutral-800 rounded-full p-1">
+					<div className="font-medium bg-zinc-100 dark:bg-neutral-800 rounded-full p-1 pe-2">
 						{user ? (
 							<NavLink
 								to={`/p/${user.username}`}
