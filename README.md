@@ -35,7 +35,23 @@ Your open, compact, companion and compass. That is _Compa_.
 
 - [x] Kwame Nkrumah University of Science and Technology (KNUST) - <https://knust.compa.so>
 
-> If you'd like to set up Compa for your school, please create an issue with the title: `School Request: <School Name>`.
+### Deploy an instance for your school
+
+If you'd like to deploy an instance for your school:
+
+1. Submit a PR with the title: `School Request: <School Name>`. The PR should be submitted with a file in `client/res` named `<school_id>.json`. The file's content should follow the format in [knust.json](/client/res/knust.json)
+
+1. After your PR is reviewed and merged, click on the **Deploy on Railway** button below to deploy your instance.
+
+1. Share your app's IP with us under the same PR so we can add a subdomain to compa for your school.
+
+[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/template/VCnpoP)
+
+Note that you bear the cost of hosting which is $5/month on Railway. You'll also need to set up an AWS compatible bucket. I recommend [Linode Object Storage](https://www.linode.com/docs/guides/platform/object-storage/) which also costs $5/month.
+
+For email, [Resend](https://resend.com) is used. It's free for 100 mails per day.
+
+> If you need any help, please reach us by mail mail@degreat.co.uk
 
 ## Run locally
 
