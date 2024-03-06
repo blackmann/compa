@@ -157,7 +157,7 @@ export default function AddEvent() {
 
 						<label className={clsx("block mt-2", { hidden: !showOptional })}>
 							Short description
-							<Input {...register("shortDescription")} />
+							<Input maxLength={30} {...register("shortDescription")} />
 							<span className="text-xs text-secondary">
 								eg. From the Pinegrove boys{" "}
 							</span>
@@ -167,6 +167,7 @@ export default function AddEvent() {
 							Description*
 							<textarea
 								className="w-full rounded-lg bg-zinc-100 dark:bg-neutral-800 border-zinc-200 dark:border-neutral-700 p-2 h-30"
+								maxLength={512}
 								{...register("description", {
 									required: true,
 									setValueAs(value) {
