@@ -134,7 +134,6 @@ function EventItem({ event }: EventItemProps) {
 					{timeToString(event.startTime)} —{" "}
 					{event.endTime ? timeToString(event.endTime) : "till you drop"}
 					<br />@{event.venue}
-					{isPast && "past"}
 				</header>
 
 				<h2 className="font-bold mt-2">{event.title}</h2>
