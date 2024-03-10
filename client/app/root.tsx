@@ -12,6 +12,7 @@ import {
 	ScrollRestoration,
 	json,
 	useLoaderData,
+	useLocation,
 } from "@remix-run/react";
 import { BottomNav, Navbar } from "./components/navbar";
 import { Footer } from "./components/footer";
@@ -21,6 +22,8 @@ import { prisma } from "./lib/prisma.server";
 import { GlobalCtx } from "./lib/global-ctx";
 import { User } from "@prisma/client";
 import { CommonHead } from "./components/common-head";
+import { useRef } from "react";
+import React from "react";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
 	let user: User | undefined | null;
@@ -42,6 +45,46 @@ export { ErrorBoundary } from "./components/error-boundary";
 
 export default function App() {
 	const { user } = useLoaderData<typeof loader>();
+
+	const location = useLocation();
+	const isMount = useRef(true);
+
+	React.useEffect(() => {
+		const mounted = isMount;
+		isMount.current = false;
+
+		if ("serviceWorker" in navigator) {
+			if (navigator.serviceWorker.controller) {
+				navigator.serviceWorker.controller?.postMessage({
+					action: "clearCache",
+				});
+				navigator.serviceWorker.controller?.postMessage({
+					type: "REMIX_NAVIGATION",
+					isMount: mounted,
+					location,
+				});
+			} else {
+				const listener = async () => {
+					await navigator.serviceWorker.ready;
+					navigator.serviceWorker.controller?.postMessage({
+						action: "clearCache",
+					});
+					navigator.serviceWorker.controller?.postMessage({
+						type: "REMIX_NAVIGATION",
+						isMount: mounted,
+						location,
+					});
+				};
+				navigator.serviceWorker.addEventListener("controllerchange", listener);
+				return () => {
+					navigator.serviceWorker.removeEventListener(
+						"controllerchange",
+						listener,
+					);
+				};
+			}
+		}
+	});
 
 	return (
 		<html lang="en">
