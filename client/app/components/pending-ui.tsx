@@ -38,7 +38,7 @@ function PendingUI() {
 
 	return (
 		<div
-			className="loader sticky left-0 top-0 h-1 -mb-1 bg-blue-500 transition-[width] duration-200 transition-ease-in"
+			className="loader sticky left-0 top-0 h-1 -mb-1 bg-blue-500 transition-[width] duration-200 transition-ease-in z-20"
 			style={{ width: "0%" }}
 			ref={divRef}
 		/>
