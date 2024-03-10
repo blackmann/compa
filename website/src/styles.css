@@ -1,0 +1,15 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;500;700&display=swap');
+
+:root {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 14px;
+}
+
+.condensed {
+  font-family: 'Roboto Condensed', sans-serif;
+}
+
+.container {
+  @apply max-md:px-4;
+}

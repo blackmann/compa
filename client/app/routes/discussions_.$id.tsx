@@ -6,7 +6,6 @@ import {
 	redirect,
 } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
-import clsx from "clsx";
 import React from "react";
 import { Avatar } from "~/components/avatar";
 import { LoginComment } from "~/components/login-comment";

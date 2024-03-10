@@ -25,7 +25,7 @@ const projectLinks = [
 
 function Footer() {
 	return (
-		<footer className="container mx-auto py-6 lg:rounded-xl mt-6 bg-zinc-100 dark:bg-neutral-800 lg:mb-4 lg:rounded-xl max-lg:rounded-t-lg max-md:rounded-t-0">
+		<footer className="container mx-auto py-6 lg:rounded-xl mt-6 bg-zinc-100 dark:bg-neutral-800 lg:mb-4 lg:rounded-xl max-lg:rounded-t-lg max-md:rounded-t-0 max-md:mb-16">
 			<div className="mb-2">
 				<SymOutline className="size-12" />
 			</div>
