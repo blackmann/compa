@@ -26,8 +26,8 @@ function Navbar() {
 	const { user } = useGlobalCtx();
 
 	return (
-		<header className="container mx-auto md:border-b border-zinc-200 dark:border-zinc-800 mb-4">
-			<div className="rounded-xl my-2">
+		<header className="container mx-auto border-b border-zinc-200 dark:border-zinc-800 mb-4 sticky top-0 bg-zinc-50 dark:bg-neutral-900 z-10">
+			<div className="rounded-xl py-2">
 				<div className="flex justify-between items-center">
 					<div>
 						<div className="flex gap-4 items-center">
@@ -93,7 +93,10 @@ function Navbar() {
 function BottomNav() {
 	return (
 		<div className="fixed left-0 bottom-0 w-full md:hidden">
-			<nav className="border-t border-zinc-200 dark:border-neutral-800 bg-zinc-50 dark:bg-zinc-900 static z-10">
+			<nav
+				className="border-t border-zinc-200 dark:border-neutral-800 bg-zinc-50 dark:bg-zinc-900 static z-10"
+				style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
+			>
 				<ul className="flex p-2 justify-around">
 					{links.map((link) => (
 						<li key={link.href}>
