@@ -3,7 +3,7 @@ import { values } from "~/lib/values.server";
 
 export const loader = async () => {
 	const shortName = values.get("shortName");
-	const appName = `${shortName} | compa`;
+	const appName = `${shortName} ✽ compa`;
 
 	return json(
 		{

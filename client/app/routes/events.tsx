@@ -40,7 +40,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
 	return [
-		{ title: `Events | ${data?.school.shortName} | compa` },
+		{ title: `Events | ${data?.school.shortName} ✽ compa` },
 		{
 			name: "description",
 			content: "All the events happening on (and off) campus. Find them here.",

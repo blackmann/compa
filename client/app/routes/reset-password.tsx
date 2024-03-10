@@ -61,7 +61,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 };
 
 export const meta: MetaFunction = () => {
-	return [{ title: "Reset Password | compa" }];
+	return [{ title: "Reset Password ✽ compa" }];
 };
 
 export default function ResetPassword() {

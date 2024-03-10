@@ -80,7 +80,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 };
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
-	return [{ title: `Login | ${data?.school} | compa` }];
+	return [{ title: `Login | ${data?.school} ✽ compa` }];
 };
 
 export default function Login() {

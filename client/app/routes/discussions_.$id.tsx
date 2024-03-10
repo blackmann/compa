@@ -113,7 +113,7 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
 
 	return [
 		{
-			title: `@${data?.post.user.username} posted in Discussions | ${data?.meta.shortName} | compa`,
+			title: `@${data?.post.user.username} posted in Discussions | ${data?.meta.shortName} ✽ compa`,
 		},
 		{ name: "description", content: `${summary}…` },
 	];

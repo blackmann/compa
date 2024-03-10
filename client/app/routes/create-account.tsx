@@ -63,7 +63,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 };
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
-	return [{ title: `Create Account | ${data?.school} | compa` }];
+	return [{ title: `Create Account | ${data?.school} ✽ compa` }];
 };
 
 const USERNAME_REGEX = /^(?=[a-zA-Z0-9._]{4,20}$)(?!.*[_.]{2})[^_.].*[^_.]$/g;
