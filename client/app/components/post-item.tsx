@@ -115,7 +115,7 @@ function PostContent({ full, post, active, level, limit }: PostContentProps) {
 					</div>
 				</header>
 
-				{!post.parentId && <Tags className="mb-4" post={post} />}
+				{!post.parentId && <Tags className="mb-4" tags={post.tags} />}
 
 				<div className="-mt-3 post-content">
 					<Content content={post.content} />

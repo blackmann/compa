@@ -1,5 +1,5 @@
 import { ellipsizeFilename, humanizeSize } from "~/lib/files";
-import { NonImageThumb } from "./non-image-thumb";
+import { FileThumbnail } from "./non-image-thumb";
 import { AudioItem } from "./audio-item";
 
 interface Props {
@@ -60,7 +60,7 @@ function Thumbnail({ file }: Props) {
 		);
 	}
 
-	return <NonImageThumb contentType={file.type} />;
+	return <FileThumbnail contentType={file.type} />;
 }
 
 export { FileSelectItem };

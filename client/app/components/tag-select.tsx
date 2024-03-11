@@ -19,7 +19,7 @@ function TagSelect({ onRemove, tags }: Props) {
 			{flatTags.map(([id, tag]) => (
 				<li
 					key={`${id}:${tag}`}
-					className="bg-zinc-200 dark:bg-neutral-800 rounded-full px-2 inline-flex items-center gap-1"
+					className="bg-zinc-200 dark:bg-neutral-800 rounded-full px-2 inline-flex items-center gap-1 font-medium"
 				>
 					{tag}{" "}
 					<button

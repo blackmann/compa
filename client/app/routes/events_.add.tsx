@@ -5,6 +5,7 @@ import dayjs from "dayjs";
 import React from "react";
 import { FieldValues, useForm } from "react-hook-form";
 import { Button } from "~/components/button";
+import { FileInput } from "~/components/file-input";
 import { Input } from "~/components/input";
 import { timeFromString } from "~/lib/time";
 import { uploadMedia } from "~/lib/upload-media";
@@ -90,6 +91,7 @@ export default function AddEvent() {
 						<label>
 							Title*
 							<Input
+								maxLength={60}
 								{...register("title", {
 									required: true,
 									setValueAs(value) {
@@ -157,7 +159,7 @@ export default function AddEvent() {
 
 						<label className={clsx("block mt-2", { hidden: !showOptional })}>
 							Short description
-							<Input maxLength={30} {...register("shortDescription")} />
+							<Input maxLength={60} {...register("shortDescription")} />
 							<span className="text-xs text-secondary">
 								eg. From the Pinegrove boys{" "}
 							</span>
@@ -231,20 +233,15 @@ export default function AddEvent() {
 						)}
 
 						<div className="mt-3 flex gap-2">
-							<label className="inline-block cursor-pointer">
-								<div className="inline-flex items-center gap-2 rounded-lg bg-zinc-200 px-2 py-1 dark:bg-neutral-800 px-2 py-1 font-medium">
-									<div className="i-lucide-image-plus opacity-60" />{" "}
-									{posterFile ? "Replace" : "Add"} poster
-								</div>
-
-								<input
-									className="w-0 overflow-hidden"
-									type="file"
-									max={1}
-									accept="image/*"
-									onChange={handleFileSelect}
-								/>
-							</label>
+							<FileInput
+								className="!w-[8rem]"
+								max={1}
+								accept="image/*"
+								onChange={handleFileSelect}
+							>
+								<div className="i-lucide-image-plus opacity-60" />
+								{posterFile ? "Replace" : "Add"} poster
+							</FileInput>
 
 							{posterFile && (
 								<Button

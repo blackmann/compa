@@ -1,14 +1,23 @@
 import React from "react";
 import { DEFAULT_SELECTIONS, Selections, TagInput } from "./tag-input";
-import { useLoaderData, useLocation, useNavigate } from "@remix-run/react";
+import { useLocation, useNavigate } from "@remix-run/react";
 import clsx from "clsx";
-import { loader } from "~/routes/discussions";
+import { parse, stringify } from "qs";
 
-function PostFilter() {
+interface Props {
+	label: React.ReactNode;
+	path: string;
+}
+
+function TagsFilter({ label, path }: Props) {
 	const [filters, setFilters] = React.useState<Selections>(DEFAULT_SELECTIONS);
 	const navigate = useNavigate();
-	const { queryParams } = useLoaderData<typeof loader>();
 	const location = useLocation();
+
+	const queryParams = React.useMemo(
+		() => parse(location.search.replace(/^\?/, "")),
+		[location.search],
+	);
 
 	const filterCount = React.useMemo(
 		() => Object.values(filters).flat().length,
@@ -18,7 +27,7 @@ function PostFilter() {
 	const q = React.useMemo(
 		() =>
 			Object.entries(filters)
-				.filter((e) => e[1].length > 0)
+				.filter(([id, values]) => values.length > 0)
 				.flatMap(([id, values]) =>
 					values.map((v, i) => `tags[${id}]=${encodeURIComponent(v)}`),
 				)
@@ -41,7 +50,10 @@ function PostFilter() {
 
 	React.useEffect(() => {
 		const timeout = setTimeout(() => {
-			const to = `/discussions?${q}`;
+			const { tags, ...rest } = queryParams;
+			const newParams = [q, stringify(rest)].filter(Boolean).join("&");
+
+			const to = [path, newParams].join("?");
 			const from = `${location.pathname}${location.search || "?"}`;
 
 			if (from === to) {
@@ -52,7 +64,7 @@ function PostFilter() {
 		}, 50);
 
 		return () => clearTimeout(timeout);
-	}, [q, navigate, location.pathname, location.search]);
+	}, [path, q, navigate, location.pathname, location.search, queryParams]);
 
 	return (
 		<div className="flex justify-between mb-2">
@@ -63,9 +75,9 @@ function PostFilter() {
 				value={filters}
 				onDone={setFilters}
 			>
-				<div className="flex gap-2 items-center">
-					<div className="inline-block i-lucide-list-filter opacity-60" />{" "}
-					Filter discussions{" "}
+				<div className="flex gap-2 items-center font-medium">
+					<div className="inline-block i-lucide-list-filter opacity-60" />
+					{label}{" "}
 					{filterCount > 0 && (
 						<span className="px-2 rounded-full bg-blue-800 text-sm">
 							{filterCount}
@@ -77,4 +89,4 @@ function PostFilter() {
 	);
 }
 
-export { PostFilter };
+export { TagsFilter };

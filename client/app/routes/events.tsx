@@ -55,9 +55,8 @@ export default function Events() {
 	return (
 		<div className="container mx-auto min-h-[60vh]">
 			<div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
-				<div className="col-span-1"> </div>
-
-				<div className="col-span-1 lg:col-span-2">
+				<div className="col-span-1 lg:col-start-2 lg:col-span-2">
+					<h1 className="font-bold text-xl">Events</h1>
 					<header className="mb-2 flex justify-between">
 						<div>
 							<div className="bg-zinc-200 dark:bg-neutral-800 rounded-full px-2 py-0.5 inline font-medium text-sm">

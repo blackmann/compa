@@ -20,6 +20,11 @@ const links = [
 		href: "/events",
 		icon: "i-lucide-sparkle",
 	},
+	{
+		title: "Library",
+		href: "/library",
+		icon: "i-lucide-library-square",
+	},
 ];
 
 function Navbar() {
@@ -31,9 +36,9 @@ function Navbar() {
 				<div className="flex justify-between items-center">
 					<div>
 						<div className="flex gap-4 items-center">
-							<a className="block shrink-0" href="/">
+							<Link className="block shrink-0" to="/">
 								<img src="/sym.svg" width={32} className="inline" alt="Compa" />
-							</a>
+							</Link>
 						</div>
 					</div>
 

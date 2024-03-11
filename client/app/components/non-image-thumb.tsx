@@ -2,7 +2,15 @@ interface Props {
 	contentType: string;
 }
 
-function NonImageThumb({ contentType }: Props) {
+function FileThumbnail({ contentType }: Props) {
+	if (contentType.startsWith("image/")) {
+		return (
+			<div className="size-10 rounded-lg bg-zinc-100 dark:bg-neutral-700 items-center justify-center flex text-secondary">
+				<div className="i-lucide-image size-6" />
+			</div>
+		);
+	}
+
 	if (contentType.startsWith("video/")) {
 		return (
 			<div className="size-10 rounded-lg bg-zinc-100 dark:bg-neutral-700 items-center justify-center flex text-secondary">
@@ -40,4 +48,4 @@ function NonImageThumb({ contentType }: Props) {
 	);
 }
 
-export { NonImageThumb };
+export { FileThumbnail };
