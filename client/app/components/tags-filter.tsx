@@ -1,8 +1,8 @@
 import React from "react";
 import { DEFAULT_SELECTIONS, Selections, TagInput } from "./tag-input";
-import { useLoaderData, useLocation, useNavigate } from "@remix-run/react";
+import { useLocation, useNavigate } from "@remix-run/react";
 import clsx from "clsx";
-import { ParsedQs } from "qs";
+import { parse, stringify } from "qs";
 
 interface Props {
 	label: React.ReactNode;
@@ -12,8 +12,12 @@ interface Props {
 function TagsFilter({ label, path }: Props) {
 	const [filters, setFilters] = React.useState<Selections>(DEFAULT_SELECTIONS);
 	const navigate = useNavigate();
-	const { queryParams = {} } = useLoaderData<{ queryParams: ParsedQs }>();
 	const location = useLocation();
+
+	const queryParams = React.useMemo(
+		() => parse(location.search.replace(/^\?/, "")),
+		[location.search],
+	);
 
 	const filterCount = React.useMemo(
 		() => Object.values(filters).flat().length,
@@ -23,7 +27,7 @@ function TagsFilter({ label, path }: Props) {
 	const q = React.useMemo(
 		() =>
 			Object.entries(filters)
-				.filter((e) => e[1].length > 0)
+				.filter(([id, values]) => values.length > 0)
 				.flatMap(([id, values]) =>
 					values.map((v, i) => `tags[${id}]=${encodeURIComponent(v)}`),
 				)
@@ -46,7 +50,10 @@ function TagsFilter({ label, path }: Props) {
 
 	React.useEffect(() => {
 		const timeout = setTimeout(() => {
-			const to = [path, q].join("?");
+			const { tags, ...rest } = queryParams;
+			const newParams = [q, stringify(rest)].filter(Boolean).join("&");
+
+			const to = [path, newParams].join("?");
 			const from = `${location.pathname}${location.search || "?"}`;
 
 			if (from === to) {
@@ -57,7 +64,7 @@ function TagsFilter({ label, path }: Props) {
 		}, 50);
 
 		return () => clearTimeout(timeout);
-	}, [path, q, navigate, location.pathname, location.search]);
+	}, [path, q, navigate, location.pathname, location.search, queryParams]);
 
 	return (
 		<div className="flex justify-between mb-2">

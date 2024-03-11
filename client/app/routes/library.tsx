@@ -13,13 +13,12 @@ import {
 } from "@remix-run/react";
 import clsx from "clsx";
 import React from "react";
-import { FieldValues, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { Button } from "~/components/button";
 import { FileInput } from "~/components/file-input";
 import { FileSelectItem } from "~/components/file-select-item";
 import { Input } from "~/components/input";
 import { Thumbnail } from "~/components/media-item";
-import { FileThumbnail } from "~/components/non-image-thumb";
 import { PostTime } from "~/components/post-time";
 import {
 	DEFAULT_SELECTIONS,
@@ -39,12 +38,17 @@ import { prisma } from "~/lib/prisma.server";
 import { uploadMedia } from "~/lib/upload-media";
 import { values } from "~/lib/values.server";
 import qs from "qs";
+import { createTagsQuery } from "~/lib/create-tags-query";
+import { FileMenu } from "~/components/file-menu";
+
+const FILE_SIZE_LIMIT = 5 * 1024 * 1024;
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
 	const searchQuery = new URL(request.url).search.substring(1);
 	const queryParams = qs.parse(searchQuery);
 
 	const query: Record<string, any> = {};
+	const tagsQuery = createTagsQuery(queryParams.tags as Record<string, any>);
 
 	if (queryParams.q) {
 		query.media = {
@@ -54,13 +58,15 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 		};
 	}
 
+	Object.assign(query, tagsQuery);
+
 	const repository = await prisma.repository.findMany({
 		where: query,
 		include: { media: true, user: true },
 		orderBy: { createdAt: "desc" },
 	});
 
-	const count = await prisma.repository.count({});
+	const count = await prisma.repository.count({ where: query });
 
 	return { school: values.meta(), repository, count, queryParams };
 };
@@ -119,14 +125,17 @@ export default function Library() {
 	const $tags = watch("tags");
 
 	function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
-		if (!event.target.files) {
+		const files = Array.from(event.target.files || []);
+		if (!files.length) {
 			return;
 		}
 
-		setValue(
-			"files",
-			[...$files, ...Array.from(event.target.files || [])].slice(0, 5),
-		);
+		if (files.some((file) => file.size > FILE_SIZE_LIMIT)) {
+			alert("Some files you selected are too large. Maximum 5MB per file.");
+			return;
+		}
+
+		setValue("files", [...$files, ...files].slice(0, 5));
 	}
 
 	function handleTagRemove(id: SelectionId, value: string) {
@@ -162,6 +171,7 @@ export default function Library() {
 
 	React.useEffect(() => {
 		const params = new URLSearchParams(location.search);
+		const previousParams = params.toString();
 
 		if (q) {
 			params.set("q", q);
@@ -169,10 +179,9 @@ export default function Library() {
 			params.delete("q");
 		}
 
-		const from = `${location.pathname}${location.search}`.replace(/\?$/, "");
+		const from = `${location.pathname}?${previousParams}`.replace(/\?$/, "");
 		const to = `${location.pathname}?${params.toString()}`.replace(/\?$/, "");
 
-		console.log(to, from);
 		if (to === from) {
 			return;
 		}
@@ -222,7 +231,7 @@ export default function Library() {
 						<form onSubmit={handleSubmit(uploadFiles)}>
 							<div className="grid xl:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-2 flex-wrap">
 								{$files.map((file, index) => (
-									<div className="col-span-1">
+									<div className="col-span-1" key={file.name}>
 										<FileSelectItem
 											file={file}
 											key={file.name}
@@ -299,7 +308,7 @@ export default function Library() {
 							/>
 
 							<div className="mt-2">
-								{/* <TagsFilter label="Filter resources" path="/library" /> */}
+								<TagsFilter label="Filter resources" path="/library" />
 							</div>
 
 							<div className="text-secondary mb-2 text-sm">
@@ -357,10 +366,11 @@ export default function Library() {
 													</div>
 												</div>
 
-												<div className="col-span-1 text-end flex justify-end">
-													<div className="font-medium bg-zinc-100 dark:bg-neutral-800 rounded-lg px-1 text-center self-start text-sm">
+												<div className="col-span-1 flex flex-col items-end">
+													<div className="font-medium bg-zinc-100 dark:bg-neutral-800 rounded-lg px-1 text-center self-end text-sm">
 														{humanizeSize(file.media.size)}
 													</div>
+													<FileMenu file={file} />
 												</div>
 											</a>
 
@@ -370,6 +380,13 @@ export default function Library() {
 										</li>
 									))}
 								</ul>
+
+								{repository.length === 0 && (
+									<div className="font-mono text-center text-secondary">
+										<div className="i-lucide-land-plot inline-block" /> Nothing
+										here!
+									</div>
+								)}
 							</div>
 						</>
 					)}

@@ -4,7 +4,7 @@ import {
 	MetaFunction,
 	json,
 } from "@remix-run/node";
-import { Link, useFetcher, useLoaderData } from "@remix-run/react";
+import { Link, useFetcher, useLoaderData, useLocation } from "@remix-run/react";
 import React from "react";
 import { TagsFilter } from "~/components/tags-filter";
 import { PostInput } from "~/components/post-input";
@@ -18,6 +18,7 @@ import { withUserPrefs } from "~/lib/with-user-prefs";
 import qs from "qs";
 import { DiscussionsEmpty } from "~/components/discussions-empty";
 import { renderSummary } from "~/lib/render-summary.server";
+import { createTagsQuery } from "~/lib/create-tags-query";
 
 const PAGE_SIZE = 30;
 
@@ -25,19 +26,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 	const searchQuery = new URL(request.url).search.substring(1);
 	const queryParams = qs.parse(searchQuery);
 
-	const tags = Object.entries(queryParams.tags || {}).flatMap(
-		([id, selection]) => {
-			if (Array.isArray(selection)) {
-				return selection.map((s) => ({
-					tags: { contains: `${id}:${selection}` },
-				}));
-			}
-
-			return { tags: { contains: `${id}:${selection}` } };
-		},
-	);
-
-	const tagsFilter = tags.length ? { AND: tags } : {};
+	const tagsFilter = createTagsQuery(queryParams.tags as Record<string, any>);
 	const timestampFilter = queryParams.createdAt?.["$lt"]
 		? { createdAt: { lt: new Date(queryParams.createdAt?.["$lt"]) } }
 		: {};
@@ -54,7 +43,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 	}
 
 	return json(
-		{ school: values.meta(), posts, queryParams },
+		{ school: values.meta(), posts },
 		{
 			headers: {
 				"Set-Cookie": await withUserPrefs(request, { lastBase: "discussions" }),
@@ -153,9 +142,12 @@ interface PaginatedProps {
 
 function Paginated({ fromDate }: PaginatedProps) {
 	const fetcher = useFetcher<typeof loader>();
+	const location = useLocation();
 
 	function handleLoadMore() {
-		fetcher.load(`/discussions?createdAt[$lt]=${fromDate}`);
+		fetcher.load(
+			`/discussions?createdAt[$lt]=${fromDate}&${location.search.substring(1)}`,
+		);
 	}
 
 	if (!fromDate) {
