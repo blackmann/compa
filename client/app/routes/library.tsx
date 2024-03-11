@@ -341,14 +341,14 @@ export default function Library() {
 													<div>
 														<Thumbnail
 															thumbnail={file.media.thumbnail}
-															contentType="image/png"
+															contentType={file.media.contentType}
 															name={file.media.filename}
 														/>
 													</div>
 
 													<div className="flex-1">
 														<header className="font-medium break-all">
-															{ellipsizeFilename(file.media.filename, 20)}
+															{ellipsizeFilename(file.media.filename, 40)}
 														</header>
 
 														<div>
