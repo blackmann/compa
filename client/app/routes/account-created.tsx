@@ -6,7 +6,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 };
 
 export const meta: MetaFunction = () => {
-	return [{ title: "Account Created | compa" }];
+	return [{ title: "Account Created ✽ compa" }];
 };
 
 export default function AccountCreated() {

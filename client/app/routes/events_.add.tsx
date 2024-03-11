@@ -10,7 +10,7 @@ import { timeFromString } from "~/lib/time";
 import { uploadMedia } from "~/lib/upload-media";
 
 export const meta: MetaFunction = () => {
-	return [{ title: "Add Event | compa" }];
+	return [{ title: "Add Event ✽ compa" }];
 };
 
 export default function AddEvent() {

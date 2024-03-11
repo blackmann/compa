@@ -94,7 +94,7 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
 	const description = `See timetable for ${data?.programme}, L${data?.level} for the year ${data?.year}`;
 
 	return [
-		{ title: `Timetable | ${data?.school.shortName} | compa` },
+		{ title: `Timetable | ${data?.school.shortName} ✽ compa` },
 		{ name: "description", content: description },
 	];
 };

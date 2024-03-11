@@ -21,6 +21,8 @@ import { prisma } from "./lib/prisma.server";
 import { GlobalCtx } from "./lib/global-ctx";
 import { User } from "@prisma/client";
 import { CommonHead } from "./components/common-head";
+import { useColorScheme } from "./lib/use-color-scheme";
+import React from "react";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
 	let user: User | undefined | null;
@@ -42,6 +44,20 @@ export { ErrorBoundary } from "./components/error-boundary";
 
 export default function App() {
 	const { user } = useLoaderData<typeof loader>();
+	const scheme = useColorScheme();
+
+	React.useEffect(() => {
+		if (scheme === "light") {
+			// dynamically change meta theme-color
+			document
+				.querySelector('meta[name="theme-color"]')
+				?.setAttribute("content", "#FAFAFA");
+		} else {
+			document
+				.querySelector('meta[name="theme-color"]')
+				?.setAttribute("content", "#171717");
+		}
+	}, [scheme]);
 
 	return (
 		<html lang="en">

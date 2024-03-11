@@ -39,7 +39,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 	await send({
 		to: user.email,
 		from: "m@compa.so",
-		subject: "Reset Password | compa",
+		subject: "Reset Password ✽ compa",
 		text: `Hi 👋🏽,\n\nYou requested to change your password. Click this link to continue: ${link}.\n\nAll the best!`,
 	});
 
@@ -47,7 +47,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 };
 
 export const meta = () => {
-	return [{ title: "Forgot Password | compa" }];
+	return [{ title: "Forgot Password ✽ compa" }];
 };
 
 export default function ForgotPassword() {
