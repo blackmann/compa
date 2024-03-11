@@ -150,7 +150,7 @@ export default function Discussion() {
 								</div>
 							</header>
 
-							<Tags className="mb-4" post={post} />
+							<Tags className="mb-4" tags={post.tags} />
 
 							<div className="-mt-2">
 								<Content content={content} />

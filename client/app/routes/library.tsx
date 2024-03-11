@@ -1,5 +1,16 @@
-import { ActionFunctionArgs, MetaFunction, json } from "@remix-run/node";
-import { Link, useFetcher, useLoaderData } from "@remix-run/react";
+import {
+	ActionFunctionArgs,
+	LoaderFunctionArgs,
+	MetaFunction,
+	json,
+} from "@remix-run/node";
+import {
+	Link,
+	useFetcher,
+	useLoaderData,
+	useLocation,
+	useNavigate,
+} from "@remix-run/react";
 import clsx from "clsx";
 import React from "react";
 import { FieldValues, useForm } from "react-hook-form";
@@ -27,13 +38,31 @@ import { useGlobalCtx } from "~/lib/global-ctx";
 import { prisma } from "~/lib/prisma.server";
 import { uploadMedia } from "~/lib/upload-media";
 import { values } from "~/lib/values.server";
+import qs from "qs";
 
-export const loader = async () => {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
+	const searchQuery = new URL(request.url).search.substring(1);
+	const queryParams = qs.parse(searchQuery);
+
+	const query: Record<string, any> = {};
+
+	if (queryParams.q) {
+		query.media = {
+			filename: {
+				contains: queryParams.q,
+			},
+		};
+	}
+
 	const repository = await prisma.repository.findMany({
+		where: query,
 		include: { media: true, user: true },
+		orderBy: { createdAt: "desc" },
 	});
+
 	const count = await prisma.repository.count({});
-	return { school: values.meta(), repository, count };
+
+	return { school: values.meta(), repository, count, queryParams };
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
@@ -79,6 +108,10 @@ export default function Library() {
 	const { user } = useGlobalCtx();
 	const { count, repository } = useLoaderData<typeof loader>();
 	const fetcher = useFetcher();
+	const navigate = useNavigate();
+	const location = useLocation();
+
+	const [q, setQ] = React.useState("");
 
 	const [uploading, setUploading] = React.useState(false);
 
@@ -120,6 +153,36 @@ export default function Library() {
 			reset();
 		}
 	}, [fetcher.data, reset]);
+
+	React.useEffect(() => {
+		const params = new URLSearchParams(location.search);
+		const q = params.get("q");
+		setQ(q || "");
+	}, [location.search]);
+
+	React.useEffect(() => {
+		const params = new URLSearchParams(location.search);
+
+		if (q) {
+			params.set("q", q);
+		} else {
+			params.delete("q");
+		}
+
+		const from = `${location.pathname}${location.search}`.replace(/\?$/, "");
+		const to = `${location.pathname}?${params.toString()}`.replace(/\?$/, "");
+
+		console.log(to, from);
+		if (to === from) {
+			return;
+		}
+
+		const timeout = setTimeout(() => {
+			navigate(to);
+		}, 600);
+
+		return () => clearTimeout(timeout);
+	}, [location.search, location.pathname, navigate, q]);
 
 	const tagsAdded = Boolean(Object.values($tags).flat().length);
 	const editMode = Boolean($files.length);
@@ -228,10 +291,15 @@ export default function Library() {
 						</form>
 					) : (
 						<>
-							<Input placeholder="Search for file" />
+							<Input
+								onChange={(e) => setQ(e.target.value)}
+								placeholder="Search for file"
+								type="search"
+								value={q}
+							/>
 
 							<div className="mt-2">
-								<TagsFilter label="Filter resources" path="/library" />
+								{/* <TagsFilter label="Filter resources" path="/library" /> */}
 							</div>
 
 							<div className="text-secondary mb-2 text-sm">
