@@ -16,6 +16,7 @@ import {
 	TagInput,
 } from "./tag-input";
 import { Content } from "./content";
+import { FileInput } from "./file-input";
 
 interface Props {
 	level?: number;
@@ -221,20 +222,17 @@ function PostInput({ level = 0, parent }: Props) {
 
 				<div className="flex justify-between flex-wrap gap-y-2">
 					<div className="flex gap-2">
-						<label className="flex items-center gap-2 rounded-lg px-2 py-1 font-medium bg-zinc-200 px-2 py-1 dark:bg-neutral-800 cursor-pointer w-[7.2rem]">
+						<FileInput
+							name="files"
+							multiple
+							maxLength={4}
+							accept="image/png,image/jpeg,image/gif,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,audio/*"
+							onChange={handleFilesSelect}
+							disabled={posting || $files.length >= 5}
+						>
 							<div className="i-lucide-file-symlink opacity-50 shrink-0" />
 							Add files
-							<input
-								type="file"
-								name="files"
-								multiple
-								maxLength={4}
-								accept="image/png,image/jpeg,image/gif,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,audio/*"
-								className="opacity-0 h-0 w-0 overflow-hidden"
-								onChange={handleFilesSelect}
-								disabled={posting || $files.length >= 5}
-							/>
-						</label>
+						</FileInput>
 
 						<div className="flex [&>*:last-child]:rounded-e-full [&>*:first-child]:rounded-s-full">
 							<AudioRecorder

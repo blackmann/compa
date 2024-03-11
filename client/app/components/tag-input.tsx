@@ -13,7 +13,7 @@ type SelectionStage = "type" | "course" | "programme" | "level";
 type SelectionId = Exclude<SelectionStage, "type">;
 type Selections = Record<SelectionId, string[]>;
 
-const TAG_LIMIT = 4;
+const DEFAULT_TAG_LIMIT = 4;
 const DEFAULT_SELECTIONS = {
 	course: [],
 	programme: [],
@@ -24,6 +24,7 @@ const TagInputCtx = React.createContext<{
 	selections: Selections;
 	onChange: (id: SelectionId, values: string[]) => void;
 	reset: VoidFunction;
+	tagsLimit: number;
 }>({
 	selections: {
 		course: [],
@@ -32,6 +33,7 @@ const TagInputCtx = React.createContext<{
 	},
 	onChange: () => {},
 	reset: () => {},
+	tagsLimit: DEFAULT_TAG_LIMIT,
 });
 
 function useTagInputCtx() {
@@ -42,9 +44,16 @@ interface Props extends React.PropsWithChildren {
 	onDone?: (selections: Selections) => void;
 	value?: Selections;
 	className?: string;
+	tagsLimit?: number;
 }
 
-function TagInput({ children, className, onDone, value }: Props) {
+function TagInput({
+	children,
+	className,
+	onDone,
+	value,
+	tagsLimit = DEFAULT_TAG_LIMIT,
+}: Props) {
 	const [showModal, setShowModal] = React.useState(false);
 	const [selections, setSelections] =
 		React.useState<Selections>(DEFAULT_SELECTIONS);
@@ -72,7 +81,7 @@ function TagInput({ children, className, onDone, value }: Props) {
 
 	return (
 		<TagInputCtx.Provider
-			value={{ selections, onChange: handleSelection, reset }}
+			value={{ selections, onChange: handleSelection, reset, tagsLimit }}
 		>
 			<button
 				type="button"
@@ -228,7 +237,7 @@ function TypeSelect({ onReset, onClose, useData, id }: StageProps) {
 	const [q, setQ] = React.useState("");
 	const { items, status, canAdd } = useData();
 
-	const { selections, onChange } = useTagInputCtx();
+	const { selections, onChange, tagsLimit } = useTagInputCtx();
 	const selection = selections[id];
 
 	const filteredItems = items.filter((item) =>
@@ -236,8 +245,8 @@ function TypeSelect({ onReset, onClose, useData, id }: StageProps) {
 	);
 
 	function handleChange(item: string, checked: boolean) {
-		if (Object.values(selections).flat().length >= TAG_LIMIT && checked) {
-			alert("You can only select up to 4 tags");
+		if (Object.values(selections).flat().length >= tagsLimit && checked) {
+			alert(`You can only select up to ${tagsLimit} tags`);
 			return;
 		}
 

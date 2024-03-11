@@ -6,7 +6,7 @@ import {
 } from "@remix-run/node";
 import { Link, useFetcher, useLoaderData } from "@remix-run/react";
 import React from "react";
-import { PostFilter } from "~/components/post-filter";
+import { TagsFilter } from "~/components/tags-filter";
 import { PostInput } from "~/components/post-input";
 import { PostItem, PostItemProps } from "~/components/post-item";
 import { checkAuth } from "~/lib/check-auth";
@@ -110,7 +110,7 @@ export default function Discussions() {
 					<hr className="mb-4 dark:border-t-neutral-800" />
 
 					<div>
-						<PostFilter label="Filter discussions" path="/discussions" />
+						<TagsFilter label="Filter discussions" path="/discussions" />
 					</div>
 
 					{posts.map((post, i) => (

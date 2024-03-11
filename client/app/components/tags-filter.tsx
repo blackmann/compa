@@ -9,7 +9,7 @@ interface Props {
 	path: string;
 }
 
-function PostFilter({ label, path }: Props) {
+function TagsFilter({ label, path }: Props) {
 	const [filters, setFilters] = React.useState<Selections>(DEFAULT_SELECTIONS);
 	const navigate = useNavigate();
 	const { queryParams = {} } = useLoaderData<{ queryParams: ParsedQs }>();
@@ -68,8 +68,8 @@ function PostFilter({ label, path }: Props) {
 				value={filters}
 				onDone={setFilters}
 			>
-				<div className="flex gap-2 items-center">
-					<div className="inline-block i-lucide-list-filter opacity-60" />{" "}
+				<div className="flex gap-2 items-center font-medium">
+					<div className="inline-block i-lucide-list-filter opacity-60" />
 					{label}{" "}
 					{filterCount > 0 && (
 						<span className="px-2 rounded-full bg-blue-800 text-sm">
@@ -82,4 +82,4 @@ function PostFilter({ label, path }: Props) {
 	);
 }
 
-export { PostFilter };
+export { TagsFilter };
