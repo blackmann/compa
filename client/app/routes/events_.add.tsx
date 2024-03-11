@@ -91,6 +91,7 @@ export default function AddEvent() {
 						<label>
 							Title*
 							<Input
+								maxLength={60}
 								{...register("title", {
 									required: true,
 									setValueAs(value) {
@@ -158,7 +159,7 @@ export default function AddEvent() {
 
 						<label className={clsx("block mt-2", { hidden: !showOptional })}>
 							Short description
-							<Input maxLength={30} {...register("shortDescription")} />
+							<Input maxLength={60} {...register("shortDescription")} />
 							<span className="text-xs text-secondary">
 								eg. From the Pinegrove boys{" "}
 							</span>
