@@ -326,6 +326,14 @@ function TypeSelect({ onReset, onClose, useData, id }: StageProps) {
 	);
 }
 
-export { TagInput, DEFAULT_SELECTIONS };
+function stringifySelections(selections: Selections) {
+	const normalized = Object.entries(selections).flatMap(([id, values]) =>
+		values.map((v) => `${id}:${v}`),
+	);
+
+	return JSON.stringify(normalized);
+}
+
+export { TagInput, DEFAULT_SELECTIONS, stringifySelections };
 
 export type { SelectionId, Selections };

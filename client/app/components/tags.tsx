@@ -4,18 +4,18 @@ import React from "react";
 
 interface Props {
 	className?: string;
-	post: Post;
+	tags: Post['tags'];
 }
 
-function Tags({ className, post }: Props) {
-	const tags = React.useMemo(() => {
+function Tags({ className, tags }: Props) {
+	const parsedTags = React.useMemo(() => {
 		const parsed =
-			(JSON.parse(post.tags || "null") as string[] | undefined) || [];
+			(JSON.parse(tags || "null") as string[] | undefined) || [];
 		return parsed.map((str) => {
 			const [id, ...parts] = str.split(":");
 			return [id, parts.join(":")];
 		});
-	}, [post]);
+	}, [tags]);
 
 	if (!tags.length) {
 		return null;
@@ -28,7 +28,7 @@ function Tags({ className, post }: Props) {
 				className,
 			)}
 		>
-			{tags.map(([id, value]) => (
+			{parsedTags.map(([id, value]) => (
 				<li
 					key={`${id}:${value}`}
 					className="bg-zinc-100 dark:bg-neutral-800 [&:not(:last-child)]:border-e dark:border-neutral-700 px-2 text-sm inline-flex items-center gap-1 whitespace-nowrap first:rounded-s-lg last:rounded-e-lg"

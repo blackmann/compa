@@ -14,6 +14,7 @@ import {
 	SelectionId,
 	Selections,
 	TagInput,
+	stringifySelections,
 } from "./tag-input";
 import { Content } from "./content";
 import { FileInput } from "./file-input";
@@ -48,12 +49,6 @@ function PostInput({ level = 0, parent }: Props) {
 	const isComment = level > 0;
 	const $files = watch("files");
 
-	function getTags() {
-		return Object.entries(tags).flatMap(([id, values]) =>
-			values.map((v) => `${id}:${v}`),
-		);
-	}
-
 	function loadPreview() {
 		const content = getValues("content");
 
@@ -73,10 +68,15 @@ function PostInput({ level = 0, parent }: Props) {
 		const media = await Promise.all($files.map(uploadMedia));
 		setUploading(false);
 
-		const tags = JSON.stringify(getTags());
+		const stringifiedTags = stringifySelections(tags);
 
 		fetcher.submit(
-			JSON.stringify({ ...data, parentId: parent?.id, media, tags }),
+			JSON.stringify({
+				...data,
+				parentId: parent?.id,
+				media,
+				tags: stringifiedTags,
+			}),
 			{
 				encType: "application/json",
 				method: "POST",
