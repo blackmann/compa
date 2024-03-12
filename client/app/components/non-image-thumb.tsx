@@ -3,6 +3,7 @@ interface Props {
 }
 
 function FileThumbnail({ contentType }: Props) {
+	console.log(contentType);
 	if (contentType.startsWith("image/")) {
 		return (
 			<div className="size-10 rounded-lg bg-zinc-100 dark:bg-neutral-700 items-center justify-center flex text-secondary">
@@ -37,6 +38,18 @@ function FileThumbnail({ contentType }: Props) {
 		return (
 			<div className="size-10 rounded-lg bg-zinc-100 dark:bg-neutral-700 items-center justify-center flex text-secondary">
 				<div className="i-lucide-file-text size-6" />
+			</div>
+		);
+	}
+
+	if (
+		[
+			"application/vnd.openxmlformats-officedocument.presentationml.presentation",
+		].includes(contentType)
+	) {
+		return (
+			<div className="size-10 rounded-lg bg-zinc-100 dark:bg-neutral-700 items-center justify-center flex text-secondary">
+				<div className="i-lucide-monitor-play size-6" />
 			</div>
 		);
 	}
