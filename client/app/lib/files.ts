@@ -1,10 +1,14 @@
 function ellipsizeFilename(name: string, length = 14) {
-	const parts = name.split(".");
-	if (parts.length === 1) {
-		return `${name.slice(0, length)}…`;
+	if (name.length <= length) {
+		return name;
 	}
-	const [filename, ...extension] = parts;
-	return `${filename.slice(0, length)}…${extension[extension.length - 1]}`;
+
+	const parts = name.split(".");
+	const [filename, ...rest] = parts;
+	const extension = rest.pop() || "";
+	const fn = [filename, ...rest].join(".").substring(0, length);
+
+	return [fn, extension].join("…");
 }
 
 function humanizeSize(s: number) {
