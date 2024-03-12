@@ -30,7 +30,10 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
 	const { email, password } = await request.json();
 
-	const user = await prisma.user.findFirst({ where: { email } });
+	const user = await prisma.user.findFirst({
+		where: { OR: [{ email }, { username: email }] },
+	});
+
 	if (!user) {
 		return json(
 			{ type: "invalid-credentials", message: "Invalid email or password" },
@@ -52,7 +55,10 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 	const passwordMatch = await compare(password, authCredential.password);
 	if (!passwordMatch) {
 		return json(
-			{ type: "invalid-credentials", message: "Invalid email or password" },
+			{
+				type: "invalid-credentials",
+				message: "Invalid email/username or password",
+			},
 			{ status: 400 },
 		);
 	}
@@ -130,8 +136,15 @@ export default function Login() {
 						)}
 
 						<label>
-							Email
-							<Input {...register("email", { required: true })} />
+							Email or username
+							<Input
+								{...register("email", {
+									required: true,
+									setValueAs(v) {
+										return v.toLowerCase();
+									},
+								})}
+							/>
 							<small className="text-secondary">Your school email</small>
 						</label>
 

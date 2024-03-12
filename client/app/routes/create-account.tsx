@@ -139,9 +139,15 @@ export default function CreateAccount() {
 							<Input
 								{...register("email", {
 									required: true,
-									validate: (email) =>
-										emailExtensions.some((ext) => email.endsWith(ext)) ||
-										"Invalid email. Use your school email.",
+									validate(email) {
+										return (
+											emailExtensions.some((ext) => email.endsWith(ext)) ||
+											"Invalid email. Use your school email."
+										);
+									},
+									setValueAs(v) {
+										return v.toLowerCase();
+									},
 								})}
 							/>
 							<small className="text-secondary" style={{ lineHeight: "1rem" }}>
