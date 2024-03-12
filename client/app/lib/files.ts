@@ -1,12 +1,12 @@
 function ellipsizeFilename(name: string, length = 14) {
-	if (name.length <= length) {
-		return name;
-	}
-
 	const parts = name.split(".");
 	const [filename, ...rest] = parts;
 	const extension = rest.pop() || "";
 	const fn = [filename, ...rest].join(".").substring(0, length);
+
+	if ((`${fn}.${extension}`).length <= length) {
+		return name;
+	}
 
 	return [fn, extension].join("…");
 }
