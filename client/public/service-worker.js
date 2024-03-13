@@ -1,6 +1,6 @@
 const cacheHeader = 'compa:v1.0.0:'
 
-const offlineFundamentals = ['./entry.worker.js', '/offline']
+const offlineFundamentals = ['/offline']
 
 //Add core website files to cache during serviceworker installation
 const updateStaticCache = async () => {
@@ -118,34 +118,71 @@ self.addEventListener('message', async (event) => {
   }
 
   if (event.data.type === 'REMIX_NAVIGATION') {
-    const { location, isMounted } = event.data
+    const cachePromises = new Map();
+    const { location, isMount, manifest, matches } = event.data
     const existingUrl = await caches.match(location.pathname)
+    const documentUrl = location.pathname + location.search + location.hash;
+    console.log('mounted', isMount)
 
-    if (!existingUrl || !isMounted) {
-      await fetch(location.pathname)
-        .then(async (response) => {
-          const cacheCopy = response.clone()
+    if (!existingUrl || !isMount) {
+      console.log('i am in here', documentUrl)
+      const response = await fetch(documentUrl).catch(async () => {
+        return (
+          (await caches.match(location.pathname)) ||
+          (await caches
+            .match(new Request('/offline'), {})
+            .then((response) => {
+              if (response) {
+                self.clients.matchAll().then((clients) => {
+                  for (const client of clients) {
+                    client.navigate('/offline')
+                  }
+                })
+              }
+              return response
+            }))
+        )
+      });
+
+        cachePromises.set(
+          documentUrl,
           await caches.open(`${cacheHeader}pages`).then(async (cache) => {
-            await cache.put(event.data.location.pathname, cacheCopy)
+            await cache.put(documentUrl, response)
+          }).catch(error => {
+            console.error(`Failed to cache document for ${documentUrl}:`, error)
           })
-        })
-        .catch(async () => {
-          return (
-            (await caches.match(location.pathname)) ||
-            (await caches
-              .match(new Request('/offline'), {})
-              .then((response) => {
-                if (response) {
-                  self.clients.matchAll().then((clients) => {
-                    for (const client of clients) {
-                      client.navigate('/offline')
-                    }
-                  })
-                }
-                return response
-              }))
-          )
-        })
+        );
     }
+
+    if (isMount) {
+      for (const match of matches) {
+        if (manifest.routes[match.id].hasLoader) {
+          const params = new URLSearchParams(location.search);
+          params.set('_data', match.id);
+
+          let search = params.toString();
+          search = search ? `?${search}` : '';
+
+          const url = location.pathname + search + location.hash;
+
+          if (!cachePromises.has(url)) {
+            console.log('Caching data for:', url);
+
+            const response = await fetch(url);
+
+            cachePromises.set(
+              url,
+              await caches.open(`${cacheHeader}assets`).then(async (cache) => {
+                await cache.put(url, response)
+              }).catch((error) => {
+                console.error(`Failed to cache data for ${url}:`, error)
+              })
+            );
+          }
+        }
+      }
+    }
+
+    await Promise.all(cachePromises.values());
   }
 })

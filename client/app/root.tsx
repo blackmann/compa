@@ -10,9 +10,11 @@ import {
 	Outlet,
 	Scripts,
 	ScrollRestoration,
+	UIMatch,
 	json,
 	useLoaderData,
 	useLocation,
+	useMatches,
 } from "@remix-run/react";
 import { BottomNav, Navbar } from "./components/navbar";
 import { Footer } from "./components/footer";
@@ -48,6 +50,21 @@ export default function App() {
 
 	const location = useLocation();
 	const isMount = useRef(true);
+	const matches = useMatches();
+
+	function isPromise(p: any): boolean {
+		if (p && typeof p === "object" && typeof p.then === "function") {
+			return true;
+		}
+		return false;
+	}
+
+	function isFunction(p: any): boolean {
+		if (typeof p === "function") {
+			return true;
+		}
+		return false;
+	}
 
 	React.useEffect(() => {
 		const mounted = isMount;
@@ -62,6 +79,8 @@ export default function App() {
 					type: "REMIX_NAVIGATION",
 					isMount: mounted,
 					location,
+					manifest: window.__remixManifest,
+					matches: matches.filter(filteredMatches).map(sanitizeHandleObject),
 				});
 			} else {
 				const listener = async () => {
@@ -73,6 +92,8 @@ export default function App() {
 						type: "REMIX_NAVIGATION",
 						isMount: mounted,
 						location,
+						manifest: window.__remixManifest,
+						matches: matches.filter(filteredMatches).map(sanitizeHandleObject),
 					});
 				};
 				navigator.serviceWorker.addEventListener("controllerchange", listener);
@@ -84,7 +105,31 @@ export default function App() {
 				};
 			}
 		}
-	});
+
+		function filteredMatches(route: UIMatch) {
+			if (route.data) {
+				return (
+					Object.values(route.data).filter((elem) => {
+						return isPromise(elem);
+					}).length === 0
+				);
+			}
+			return true;
+		}
+
+		function sanitizeHandleObject(route: UIMatch) {
+			let handle = route.handle;
+
+			if (handle) {
+				const filterInvalidTypes = ([, value]: any) =>
+					!isPromise(value) && !isFunction(value);
+				handle = Object.fromEntries(
+					Object.entries(route.handle!).filter(filterInvalidTypes),
+				);
+			}
+			return { ...route, handle };
+		}
+	}, [location, matches]);
 
 	return (
 		<html lang="en">
@@ -103,7 +148,7 @@ export default function App() {
 
 				<ScrollRestoration />
 				<Scripts />
-				<LiveReload />
+				<LiveReload timeoutMs={1000} />
 				<Footer />
 				<BottomNav />
 			</body>

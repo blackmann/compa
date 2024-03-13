@@ -23,7 +23,7 @@ if (process.env.NODE_ENV === "production") {
 
 if ("serviceWorker" in navigator) {
 	try {
-		await navigator.serviceWorker.register("/service-worker.js", {
+		navigator.serviceWorker.register("/service-worker.js", {
 			scope: "/",
 		});
 	} catch (error) {
