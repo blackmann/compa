@@ -1,7 +1,23 @@
 {
-  "editor.defaultFormatter": "biomejs.biome",
   "[prisma]": {
     "editor.defaultFormatter": "Prisma.prisma"
   },
-  "cSpell.words": ["clsx"]
+  "cSpell.words": [
+    "clsx",
+    "iconify",
+    "isbot",
+    "julr",
+    "katex",
+    "lucide",
+    "posthog",
+    "rehype",
+    "shikijs",
+    "typecheck",
+    "unocss"
+  ],
+  "editor.formatOnSave": true,
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": "explicit"
+  }
 }

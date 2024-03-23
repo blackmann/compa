@@ -7,6 +7,10 @@ settings:
 importers:
 
   .:
+    dependencies:
+      unist-util-visit:
+        specifier: ^5.0.0
+        version: 5.0.0
     devDependencies:
       '@biomejs/biome':
         specifier: ^1.5.3
