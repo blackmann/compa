@@ -22,7 +22,9 @@ function PostPeople({ post }: Props) {
 				{people.map((person) => (
 					<li key={person.id}>
 						<div className="flex gap-2 py-1 px-2 rounded-lg hover:bg-zinc-100 items-center hover-bg-light">
-							<Avatar size={22} name={person.username} />
+							<a href={`/p/${person.username}`}> 
+                                <Avatar size={22} name={person.username} />
+                            </a>
 
 							<div>
 								{person.username}{" "}

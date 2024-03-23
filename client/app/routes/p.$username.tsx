@@ -58,7 +58,9 @@ export default function Profile() {
 			<div className="grid lg:grid-cols-4">
 				<div className="col-span-1 lg:col-span-2 lg:col-start-2">
 					<div className="flex gap-2 pb-5 border-b dark:border-neutral-800">
-						<Avatar name={user.username} />
+						<a href={`/p/${user.username}`}>
+                            <Avatar name={user.username} />
+                        </a>
 
 						<div>
 							<div className="font-mono font-medium">

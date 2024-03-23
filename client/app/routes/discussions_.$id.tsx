@@ -132,7 +132,9 @@ export default function Discussion() {
 					<div className="flex gap-2">
 						<div className="flex flex-col items-center">
 							<div className="mb-2">
-								<Avatar name={post.user.username} />
+                                <a href={`/p/${post.user.username}`}>
+								    <Avatar name={post.user.username} />
+                                </a>
 							</div>
 
 							<Votes post={post} />
