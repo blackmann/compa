@@ -5,12 +5,12 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "build:client": "pnpm -r --filter='client' build",
-    "build:website": "pnpm -r --filter='website' build",
-    "dev:client": "pnpm -r --filter='client' dev",
-    "dev:website": "pnpm -r --filter='website' dev",
-    "start:client": "pnpm -r --filter='client' start",
-    "setup:all": "pnpm install && pnpm -r --filter='client' prisma migrate deploy && pnpm -r --filter='client' prisma generate"
+    "build:client": "yarn workspace client build",
+    "build:website": "yarn workspace website build",
+    "dev:client": "yarn workspace client dev",
+    "dev:website": "yarn workspace website dev",
+    "start:client": "yarn workspace client start",
+    "setup:all": "yarn install && yarn workspace client prisma migrate deploy && yarn workspace client prisma generate"
   },
   "workspaces": [
     "client",
