@@ -1,7 +1,15 @@
 {
   "recommendations": [
     "biomejs.biome",
-    "bierner.color-info",
+    "naumovs.color-highlight",
+    "usernamehw.errorlens",
+    "eamodio.gitlens",
+    "VisualStudioExptTeam.vscodeintellicode",
+    "esbenp.prettier-vscode",
+    "Prisma.prisma",
+    "bradlc.vscode-tailwindcss",
+    "vincaslt.highlight-matching-tag",
+    "YoavBls.pretty-ts-errors",
     "dbaeumer.vscode-eslint",
     "streetsidesoftware.code-spell-checker"
   ]

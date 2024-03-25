@@ -3,20 +3,20 @@ import { useFetcher } from "@remix-run/react";
 import React from "react";
 
 function usePostPeople(postId: number) {
-	const [people, setPeople] = React.useState<User[]>([]);
-	const fetcher = useFetcher();
+  const [people, setPeople] = React.useState<User[]>([]);
+  const fetcher = useFetcher();
 
-	React.useEffect(() => {
-		fetcher.load(`/people?postId=${postId}`);
-	}, [postId, fetcher.load]);
+  React.useEffect(() => {
+    fetcher.load(`/people?postId=${postId}`);
+  }, [postId, fetcher.load]);
 
-	React.useEffect(() => {
-		if (fetcher.data) {
-			setPeople(fetcher.data.people);
-		}
-	}, [fetcher.data]);
+  React.useEffect(() => {
+    if (fetcher.data) {
+      setPeople((fetcher.data as any).people);
+    }
+  }, [fetcher.data]);
 
-	return people;
+  return people;
 }
 
 export { usePostPeople };

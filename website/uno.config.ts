@@ -1,12 +1,12 @@
 import {
   defineConfig,
-  presetWind,
   presetIcons,
+  presetWind,
+  transformerDirectives,
   transformerVariantGroup,
-  transformerDirectives
-} from 'unocss'
+} from "unocss";
 
 export default defineConfig({
-  presets: [presetWind({ dark: 'media' }), presetIcons()],
-  transformers: [transformerDirectives(), transformerVariantGroup()]
-})
+  presets: [presetWind({ dark: "media" }), presetIcons()],
+  transformers: [transformerDirectives(), transformerVariantGroup()],
+});

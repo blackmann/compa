@@ -6,6 +6,7 @@
 
 import { RemixBrowser } from "@remix-run/react";
 import AudioRecorder from "audio-recorder-polyfill";
+// @ts-ignore
 import mpegEncoder from "audio-recorder-polyfill/mpeg-encoder";
 import posthog from "posthog-js";
 import { startTransition, StrictMode } from "react";

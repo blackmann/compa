@@ -196,7 +196,7 @@ function PostInput({ level = 0, parent }: Props) {
           </div>
 
           <div className="px-2 py-1">
-            <Content content={previewFetcher.data?.rendered} />
+            <Content content={(previewFetcher.data as any)?.rendered} />
           </div>
 
           <div className="bg-zinc-200 dark:bg-neutral-700 bg-opacity-50 text-secondary inline-block text-sm rounded-lg px-2 mb-1 ms-2 font-medium">
