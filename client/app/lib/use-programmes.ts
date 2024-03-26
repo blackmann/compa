@@ -5,6 +5,7 @@ import { RequestStatus } from "./request-status";
 import { loader as programmesLoader } from "~/routes/programmes";
 
 const cache: Programme[] = [];
+
 function useProgrammes() {
 	const [programmes, setProgrammes] = React.useState(cache);
 	const fetcher = useFetcher<typeof programmesLoader>();

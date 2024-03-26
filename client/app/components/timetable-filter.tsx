@@ -32,7 +32,7 @@ function TimetableFilter({ programmes }: Props) {
 
 	const selected = React.useMemo(
 		() => programmes.find(({ slug }) => slug === programme),
-		[programmes],
+		[programmes, programme],
 	);
 
 	const programmeOptions = programmes.map(({ name, slug }) => ({
@@ -57,7 +57,7 @@ function TimetableFilter({ programmes }: Props) {
 		if (location.pathname.startsWith(to)) return;
 
 		navigate(to);
-	}, [programme, level, sem, year]);
+	}, [programme, level, sem, year, params.day, navigate]);
 
 	return (
 		<div className="max-lg:block flex gap-2">

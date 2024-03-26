@@ -3,7 +3,6 @@ interface Props {
 }
 
 function FileThumbnail({ contentType }: Props) {
-	console.log(contentType);
 	if (contentType.startsWith("image/")) {
 		return (
 			<div className="size-10 rounded-lg bg-zinc-100 dark:bg-neutral-700 items-center justify-center flex text-secondary">
