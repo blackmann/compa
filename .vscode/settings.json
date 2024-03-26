@@ -1,6 +1,30 @@
 {
-	"editor.defaultFormatter": "biomejs.biome",
-	"[prisma]": {
-		"editor.defaultFormatter": "Prisma.prisma"
-	}
+  "editor.defaultFormatter": "biomejs.biome",
+  "[prisma]": {
+    "editor.defaultFormatter": "Prisma.prisma"
+  },
+  "cSpell.words": [
+    "biomejs",
+    "clsx",
+    "compa",
+    "iconify",
+    "isbot",
+    "julr",
+    "katex",
+    "kompanion",
+    "lucide",
+    "posthog",
+    "prefs",
+    "rehype",
+    "Shiki",
+    "shikijs",
+    "typecheck",
+    "unocss",
+    "vitesse"
+  ],
+  "editor.formatOnSave": true,
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": "explicit"
+  }
 }
