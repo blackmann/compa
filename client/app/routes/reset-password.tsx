@@ -56,6 +56,11 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 		data: { password: await hash(password) },
 	});
 
+	await prisma.passwordResetRequest.update({
+		where: { id: resetRequest.id },
+		data: { used: true },
+	});
+
 	// [ ]: We should show some feedback that password changed successfully
 	return redirect("/login?password-changed=true");
 };

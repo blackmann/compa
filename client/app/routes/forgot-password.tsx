@@ -6,6 +6,7 @@ import { Input } from "~/components/input";
 import { send } from "~/lib/mail.server";
 import { prisma } from "~/lib/prisma.server";
 import { randomStr } from "~/lib/random-str";
+import dayjs from "dayjs";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
 	if (request.method !== "POST") {
@@ -18,6 +19,17 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
 	const user = await prisma.user.findFirst({ where: { email } });
 	if (!user) {
+		return json({});
+	}
+
+	// Don't resend token if user has a valid token
+	const hourAgo = dayjs().subtract(1, "hour").toDate();
+
+	const validToken = await prisma.passwordResetRequest.findFirst({
+		where: { userId: user.id, used: false, createdAt: { gte: hourAgo } },
+	});
+
+	if (validToken) {
 		return json({});
 	}
 
