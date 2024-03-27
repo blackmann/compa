@@ -15,6 +15,8 @@ const s3 = new S3Client({
 	region: process.env.AWS_REGION as string,
 });
 
+const DIR = 'compa'
+
 async function upload(
 	stream: AsyncIterable<Uint8Array> | Buffer,
 	filename: string,
@@ -26,7 +28,7 @@ async function upload(
 		params: {
 			ACL: "public-read",
 			Bucket: process.env.AWS_BUCKET as string,
-			Key: filename,
+			Key: [DIR, filename].join('/'),
 			ContentType: contentType,
 			CacheControl: "max-age=31536000",
 			Body: Readable.from(stream),
