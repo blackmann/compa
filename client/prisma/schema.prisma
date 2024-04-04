@@ -107,7 +107,14 @@ model Post {
   media         Media[]
   Vote          Vote[]
   deleted       Boolean  @default(false)
-  tags          String   @default("") // JSON stringified array of tags
+
+  // JSON stringified array of tags
+  tags          String   @default("")
+
+  // To show the lineage of the post. This is relevant for comments. Eg. for a
+  // comment on a second level, the path will be 23/40. Where 23 is the id of the
+  // OP, and 40 is the id of the comment under it.
+  path          String?
 }
 
 model Vote {
@@ -162,11 +169,11 @@ model EventItem {
 }
 
 model Repository {
-  id      Int    @id @default(autoincrement())
-  media   Media  @relation(fields: [mediaId], references: [id])
-  mediaId Int
-  user    User   @relation(fields: [userId], references: [id])
-  tags    String @default("") // JSON stringified array of tags
+  id        Int      @id @default(autoincrement())
+  media     Media    @relation(fields: [mediaId], references: [id])
+  mediaId   Int
+  user      User     @relation(fields: [userId], references: [id])
+  tags      String   @default("") // JSON stringified array of tags
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   userId    Int

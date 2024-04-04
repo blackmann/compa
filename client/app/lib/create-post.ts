@@ -4,6 +4,8 @@ import { prisma } from "./prisma.server";
 async function createPost(data: Record<string, any>, userId: number) {
 	const media = data.media as Omit<Media, "postId">[];
 
+	const path = await getPath(data.parentId);
+
 	const post = await prisma.post.create({
 		data: {
 			content: data.content,
@@ -11,7 +13,8 @@ async function createPost(data: Record<string, any>, userId: number) {
 			upvotes: 1,
 			parentId: data.parentId,
 			people: 1,
-			tags: data.tags
+			tags: data.tags,
+			path,
 		},
 	});
 
@@ -29,7 +32,20 @@ async function createPost(data: Record<string, any>, userId: number) {
 		},
 	});
 
-  return post
+	return post;
+}
+
+async function getPath(id?: number | null): Promise<string | undefined> {
+	if (!id) {
+		return;
+	}
+
+	const parent = await prisma.post.findFirst({
+		where: { id },
+		select: { parentId: true },
+	});
+
+	return [await getPath(parent?.parentId), id].filter(Boolean).join("/");
 }
 
 export { createPost };
