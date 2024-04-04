@@ -51,7 +51,7 @@
     "remark-rehype": "^11.1.0",
     "remark-smartypants": "^2.1.0",
     "resend": "^3.1.0",
-    "sharp": "^0.33.2",
+    "sharp": "^0.33.3",
     "unified": "^11.0.4"
   },
   "devDependencies": {

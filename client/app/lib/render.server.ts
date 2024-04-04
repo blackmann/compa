@@ -9,10 +9,12 @@ import smartypants from "remark-smartypants";
 import rehypeKatex from "rehype-katex";
 import remarkMath from "remark-math";
 import { removeCodeTrail } from "./remove-code-trail";
+import linkifyMentions from "./linkify-mentions";
 
 const processor = unified()
 	.use(remarkParse)
 	.use(remarkGfm)
+	.use(linkifyMentions)
 	.use(remarkRehype)
 	.use(rehypeSanitize)
 	.use(remarkMath)

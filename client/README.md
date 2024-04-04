@@ -1,38 +1,15 @@
-# Welcome to Remix!
+# compa client
 
-- [Remix Docs](https://remix.run/docs)
+## Common dev issues
 
-## Development
+When you see an error like below when running `yarn dev`:
 
-From your terminal:
-
-```sh
-npm run dev
+```
+Error: Could not load the "sharp" module using the darwin-arm64 runtime
 ```
 
-This starts your app in development mode, rebuilding assets on file changes.
-
-## Deployment
-
-First, build your app for production:
+Run the following command to remedy it:
 
 ```sh
-npm run build
+yarn workspace client add sharp --ignore-engines
 ```
-
-Then run the app in production mode:
-
-```sh
-npm start
-```
-
-Now you'll need to pick a host to deploy it to.
-
-### DIY
-
-If you're familiar with deploying node applications, the built-in Remix app server is production-ready.
-
-Make sure to deploy the output of `remix build`
-
-- `build/`
-- `public/build/`

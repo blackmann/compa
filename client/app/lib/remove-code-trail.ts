@@ -1,6 +1,7 @@
 import { visit } from "unist-util-visit";
+import type { Plugin } from 'unified'
 
-function removeCodeTrail() {
+function removeCodeTrail(): ReturnType<Plugin> {
 	return (tree) => {
 		// remove trailing newline from code
 		visit(tree, "element", (node) => {
