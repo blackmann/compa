@@ -1,13 +1,13 @@
 import { findAndReplace } from "mdast-util-find-and-replace";
 import type { Plugin } from "unified";
-import type { PhrasingContent } from 'mdast'
+import type { Node } from "mdast";
 
 const userGroup = "[\\da-z][-\\da-z_]{0,38}";
 const mentionRegex = new RegExp(`(?:^|\\s)@(${userGroup})`, "gi");
 
 // Adapted from https://github.com/FinnRG/remark-mentions/blob/main/lib/index.js
 function replaceMention(value: string, username: string) {
-	const whitespace: PhrasingContent[] = [];
+	const whitespace: Node[] = [];
 
 	// Separate leading white space
 	if (value.indexOf("@") > 0) {
@@ -17,18 +17,35 @@ function replaceMention(value: string, username: string) {
 		});
 	}
 
+	const children: Node[] = [{ type: "text", value: value.trim() }];
+
+	if (username === "notgr") {
+		children.push({
+			type: "element",
+			tagName: "div",
+			properties: {
+				className: "i-lucide-crown text-amber-500 inline-block",
+			},
+		});
+	}
+
 	return [
 		...whitespace,
 		{
-			type: "link",
-			url: `/p/${username}`,
-			children: [{ type: "text", value: value.trim() }],
+			type: "element",
+			tagName: "a",
+			properties: {
+				href: `/p/${username}`,
+				className:
+					"!no-underline inline-flex items-center gap-1 font-medium !text-green-600 dark:text-green-500 bg-green-700 bg-opacity-10 rounded-lg px-1",
+			},
+			children,
 		},
 	];
 }
 
 export default function linkifyMentions(): ReturnType<Plugin> {
-	return (tree, _file) => {
+	return (tree) => {
 		findAndReplace(tree, [[mentionRegex, replaceMention]]);
 	};
 }
