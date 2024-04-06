@@ -25,6 +25,7 @@ import { render } from "~/lib/render.server";
 import { values } from "~/lib/values.server";
 import { Content } from "~/components/content";
 import { Username } from "~/components/username";
+import { sendPostNotification } from "~/lib/send-post-notification";
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
 	const postId = Number(params.id as string);
@@ -59,6 +60,7 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {
 	const userId = await checkAuth(request);
+
 	switch (request.method) {
 		case "DELETE": {
 			const postId = Number(params.id);
@@ -80,6 +82,12 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 			const data = await request.json();
 
 			await createPost(data, userId);
+			await sendPostNotification({
+				message: "username posted on post",
+				actorId: userId,
+				entityId: Number(params.id),
+				entityType: "post",
+			});
 			await updatePostProps(data.parentId);
 
 			return json({}, { status: 201 });
