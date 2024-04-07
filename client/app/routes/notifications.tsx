@@ -35,9 +35,11 @@ export default function Notifications() {
 						return (
 							<NavLink
 								key={notification.id}
+								to={`/notifications/${notification.notification.id}`}
 								className="block"
-								to={`/discussions/${notification.notification.entityId}`}
-							>{`${notification.user.username} posted on a discussion`}</NavLink>
+							>
+								{notification.notification.message}
+							</NavLink>
 						);
 				}
 			})}

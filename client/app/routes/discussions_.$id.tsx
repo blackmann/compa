@@ -82,11 +82,17 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 			const data = await request.json();
 
 			await createPost(data, userId);
+
+			const user = await prisma.user.findFirst({ where: { id: userId } });
+
+			const summary = data?.content.substring(0, 30);
+
 			await createPostNotification({
-				message: "username posted on post",
+				message: `${user?.username} posted on ${summary}}`,
 				actorId: userId,
 				entityId: Number(params.id),
 			});
+
 			await updatePostProps(data.parentId);
 
 			return json({}, { status: 201 });
