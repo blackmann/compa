@@ -28,7 +28,7 @@ const links = [
 ];
 
 function Navbar() {
-	const { user } = useGlobalCtx();
+	const { user, notifications } = useGlobalCtx();
 
 	return (
 		<header className="container mx-auto border-b border-zinc-200 dark:border-zinc-800 mb-4 sticky top-0 bg-zinc-50 dark:bg-neutral-900 z-10">
@@ -64,6 +64,8 @@ function Navbar() {
 							))}
 						</ul>
 					</nav>
+
+					<i className="i-lucide-bell bg-red-400" />
 
 					<div className="font-medium bg-zinc-100 dark:bg-neutral-800 rounded-full p-1 pe-2">
 						{user ? (

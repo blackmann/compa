@@ -1,18 +1,12 @@
 import { prisma } from "./prisma.server";
 
-type sendPostNotificationType = {
+interface Options {
 	message: string;
 	actorId: number;
 	entityId: number;
-	entityType: string;
-};
+}
 
-async function sendPostNotification({
-	message,
-	actorId,
-	entityId,
-	entityType,
-}: sendPostNotificationType) {
+async function createPostNotification({ message, actorId, entityId }: Options) {
 	const suscribers = await prisma.post.findMany({
 		where: {
 			OR: [{ id: entityId }, { parentId: entityId }],
@@ -27,18 +21,20 @@ async function sendPostNotification({
 			message,
 			actorId,
 			entityId,
-			entityType,
+			entityType: "post",
 		},
 	});
 
-	suscribers?.map(async (suscriber) => {
-		await prisma.notificationSuscribers.create({
-			data: {
-				userId: suscriber.userId,
-				notificationId: notification.id,
-			},
-		});
-	});
+	await Promise.all(
+		suscribers?.map(async (suscriber) => {
+			await prisma.notificationSuscribers.create({
+				data: {
+					userId: suscriber.userId,
+					notificationId: notification.id,
+				},
+			});
+		}),
+	);
 }
 
-export { sendPostNotification };
+export { createPostNotification };

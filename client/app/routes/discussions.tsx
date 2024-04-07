@@ -38,23 +38,12 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 		orderBy: { createdAt: "desc" },
 	});
 
-	const userId = await checkAuth(request);
-	let notifications = [];
-	if (userId) {
-		notifications = await prisma.notificationSuscribers.findMany({
-			where: { userId, read: false },
-
-			include: { notification: true },
-		});
-	}
-	console.log(notifications?.length);
-
 	for (const post of posts) {
 		post.content = await renderSummary(post.content);
 	}
 
 	return json(
-		{ school: values.meta(), posts, notifications: notifications.length },
+		{ school: values.meta(), posts },
 		{
 			headers: {
 				"Set-Cookie": await withUserPrefs(request, { lastBase: "discussions" }),
@@ -83,12 +72,11 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
 };
 
 export default function Discussions() {
-	const { posts, notifications } = useLoaderData<typeof loader>();
+	const { posts } = useLoaderData<typeof loader>();
 	const { user } = useGlobalCtx();
 
 	return (
 		<div className="container mx-auto min-h-[60vh]">
-			{notifications && <div> you have {notifications} notifications</div>}
 			<div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
 				<div className="col-span-1" />
 
