@@ -190,7 +190,7 @@ function Paginated({ fromDate }: PaginatedProps) {
 				</div>
 			) : (
 				<button
-					className="px-2 py-1 rounded-lg border font-medium inline-flex items-center gap-2 text-secondary hover:bg-zinc-100 transition-[background] duration-200"
+					className="px-2 py-1 rounded-lg border dark:border-neutral-700 font-medium inline-flex items-center gap-2 text-secondary hover:bg-zinc-100 transition-[background] duration-200"
 					onClick={handleLoadMore}
 					type="button"
 				>
