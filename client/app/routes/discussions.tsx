@@ -19,6 +19,7 @@ import qs from "qs";
 import { DiscussionsEmpty } from "~/components/discussions-empty";
 import { renderSummary } from "~/lib/render-summary.server";
 import { createTagsQuery } from "~/lib/create-tags-query";
+import { includeVotes } from "~/lib/include-votes";
 
 const PAGE_SIZE = 30;
 
@@ -43,7 +44,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 	}
 
 	return json(
-		{ school: values.meta(), posts },
+		{ school: values.meta(), posts: await includeVotes(posts, request) },
 		{
 			headers: {
 				"Set-Cookie": await withUserPrefs(request, { lastBase: "discussions" }),

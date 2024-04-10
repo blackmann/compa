@@ -25,8 +25,9 @@ import { render } from "~/lib/render.server";
 import { values } from "~/lib/values.server";
 import { Content } from "~/components/content";
 import { Username } from "~/components/username";
+import { includeVotes } from "~/lib/include-votes";
 
-export const loader = async ({ params }: LoaderFunctionArgs) => {
+export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 	const postId = Number(params.id as string);
 
 	const post = await prisma.post.findFirst({
@@ -49,10 +50,20 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
 		comment.content = await render(comment.content);
 	}
 
+	let vote: boolean | undefined;
+	try {
+		const userId = await checkAuth(request);
+		const voteRecord = await prisma.vote.findFirst({
+			where: { userId, postId: postId },
+		});
+
+		vote = voteRecord?.up;
+	} catch {}
+
 	return json({
-		comments,
+		comments: await includeVotes(comments, request),
 		meta: values.meta(),
-		post,
+		post: { ...post, vote },
 		content: content,
 	});
 };

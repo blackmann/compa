@@ -18,7 +18,9 @@ import React from "react";
 
 interface Props {
 	level?: number;
-	post: Prisma.PostGetPayload<{ include: { user: true; media: true } }>;
+	post: Prisma.PostGetPayload<{ include: { user: true; media: true } }> & {
+		vote?: boolean;
+	};
 	limit?: boolean;
 }
 
