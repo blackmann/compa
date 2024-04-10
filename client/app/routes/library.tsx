@@ -197,7 +197,7 @@ export default function Library() {
 	const editMode = Boolean($files.length);
 
 	return (
-		<div className="h-[60vh] container mx-auto">
+		<div className="min-h-[60vh] container mx-auto">
 			<div className="grid grid-cols-1 md:grid-cols-5">
 				<div className="col-span-1 md:col-span-3 md:col-start-2">
 					<div className="flex">
