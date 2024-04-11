@@ -21,7 +21,7 @@ import { renderSummary } from "~/lib/render-summary.server";
 import { createTagsQuery } from "~/lib/create-tags-query";
 import { includeVotes } from "~/lib/include-votes";
 
-const PAGE_SIZE = 30;
+const PAGE_SIZE = 50;
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
 	const searchQuery = new URL(request.url).search.substring(1);
