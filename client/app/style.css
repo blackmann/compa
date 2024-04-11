@@ -157,3 +157,17 @@ input {
     text-decoration: var(--shiki-dark-text-decoration) !important;
   }
 }
+
+.fade-in {
+  animation: fadeIn 240ms;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}

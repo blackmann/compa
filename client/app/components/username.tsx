@@ -1,7 +1,8 @@
 import { User } from "@prisma/client";
+import { Jsonify } from "type-fest";
 
 interface Props {
-	user: User;
+	user: User | Jsonify<User>;
 	showVerfied?: boolean;
 }
 

@@ -27,10 +27,9 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 	const searchQuery = new URL(request.url).search.substring(1);
 	const queryParams = qs.parse(searchQuery);
 
-	const tagsFilter = createTagsQuery(queryParams.tags as Record<string, any>);
-	const timestampFilter = queryParams.createdAt?.["$lt"]
-		? { createdAt: { lt: new Date(queryParams.createdAt?.["$lt"]) } }
-		: {};
+	const tagsFilter = createTagsQuery(queryParams.tags as qs.ParsedQs);
+	const $lt = (queryParams.createdAt as qs.ParsedQs)?.$lt as string | null;
+	const timestampFilter = $lt ? { createdAt: { lt: new Date($lt) } } : {};
 
 	const posts = await prisma.post.findMany({
 		take: PAGE_SIZE,

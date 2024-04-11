@@ -26,6 +26,9 @@ import { values } from "~/lib/values.server";
 import { Content } from "~/components/content";
 import { Username } from "~/components/username";
 import { includeVotes } from "~/lib/include-votes";
+import { Media } from "@prisma/client";
+import { Jsonify } from "type-fest";
+import { MediaPreview } from "~/components/media-preview";
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 	const postId = Number(params.id as string);
@@ -134,105 +137,118 @@ export default function Discussion() {
 	const { comments, post, content } = useLoaderData<typeof loader>();
 	const { user } = useGlobalCtx();
 
+	const [media, setMedia] = React.useState<Media | Jsonify<Media> | undefined>(
+		undefined,
+	);
+
 	return (
-		<div className="container mx-auto min-h-[60vh]">
-			<div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
-				<div className="col-span-1"> </div>
+		<>
+			<div className="container mx-auto min-h-[60vh]">
+				<div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
+					<div className="col-span-1"> </div>
 
-				<div className="col-span-1 lg:col-span-2">
-					<div className="flex gap-2">
-						<div className="flex flex-col items-center">
-							<div className="mb-2">
-								<Avatar name={post.user.username} />
-							</div>
-
-							<Votes post={post} />
-						</div>
-
-						<div className="border-b dark:border-neutral-700 pb-2 flex-1 w-0">
-							<header className="flex justify-between">
-								<span className="font-mono text-secondary">
-									<Username user={post.user} /> &bull;{" "}
-									<PostTime time={post.createdAt} />
-								</span>
-
-								<div>
-									<PostMenu post={post} />
+					<div className="col-span-1 lg:col-span-2">
+						<div className="flex gap-2">
+							<div className="flex flex-col items-center">
+								<div className="mb-2">
+									<Avatar name={post.user.username} />
 								</div>
-							</header>
 
-							<Tags className="mb-4" tags={post.tags} />
-
-							<div className="-mt-2">
-								<Content content={content} />
-
-								{post.media.length > 0 && (
-									<div className="grid xl:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-2 flex-wrap mt-2">
-										{post.media.map((media) => (
-											<div className="col-span-1" key={media.id}>
-												<a
-													className="block"
-													href={media.url}
-													target="_blank"
-													rel="noreferrer"
-												>
-													<MediaItem media={media} />
-												</a>
-											</div>
-										))}
-									</div>
-								)}
+								<Votes post={post} />
 							</div>
 
-							<footer className="mt-2 flex justify-between">
-								<span className="inline-flex items-center gap-2 text-secondary">
-									<div className="i-lucide-message-circle inline-block" />{" "}
-									{post.commentsCount || "Leave a comment"}
-								</span>
+							<div className="border-b dark:border-neutral-700 pb-2 flex-1 w-0">
+								<header className="flex justify-between">
+									<span className="font-mono text-secondary">
+										<Username user={post.user} /> &bull;{" "}
+										<PostTime time={post.createdAt} />
+									</span>
 
-								<span className="inline-flex items-center gap-2 text-secondary">
-									<div className="i-lucide-users-2 inline-block" />{" "}
-									{post.people} {post.people === 1 ? "person" : "people"}
-								</span>
-							</footer>
+									<div>
+										<PostMenu post={post} />
+									</div>
+								</header>
+
+								<Tags className="mb-4" tags={post.tags} />
+
+								<div className="-mt-2">
+									<Content content={content} />
+
+									{post.media.length > 0 && (
+										<div className="grid xl:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-2 flex-wrap mt-2">
+											{post.media.map((media) => (
+												<div className="col-span-1" key={media.id}>
+													<button
+														className="block w-full"
+														type="button"
+														onClick={() => setMedia(media)}
+													>
+														<MediaItem media={media} />
+													</button>
+												</div>
+											))}
+										</div>
+									)}
+								</div>
+
+								<footer className="mt-2 flex justify-between">
+									<span className="inline-flex items-center gap-2 text-secondary">
+										<div className="i-lucide-message-circle inline-block" />{" "}
+										{post.commentsCount || "Leave a comment"}
+									</span>
+
+									<span className="inline-flex items-center gap-2 text-secondary">
+										<div className="i-lucide-users-2 inline-block" />{" "}
+										{post.people} {post.people === 1 ? "person" : "people"}
+									</span>
+								</footer>
+							</div>
 						</div>
-					</div>
 
-					<div className="flex gap-2 mt-4">
-						{user ? (
-							<>
-								<Avatar name={user?.username || ""} />
-								<div className="flex-1">
-									<PostInput
-										parent={post as unknown as PostItemProps["post"]}
+						<div className="flex gap-2 mt-4">
+							{user ? (
+								<>
+									<Avatar name={user?.username || ""} />
+									<div className="flex-1">
+										<PostInput
+											parent={post as unknown as PostItemProps["post"]}
+											level={1}
+										/>
+									</div>
+								</>
+							) : (
+								<LoginComment />
+							)}
+						</div>
+
+						<div className="mt-2">
+							{comments.map((comment, i) => (
+								<React.Fragment key={comment.id}>
+									<PostItem
+										post={comment as unknown as PostItemProps["post"]}
 										level={1}
 									/>
-								</div>
-							</>
-						) : (
-							<LoginComment />
-						)}
+									{i < comments.length - 1 && (
+										<hr className="me-2 ms-12 dark:border-neutral-800" />
+									)}
+								</React.Fragment>
+							))}
+						</div>
 					</div>
 
-					<div className="mt-2">
-						{comments.map((comment, i) => (
-							<React.Fragment key={comment.id}>
-								<PostItem
-									post={comment as unknown as PostItemProps["post"]}
-									level={1}
-								/>
-								{i < comments.length - 1 && (
-									<hr className="me-2 ms-12 dark:border-neutral-800" />
-								)}
-							</React.Fragment>
-						))}
+					<div className="cols-span-1 hidden lg:block">
+						<PostPeople post={post} />
 					</div>
-				</div>
-
-				<div className="cols-span-1 hidden lg:block">
-					<PostPeople post={post} />
 				</div>
 			</div>
-		</div>
+
+			<MediaPreview
+				post={post}
+				media={media}
+				open={Boolean(media)}
+				onClose={() => setMedia(undefined)}
+				setMedia={setMedia}
+			/>
+		</>
 	);
 }

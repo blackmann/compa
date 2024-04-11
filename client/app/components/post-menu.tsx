@@ -2,9 +2,12 @@ import { Prisma } from "@prisma/client";
 import { useFetcher } from "@remix-run/react";
 import { DropdownMenu } from "./dropdown-menu";
 import { useGlobalCtx } from "~/lib/global-ctx";
+import { Jsonify } from "type-fest";
+
+type Post = Prisma.PostGetPayload<{ include: { user: true } }>;
 
 interface Props {
-	post: Prisma.PostGetPayload<{ include: { user: true } }>;
+	post: Post | Jsonify<Post>;
 }
 
 function PostMenu({ post }: Props) {
@@ -34,7 +37,7 @@ function PostMenu({ post }: Props) {
 		}
 	}
 
-	return <DropdownMenu items={menuItems} onItemClick={handleClick}/>;
+	return <DropdownMenu items={menuItems} onItemClick={handleClick} />;
 }
 
 export { PostMenu };

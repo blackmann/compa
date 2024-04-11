@@ -2,9 +2,14 @@ import { Prisma } from "@prisma/client";
 import { useFetcher } from "@remix-run/react";
 import clsx from "clsx";
 import { useGlobalCtx } from "~/lib/global-ctx";
+import { Jsonify } from "type-fest";
+
+type Post = Prisma.PostGetPayload<{ include: { user: true } }> & {
+	vote?: boolean;
+};
 
 interface Props {
-	post: Prisma.PostGetPayload<{ include: { user: true } }> & { vote?: boolean };
+	post: Post | Jsonify<Post>;
 }
 
 function Votes({ post }: Props) {
