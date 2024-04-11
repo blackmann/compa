@@ -126,7 +126,7 @@ function MediaPreview({ media, open, onClose, post, setMedia }: Props) {
 									posted {postTime(post.createdAt)}
 								</p>
 
-								{otherMedia.length && (
+								{Boolean(otherMedia.length) && (
 									<p className="text-sm text-secondary font-mono">
 										{post.media.length} attachments
 									</p>
