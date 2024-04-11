@@ -32,7 +32,7 @@ function Modal({ children, className, onClose, open }: Props) {
 	return ReactDOM.createPortal(
 		<dialog
 			className={clsx(
-				"rounded-xl border border-zinc-300 dark:border-neutral-700 shadow",
+				"rounded-xl border border-zinc-300 dark:border-neutral-700 shadow dark:bg-neutral-900",
 				className,
 			)}
 			ref={ref}
