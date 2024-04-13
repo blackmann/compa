@@ -1,9 +1,12 @@
 import { Prisma } from "@prisma/client";
 import { usePostPeople } from "~/lib/use-post-people";
 import { Avatar } from "./avatar";
+import { Jsonify } from "type-fest";
+
+type Post = Prisma.PostGetPayload<{ include: { user: true } }>;
 
 interface Props {
-	post: Prisma.PostGetPayload<{ include: { user: true } }>;
+	post: Post | Jsonify<Post>;
 }
 
 function PostPeople({ post }: Props) {

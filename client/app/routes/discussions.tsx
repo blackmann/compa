@@ -19,17 +19,17 @@ import qs from "qs";
 import { DiscussionsEmpty } from "~/components/discussions-empty";
 import { renderSummary } from "~/lib/render-summary.server";
 import { createTagsQuery } from "~/lib/create-tags-query";
+import { includeVotes } from "~/lib/include-votes";
 
-const PAGE_SIZE = 30;
+const PAGE_SIZE = 50;
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
 	const searchQuery = new URL(request.url).search.substring(1);
 	const queryParams = qs.parse(searchQuery);
 
-	const tagsFilter = createTagsQuery(queryParams.tags as Record<string, any>);
-	const timestampFilter = queryParams.createdAt?.["$lt"]
-		? { createdAt: { lt: new Date(queryParams.createdAt?.["$lt"]) } }
-		: {};
+	const tagsFilter = createTagsQuery(queryParams.tags as qs.ParsedQs);
+	const $lt = (queryParams.createdAt as qs.ParsedQs)?.$lt as string | null;
+	const timestampFilter = $lt ? { createdAt: { lt: new Date($lt) } } : {};
 
 	const posts = await prisma.post.findMany({
 		take: PAGE_SIZE,
@@ -43,7 +43,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 	}
 
 	return json(
-		{ school: values.meta(), posts },
+		{ school: values.meta(), posts: await includeVotes(posts, request) },
 		{
 			headers: {
 				"Set-Cookie": await withUserPrefs(request, { lastBase: "discussions" }),
@@ -189,7 +189,7 @@ function Paginated({ fromDate }: PaginatedProps) {
 				</div>
 			) : (
 				<button
-					className="px-2 py-1 rounded-lg border font-medium inline-flex items-center gap-2 text-secondary hover:bg-zinc-100 transition-[background] duration-200"
+					className="px-2 py-1 rounded-lg border dark:border-neutral-700 font-medium inline-flex items-center gap-2 text-secondary hover:bg-zinc-100 transition-[background] duration-200"
 					onClick={handleLoadMore}
 					type="button"
 				>

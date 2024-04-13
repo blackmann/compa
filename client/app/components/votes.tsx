@@ -1,9 +1,15 @@
 import { Prisma } from "@prisma/client";
 import { useFetcher } from "@remix-run/react";
+import clsx from "clsx";
 import { useGlobalCtx } from "~/lib/global-ctx";
+import { Jsonify } from "type-fest";
+
+type Post = Prisma.PostGetPayload<{ include: { user: true } }> & {
+	vote?: boolean;
+};
 
 interface Props {
-	post: Prisma.PostGetPayload<{ include: { user: true } }>;
+	post: Post | Jsonify<Post>;
 }
 
 function Votes({ post }: Props) {
@@ -35,7 +41,12 @@ function Votes({ post }: Props) {
 	return (
 		<>
 			<button
-				className="i-lucide-triangle text-secondary"
+				className={clsx(
+					"i-lucide-triangle text-secondary disabled:opacity-50",
+					{
+						"!dark:text-white !text-zinc-900": post.vote,
+					},
+				)}
 				type="button"
 				onClick={handleUpvote}
 				disabled={!user}
@@ -46,7 +57,12 @@ function Votes({ post }: Props) {
 			</span>
 
 			<button
-				className="i-lucide-triangle rotate-180 text-secondary"
+				className={clsx(
+					"i-lucide-triangle rotate-180 text-secondary disabled:opacity-50",
+					{
+						"!dark:text-white !text-zinc-900": post.vote === false,
+					},
+				)}
 				type="button"
 				onClick={handleDownvote}
 				disabled={!user}

@@ -1,11 +1,19 @@
+import clsx from "clsx";
+
 interface Props {
 	contentType: string;
+	className?: string;
 }
 
-function FileThumbnail({ contentType }: Props) {
+function FileThumbnail({ className, contentType }: Props) {
 	if (contentType.startsWith("image/")) {
 		return (
-			<div className="size-10 rounded-lg bg-zinc-100 dark:bg-neutral-700 items-center justify-center flex text-secondary">
+			<div
+				className={clsx(
+					"size-10 rounded-lg bg-zinc-100 dark:bg-neutral-700 items-center justify-center flex text-secondary",
+					className,
+				)}
+			>
 				<div className="i-lucide-image size-6" />
 			</div>
 		);
@@ -13,7 +21,12 @@ function FileThumbnail({ contentType }: Props) {
 
 	if (contentType.startsWith("video/")) {
 		return (
-			<div className="size-10 rounded-lg bg-zinc-100 dark:bg-neutral-700 items-center justify-center flex text-secondary">
+			<div
+				className={clsx(
+					"size-10 rounded-lg bg-zinc-100 dark:bg-neutral-700 items-center justify-center flex text-secondary",
+					className,
+				)}
+			>
 				<div className="i-lucide-video size-6" />
 			</div>
 		);
@@ -21,7 +34,12 @@ function FileThumbnail({ contentType }: Props) {
 
 	if (contentType.startsWith("audio/")) {
 		return (
-			<div className="size-10 rounded-lg bg-zinc-100 dark:bg-neutral-700 items-center justify-center flex text-secondary">
+			<div
+				className={clsx(
+					"size-10 rounded-lg bg-zinc-100 dark:bg-neutral-700 items-center justify-center flex text-secondary",
+					className,
+				)}
+			>
 				<div className="i-lucide-music size-6" />
 			</div>
 		);
@@ -35,7 +53,12 @@ function FileThumbnail({ contentType }: Props) {
 		].includes(contentType)
 	) {
 		return (
-			<div className="size-10 rounded-lg bg-zinc-100 dark:bg-neutral-700 items-center justify-center flex text-secondary">
+			<div
+				className={clsx(
+					"size-10 rounded-lg bg-zinc-100 dark:bg-neutral-700 items-center justify-center flex text-secondary",
+					className,
+				)}
+			>
 				<div className="i-lucide-file-text size-6" />
 			</div>
 		);
@@ -47,14 +70,24 @@ function FileThumbnail({ contentType }: Props) {
 		].includes(contentType)
 	) {
 		return (
-			<div className="size-10 rounded-lg bg-zinc-100 dark:bg-neutral-700 items-center justify-center flex text-secondary">
+			<div
+				className={clsx(
+					"size-10 rounded-lg bg-zinc-100 dark:bg-neutral-700 items-center justify-center flex text-secondary",
+					className,
+				)}
+			>
 				<div className="i-lucide-monitor-play size-6" />
 			</div>
 		);
 	}
 
 	return (
-		<div className="size-10 rounded-lg bg-zinc-100 dark:bg-neutral-700 items-center justify-center flex text-secondary">
+		<div
+			className={clsx(
+				"size-10 rounded-lg bg-zinc-100 dark:bg-neutral-700 items-center justify-center flex text-secondary",
+				className,
+			)}
+		>
 			<div className="i-lucide-asterisk size-6" />
 		</div>
 	);
