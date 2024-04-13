@@ -46,12 +46,12 @@ export default function Notifications() {
 			<ul>
 				{notifications.map((notification) => {
 					switch (notification.notification.entityType) {
-						case "post":
+						case "post": {
 							return (
 								<li key={notification.id}>
 									<NavLink
 										to={`/notifications/${notification.notification.id}`}
-										className={clsx("flex hover:bg-zinc-100 px-2 py-1", {
+										className={clsx("flex hover:bg-zinc-100 dark:hover:bg-neutral-800 px-2 py-1", {
 											"opacity-60": notification.read,
 										})}
 									>
@@ -69,13 +69,15 @@ export default function Notifications() {
 									</NavLink>
 								</li>
 							);
+						}
 					}
 				})}
 			</ul>
 
 			{notifications.length === 0 && (
 				<div className="text-secondary font-medium flex gap-2">
-					<div className="i-lucide-coffee" /> Fresh. You've got nothing to worry about.
+					<div className="i-lucide-coffee" /> Fresh. You've got nothing to worry
+					about.
 				</div>
 			)}
 		</div>
