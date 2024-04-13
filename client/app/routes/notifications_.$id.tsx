@@ -16,12 +16,28 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 	}
 
 	switch (notification.entityType) {
-		case "post":
+		case "post": {
 			await prisma.notificationSubscriber.updateMany({
 				data: { read: true },
 				where: { notificationId, userId },
 			});
 
-			return redirect(`/discussions/${notification.entityId}`);
+			const post = await prisma.post.findFirst({
+				where: { id: notification.entityId },
+			});
+
+			if (!post) {
+				throw json({}, { status: 404 });
+			}
+
+			const path = []
+			if (post.path) {
+				path.push(post.path)
+			}
+
+			path.push(post.id)
+
+			return redirect(`/discussions/${path.join('/')}`);
+		}
 	}
 };

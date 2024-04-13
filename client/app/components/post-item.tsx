@@ -22,12 +22,18 @@ interface Props {
 		vote?: boolean;
 	};
 	limit?: boolean;
+	expanded?: boolean;
 }
 
-function PostItem({ post, limit, level = 0 }: Props) {
+function PostItem({
+	expanded: shouldExpand = false,
+	post,
+	limit,
+	level = 0,
+}: Props) {
 	const mounted = useMounted();
 
-	const [expanded, setExpanded] = React.useState(false);
+	const [expanded, setExpanded] = React.useState(shouldExpand);
 
 	function handleItemClick() {
 		setExpanded((expanded) => !expanded);
@@ -66,6 +72,7 @@ function PostItem({ post, limit, level = 0 }: Props) {
 					className="cursor-pointer"
 					id={post.id.toString()}
 					tabIndex={0}
+					role="button"
 					onClick={handleItemClick}
 					onKeyDown={(e) => {
 						if (["Space", "Enter"].includes(e.key)) handleItemClick();
