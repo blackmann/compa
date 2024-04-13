@@ -88,7 +88,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 			const summary = data?.content.substring(0, 30);
 
 			await createPostNotification({
-				message: `${user?.username} posted on ${summary}}`,
+				message: `${user?.username} commented on ${summary}}`,
 				actorId: userId,
 				entityId: Number(params.id),
 			});

@@ -11,15 +11,17 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 		where: { id: notificationId },
 	});
 
-	if (notification) {
-		switch (notification.entityType) {
-			case "post":
-				await prisma.notificationSuscribers.updateMany({
-					data: { read: true },
-					where: { notificationId, userId },
-				});
+	if (!notification) {
+		throw new Response("Not found", { status: 404 });
+	}
 
-				return redirect(`/discussions/${notification.entityId}`);
-		}
+	switch (notification.entityType) {
+		case "post":
+			await prisma.notificationSuscribers.updateMany({
+				data: { read: true },
+				where: { notificationId, userId },
+			});
+
+			return redirect(`/discussions/${notification.entityId}`);
 	}
 };
