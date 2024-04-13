@@ -72,6 +72,12 @@ export default function Notifications() {
 					}
 				})}
 			</ul>
+
+			{notifications.length === 0 && (
+				<div className="text-secondary font-medium flex gap-2">
+					<div className="i-lucide-coffee" /> Fresh. You've got nothing to worry about.
+				</div>
+			)}
 		</div>
 	);
 }
