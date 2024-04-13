@@ -49,19 +49,21 @@ model Instructor {
 }
 
 model User {
-  id                   Int                    @id @default(autoincrement())
-  username             String                 @unique
-  email                String                 @unique
-  AuthCredential       AuthCredential?
-  createdAt            DateTime               @default(now())
-  updatedAt            DateTime               @updatedAt
-  verified             Boolean                @default(false)
-  PasswordResetRequest PasswordResetRequest[]
-  Post                 Post[]
-  Vote                 Vote[]
-  Media                Media[]
-  EventItem            EventItem[]
-  Resource             Repository[]
+  id                    Int                      @id @default(autoincrement())
+  username              String                   @unique
+  email                 String                   @unique
+  AuthCredential        AuthCredential?
+  createdAt             DateTime                 @default(now())
+  updatedAt             DateTime                 @updatedAt
+  verified              Boolean                  @default(false)
+  PasswordResetRequest  PasswordResetRequest[]
+  Post                  Post[]
+  Vote                  Vote[]
+  Media                 Media[]
+  EventItem             EventItem[]
+  Resource              Repository[]
+  NotificationSubscriber NotificationSubscriber[]
+  Notification          Notification[]
 }
 
 model AuthCredential {
@@ -177,4 +179,25 @@ model Repository {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   userId    Int
+}
+
+model Notification {
+  id                     Int                      @id @default(autoincrement())
+  message                String
+  actorId                Int
+  entityId               Int
+  entityType             String
+  createdAt              DateTime                 @default(now())
+  updateAt               DateTime                 @updatedAt
+  NotificationSubscriber NotificationSubscriber[]
+  user                   User                     @relation(fields: [actorId], references: [id])
+}
+
+model NotificationSubscriber {
+  id             Int          @id @default(autoincrement())
+  notificationId Int
+  userId         Int
+  read           Boolean      @default(false)
+  user           User         @relation(fields: [userId], references: [id])
+  notification   Notification @relation(fields: [notificationId], references: [id])
 }

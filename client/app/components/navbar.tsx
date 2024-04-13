@@ -28,7 +28,7 @@ const links = [
 ];
 
 function Navbar() {
-	const { user } = useGlobalCtx();
+	const { user, unreadNotifications } = useGlobalCtx();
 
 	return (
 		<header className="container mx-auto border-b border-zinc-200 dark:border-zinc-800 mb-4 sticky top-0 bg-zinc-50 dark:bg-neutral-900 z-10">
@@ -65,29 +65,50 @@ function Navbar() {
 						</ul>
 					</nav>
 
-					<div className="font-medium bg-zinc-100 dark:bg-neutral-800 rounded-full p-1 pe-2">
-						{user ? (
+					<div className="flex gap-2 items-center">
+						{Boolean(user) && (
 							<NavLink
-								to={`/p/${user.username}`}
 								className={({ isActive }) =>
-									clsx("flex items-center gap-2 ", {
-										"group is-active": isActive,
-									})
+									clsx(
+										"size-8 rounded-full border-2 border-transparent bg-zinc-100 hover:bg-zinc-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 flex items-center justify-center relative",
+										{ "!bg-blue-600 text-white group is-active": isActive },
+									)
 								}
+								to="/notifications"
 							>
-								<Avatar
-									className="border-2 border-transparent group-[.is-active]:border-blue-500 group-[.is-active]:dark:border-amber-500 transition-[border-color] duration-200"
-									size={22}
-									name={user.username}
-								/>{" "}
-								<Username user={user} />
+								<div className="i-lucide-bell text-xl" />
+
+								{Boolean(unreadNotifications) && (
+									<div className="rounded-full absolute -top-1 -right-2 bg-blue-600 text-white font-medium px-1 text-xs !group-[.is-active]:bg-blue-700">
+										{unreadNotifications}
+									</div>
+								)}
 							</NavLink>
-						) : (
-							<Link className="flex gap-2 items-center" to="/login">
-								<div className="i-lucide-arrow-right-circle opacity-50" />
-								Login
-							</Link>
 						)}
+						<div className="font-medium bg-zinc-100 hover:bg-zinc-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 rounded-full p-1 pe-2 transition-[background] duration-200">
+							{user ? (
+								<NavLink
+									to={`/p/${user.username}`}
+									className={({ isActive }) =>
+										clsx("flex items-center gap-2 ", {
+											"group is-active": isActive,
+										})
+									}
+								>
+									<Avatar
+										className="border-2 border-transparent group-[.is-active]:border-blue-600 group-[.is-active]:dark:border-amber-500 transition-[border-color] duration-200"
+										size={22}
+										name={user.username}
+									/>{" "}
+									<Username user={user} />
+								</NavLink>
+							) : (
+								<Link className="flex gap-2 items-center" to="/login">
+									<div className="i-lucide-arrow-right-circle opacity-50" />
+									Login
+								</Link>
+							)}
+						</div>
 					</div>
 				</div>
 			</div>

@@ -14,7 +14,7 @@ type Post = Prisma.PostGetPayload<{ include: { user: true; media: true } }>;
 interface Props {
 	open?: boolean;
 	onClose?: VoidFunction;
-	post: Jsonify<Post>;
+	post: Post | Jsonify<Post>;
 	media?: Media | Jsonify<Media>;
 	setMedia?: (media: Media | Jsonify<Media>) => void;
 }
