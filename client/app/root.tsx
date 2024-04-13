@@ -80,6 +80,14 @@ export default function App() {
 		return () => document.removeEventListener("visibilitychange", refresh);
 	}, [revalidator]);
 
+	React.useEffect(() => {
+		if (unreadNotifications > 0) {
+			navigator.setAppBadge(unreadNotifications);
+		} else {
+			navigator.clearAppBadge();
+		}
+	}, [unreadNotifications]);
+
 	return (
 		<html lang="en">
 			<head>

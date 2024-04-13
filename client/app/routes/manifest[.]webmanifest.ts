@@ -9,7 +9,7 @@ export const loader = async () => {
 		{
 			short_name: appName,
 			name: appName,
-			start_url: "/",
+			start_url: "/?version=2",
 			display: "standalone",
 			background_color: "#ffffff",
 			display_override: ["fullscreen"],
@@ -25,6 +25,14 @@ export const loader = async () => {
 							purpose: "any monochrome",
 						},
 					],
+				},
+				{
+					name: "Timetable",
+					url: "/timetable",
+				},
+				{
+					name: "Library",
+					url: "/library",
 				},
 			],
 			icons: [
