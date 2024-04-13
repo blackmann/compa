@@ -9,13 +9,17 @@ async function createPostNotification(post: Post, user: User) {
 		where: { id: post.parentId },
 	})) as Post;
 
+	if (op.userId === user.id) {
+		return
+	}
+
 	const summary = await renderStripped(op.content, 42);
 	const message = [`@${user?.username}`];
 
 	if (op.path) {
 		message.push("replied to your comment:");
 	} else {
-		message.push("commented on:")
+		message.push("commented on:");
 	}
 
 	message.push(summary);
@@ -31,25 +35,12 @@ async function createPostNotification(post: Post, user: User) {
 		data,
 	});
 
-	const suscribers = await prisma.post.findMany({
-		where: {
-			parentId: op.id,
-			userId: { not: data.actorId }
+	await prisma.notificationSubscriber.create({
+		data: {
+			userId: op.userId,
+			notificationId: notification.id,
 		},
-		distinct: ["userId"],
-		select: { userId: true },
 	});
-
-	await Promise.allSettled(
-		suscribers?.map(async (suscriber) => {
-			await prisma.notificationSubscriber.create({
-				data: {
-					userId: suscriber.userId,
-					notificationId: notification.id,
-				},
-			});
-		}),
-	);
 }
 
 export { createPostNotification };
