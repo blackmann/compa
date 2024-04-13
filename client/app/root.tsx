@@ -81,10 +81,14 @@ export default function App() {
 	}, [revalidator]);
 
 	React.useEffect(() => {
-		if (unreadNotifications > 0) {
-			navigator.setAppBadge(unreadNotifications);
-		} else {
-			navigator.clearAppBadge();
+		try {
+			if (unreadNotifications > 0) {
+				navigator.setAppBadge(unreadNotifications);
+			} else {
+				navigator.clearAppBadge();
+			}
+		} catch {
+			// doesn't support badging
 		}
 	}, [unreadNotifications]);
 
