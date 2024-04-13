@@ -12,6 +12,7 @@ import {
 	ScrollRestoration,
 	json,
 	useLoaderData,
+	useRevalidator,
 } from "@remix-run/react";
 import { BottomNav, Navbar } from "./components/navbar";
 import { Footer } from "./components/footer";
@@ -50,6 +51,7 @@ export { ErrorBoundary } from "./components/error-boundary";
 export default function App() {
 	const { user, unreadNotifications } = useLoaderData<typeof loader>();
 	const scheme = useColorScheme();
+	const revalidator = useRevalidator();
 
 	React.useEffect(() => {
 		if (scheme === "light") {
@@ -63,6 +65,20 @@ export default function App() {
 				?.setAttribute("content", "#171717");
 		}
 	}, [scheme]);
+
+	React.useEffect(() => {
+		function refresh() {
+			if (document.visibilityState !== "visible") {
+				return;
+			}
+
+			revalidator.revalidate();
+		}
+
+		document.addEventListener("visibilitychange", refresh);
+
+		return () => document.removeEventListener("visibilitychange", refresh);
+	}, [revalidator]);
 
 	return (
 		<html lang="en">
