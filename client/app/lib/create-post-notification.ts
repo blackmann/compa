@@ -25,9 +25,9 @@ async function createPostNotification({ message, actorId, entityId }: Options) {
 		},
 	});
 
-	await Promise.all(
+	await Promise.allSettled(
 		suscribers?.map(async (suscriber) => {
-			await prisma.notificationSuscribers.create({
+			await prisma.notificationSubscriber.create({
 				data: {
 					userId: suscriber.userId,
 					notificationId: notification.id,

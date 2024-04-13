@@ -17,7 +17,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 
 	switch (notification.entityType) {
 		case "post":
-			await prisma.notificationSuscribers.updateMany({
+			await prisma.notificationSubscriber.updateMany({
 				data: { read: true },
 				where: { notificationId, userId },
 			});

@@ -26,21 +26,19 @@ import React from "react";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
 	let user: User | undefined | null;
-	let notifications = 0;
+	let unreadNotifications = 0;
+
 	try {
 		const userId = await checkAuth(request);
 		user = await prisma.user.findFirst({ where: { id: userId } });
-		notifications = user
-			? await prisma.notificationSuscribers.count({
-					where: { userId: user.id, read: false },
-			  })
-			: 0;
+		unreadNotifications = await prisma.notificationSubscriber.count({
+			where: { userId: userId, read: false },
+		});
 	} catch (error) {
 		//
 	}
-	console.log(notifications);
 
-	return json({ user, notifications });
+	return json({ user, unreadNotifications });
 };
 
 export const links: LinksFunction = () => [
@@ -50,7 +48,7 @@ export const links: LinksFunction = () => [
 export { ErrorBoundary } from "./components/error-boundary";
 
 export default function App() {
-	const { user, notifications } = useLoaderData<typeof loader>();
+	const { user, unreadNotifications } = useLoaderData<typeof loader>();
 	const scheme = useColorScheme();
 
 	React.useEffect(() => {
@@ -76,7 +74,7 @@ export default function App() {
 			<body>
 				<PendingUI />
 
-				<GlobalCtx.Provider value={{ user, notifications }}>
+				<GlobalCtx.Provider value={{ user, unreadNotifications }}>
 					<Navbar />
 					<Outlet context={{ user }} />
 				</GlobalCtx.Provider>

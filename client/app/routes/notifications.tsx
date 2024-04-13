@@ -6,9 +6,9 @@ import { values } from "~/lib/values.server";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
 	const userId = await checkAuth(request);
-	const notifications = await prisma.notificationSuscribers.findMany({
+	const notifications = await prisma.notificationSubscriber.findMany({
 		where: { userId, read: false },
-		include: { notification: true, user: true },
+		include: { notification: true },
 	});
 
 	return json({ school: values.meta(), notifications });
