@@ -26,10 +26,11 @@ import { values } from "~/lib/values.server";
 import { Content } from "~/components/content";
 import { Username } from "~/components/username";
 import { includeVotes } from "~/lib/include-votes";
-import { Media } from "@prisma/client";
+import { Media, User } from "@prisma/client";
 import { Jsonify } from "type-fest";
 import { MediaPreview } from "~/components/media-preview";
 import { createPostNotification } from "~/lib/create-post-notification";
+import { renderStripped } from "~/lib/render-stripped.server";
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 	const postId = Number(params.id as string);
@@ -95,17 +96,9 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 		case "POST": {
 			const data = await request.json();
 
-			await createPost(data, userId);
-
-			const user = await prisma.user.findFirst({ where: { id: userId } });
-
-			const summary = data?.content.substring(0, 30);
-
-			await createPostNotification({
-				message: `${user?.username} commented on ${summary}}`,
-				actorId: userId,
-				entityId: Number(params.id),
-			});
+			const post = await createPost(data, userId);
+			const user = await prisma.user.findFirst({ where: { id: userId } }) as User;
+			await createPostNotification(post, user);
 
 			await updatePostProps(data.parentId);
 

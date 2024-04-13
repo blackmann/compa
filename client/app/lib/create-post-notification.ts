@@ -1,28 +1,43 @@
+import { Post, User } from "@prisma/client";
 import { prisma } from "./prisma.server";
+import { renderStripped } from "./render-stripped.server";
 
-interface Options {
-	message: string;
-	actorId: number;
-	entityId: number;
-}
+async function createPostNotification(post: Post, user: User) {
+	if (!post.parentId) return;
 
-async function createPostNotification({ message, actorId, entityId }: Options) {
+	const op = (await prisma.post.findFirst({
+		where: { id: post.parentId },
+	})) as Post;
+
+	const summary = await renderStripped(op.content, 42);
+	const message = [`@${user?.username}`];
+
+	if (op.path) {
+		message.push("replied to your comment:");
+	} else {
+		message.push("commented on:")
+	}
+
+	message.push(summary);
+
+	const data = {
+		message: message.join(" "),
+		actorId: user.id,
+		entityId: post.id,
+		entityType: "post",
+	};
+
+	const notification = await prisma.notification.create({
+		data,
+	});
+
 	const suscribers = await prisma.post.findMany({
 		where: {
-			OR: [{ id: entityId }, { parentId: entityId }],
-			AND: { userId: { not: actorId } },
+			parentId: op.id,
+			userId: { not: data.actorId }
 		},
 		distinct: ["userId"],
 		select: { userId: true },
-	});
-
-	const notification = await prisma.notification.create({
-		data: {
-			message,
-			actorId,
-			entityId,
-			entityType: "post",
-		},
 	});
 
 	await Promise.allSettled(

@@ -33,7 +33,7 @@ function replaceMention(value: string, username: string) {
 		...whitespace,
 		{
 			type: "element",
-			tagName: "a",
+			tagName: "a", // use a div with id = user+username and add hover listeners to show a popup on tap or hover
 			properties: {
 				href: `/p/${username}`,
 				className:
