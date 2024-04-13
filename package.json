@@ -9,8 +9,10 @@
 		"build:website": "yarn workspace website build",
 		"dev:client": "yarn workspace client dev",
 		"dev:website": "yarn workspace website dev",
-		"start:client": "yarn workspace client start",
-		"setup:all": "yarn install && yarn workspace client prisma migrate deploy && yarn workspace client prisma generate"
+		"makemigration:client": "yarn workspace client prisma migrate dev --name $1",
+		"migrate:client": "yarn workspace client prisma migrate deploy",
+		"setup:all": "yarn install && yarn workspace client prisma migrate deploy && yarn workspace client prisma generate",
+		"start:client": "yarn workspace client start"
 	},
 	"workspaces": ["client", "website"],
 	"devDependencies": {

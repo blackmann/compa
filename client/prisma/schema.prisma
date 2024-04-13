@@ -62,7 +62,7 @@ model User {
   Media                 Media[]
   EventItem             EventItem[]
   Resource              Repository[]
-  NotificationSuscriber NotificationSuscribers[]
+  NotificationSuscriber NotificationSuscriber[]
   Notification          Notification[]
 }
 
@@ -189,11 +189,11 @@ model Notification {
   entityType             String
   createdAt              DateTime                 @default(now())
   updateAt               DateTime                 @updatedAt
-  NotificationSuscribers NotificationSuscribers[]
+  NotificationSuscriber NotificationSuscriber[]
   user                   User                     @relation(fields: [actorId], references: [id])
 }
 
-model NotificationSuscribers {
+model NotificationSuscriber {
   id             Int          @id @default(autoincrement())
   notificationId Int
   userId         Int
