@@ -35,6 +35,17 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
 	const { password, email, username } = await request.json();
 
+	const emailExtensions = values.get("emailExtensions") as string[];
+	if (!emailExtensions.some((ext) => email.endsWith(ext))) {
+		return json(
+			{
+				type: "invalid-email",
+				message: "Invalid email. Use your school email.",
+			},
+			{ status: 403 },
+		);
+	}
+
 	let user: User;
 	try {
 		user = await prisma.user.create({ data: { email, username } });
