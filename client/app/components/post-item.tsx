@@ -1,4 +1,4 @@
-import { Link, useLocation } from "@remix-run/react";
+import { Link } from "@remix-run/react";
 import { Avatar } from "./avatar";
 import { Prisma } from "@prisma/client";
 import { PostTime } from "~/components/post-time";
@@ -15,12 +15,15 @@ import { Tags } from "./tags";
 import { Content } from "./content";
 import { Username } from "./username";
 import React from "react";
+import { Jsonify } from 'type-fest'
+
+type Post = Prisma.PostGetPayload<{ include: { user: true; media: true } }> & {
+	vote?: boolean;
+}
 
 interface Props {
 	level?: number;
-	post: Prisma.PostGetPayload<{ include: { user: true; media: true } }> & {
-		vote?: boolean;
-	};
+	post: Post | Jsonify<Post>;
 	limit?: boolean;
 	expanded?: boolean;
 }
@@ -88,7 +91,7 @@ function PostItem({
 }
 
 interface PostContentProps {
-	post: Prisma.PostGetPayload<{ include: { user: true; media: true } }>;
+	post: Props['post'];
 	active: boolean;
 	limit?: boolean;
 	level: number;

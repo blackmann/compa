@@ -9,7 +9,7 @@ interface Args {
 
 function useComments({ postId }: Args) {
 	const [comments, setComments] = React.useState<
-		Prisma.PostGetPayload<{ include: { user: true } }>[]
+		Prisma.PostGetPayload<{ include: { user: true; media: true } }>[]
 	>([]);
 
 	const fetcher = useFetcher<typeof loader>();
