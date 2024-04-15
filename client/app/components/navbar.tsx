@@ -201,9 +201,9 @@ function SideNav() {
 						to={link.href}
 						className={({ isActive }) =>
 							clsx(
-								"px-2 py-1 !hover:bg-zinc-100 dark:bg-opacity-40 dark:bg-neutral-700 rounded-full font-medium flex items-center gap-2 transition-[background] duration-200",
+								"px-2 py-1 hover:bg-zinc-100 dark:hover:bg-neutral-800 rounded-full font-medium flex items-center gap-2 transition-[background] duration-200",
 								{
-									"!bg-zinc-200": isActive,
+									"!bg-zinc-200 !dark:bg-neutral-800": isActive,
 									"text-secondary": !isActive,
 								},
 							)
