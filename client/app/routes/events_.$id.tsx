@@ -87,7 +87,7 @@ export default function EventDetail() {
 	return (
 		<div className="container mx-auto min-h-[60vh]">
 			<div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
-				<article className="col-span-1 lg:col-span-2 lg:col-start-2">
+				<article className="col-span-1 lg:col-span-2">
 					<div className="text-xs font-mono mt-2 text-secondary">
 						Posted <PostTime time={event.createdAt} /> by{" "}
 						<Username user={event.user} />

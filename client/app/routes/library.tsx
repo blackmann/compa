@@ -198,8 +198,8 @@ export default function Library() {
 
 	return (
 		<div className="min-h-[60vh] container mx-auto">
-			<div className="grid grid-cols-1 md:grid-cols-5">
-				<div className="col-span-1 md:col-span-3 md:col-start-2">
+			<div className="grid grid-cols-1 lg:grid-cols-5">
+				<div className="col-span-1 lg:col-span-4">
 					<div className="flex">
 						<div className="flex-1">
 							<h1 className="font-bold text-xl">Library</h1>

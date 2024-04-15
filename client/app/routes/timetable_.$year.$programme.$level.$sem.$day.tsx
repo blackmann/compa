@@ -117,9 +117,9 @@ export default function TimeTable() {
 			<div className="grid grid-cols-1 lg:grid-cols-4 xl:grid-cols-6 gap-4 min-h-[70vh]">
 				<div
 					className={clsx(
-						"col-span-1 lg:col-span-2 lg:col-start-2 xl:col-start-3",
+						"col-span-1 lg:col-span-2 xl:col-span-3",
 						{
-							"max-xl:hidden !xl:col-start-2": outlet,
+							"max-lg:hidden": outlet,
 						},
 					)}
 				>
@@ -210,7 +210,7 @@ export default function TimeTable() {
 					)}
 				</div>
 
-				<div className="col-span-1 lg:col-span-2 lg:col-start-2 xl:col-start-4">
+				<div className="col-span-1 lg:col-span-2 xl:col-span-3">
 					<Outlet />
 				</div>
 			</div>

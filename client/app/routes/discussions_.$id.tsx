@@ -138,8 +138,8 @@ export default function Discussion() {
 
 	return (
 		<div className="container mx-auto min-h-[60vh]">
-			<div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
-				<div className="col-span-1 lg:col-span-2 lg:col-start-2">
+			<div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+				<div className="col-span-1 lg:col-span-2">
 					<PostContent post={post} />
 
 					<div className="flex gap-2 mt-4">
