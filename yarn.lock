@@ -9444,6 +9444,11 @@ proxy-addr@~2.0.7:
     forwarded "0.2.0"
     ipaddr.js "1.9.1"
 
+pulltorefreshjs@^0.1.22:
+  version "0.1.22"
+  resolved "https://registry.yarnpkg.com/pulltorefreshjs/-/pulltorefreshjs-0.1.22.tgz#ddb5e3feee0b2a49fd46e1b18e84fffef2c47ac0"
+  integrity sha512-haxNVEHnS4NCQA7NeG7TSV69z4uqy/N7nfPRuc4dPWe8H6ygUrMjdNeohE+6v0lVVX/ukSjbLYwPUGUYtFKfvQ==
+
 pump@^2.0.0:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/pump/-/pump-2.0.1.tgz#12399add6e4cf7526d973cbc8b5ce2e2908b3909"

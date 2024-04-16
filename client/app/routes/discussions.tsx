@@ -4,7 +4,13 @@ import {
 	MetaFunction,
 	json,
 } from "@remix-run/node";
-import { Link, useFetcher, useLoaderData, useLocation } from "@remix-run/react";
+import {
+	Link,
+	useFetcher,
+	useLoaderData,
+	useLocation,
+	useRevalidator,
+} from "@remix-run/react";
 import React from "react";
 import { TagsFilter } from "~/components/tags-filter";
 import { PostInput } from "~/components/post-input";
@@ -20,6 +26,7 @@ import { DiscussionsEmpty } from "~/components/discussions-empty";
 import { renderSummary } from "~/lib/render-summary.server";
 import { createTagsQuery } from "~/lib/create-tags-query";
 import { includeVotes } from "~/lib/include-votes";
+import PullToRefresh from "pulltorefreshjs";
 
 const PAGE_SIZE = 50;
 
@@ -74,9 +81,31 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
 export default function Discussions() {
 	const { posts } = useLoaderData<typeof loader>();
 	const { user } = useGlobalCtx();
+	const revalidator = useRevalidator();
+
+	const contentRef = React.useRef<HTMLDivElement>(null);
+
+	React.useEffect(() => {
+		if (!contentRef.current) {
+			return;
+		}
+
+		PullToRefresh.init({
+			mainElement: contentRef.current,
+			onRefresh() {
+				return new Promise((resolve) => {
+					revalidator.revalidate();
+					setTimeout(resolve, 1500);
+				});
+			},
+			iconRefreshing: `<div class="i-svg-spinners-180-ring-with-bg text-xl inline-block" />`,
+		});
+
+		return PullToRefresh.destroyAll;
+	}, [revalidator]);
 
 	return (
-		<div className="container mx-auto min-h-[60vh]">
+		<div className="container mx-auto min-h-[60vh] pt-2" ref={contentRef}>
 			<div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
 				<div className="col-span-1" />
 

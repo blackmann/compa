@@ -171,3 +171,20 @@ input {
     opacity: 1;
   }
 }
+
+.ptr--ptr {
+  @apply bg-zinc-100 dark:bg-neutral-800 border-b dark:border-neutral-700;
+  box-shadow: none !important;
+}
+
+.ptr--box {
+  @apply !pb-1 !pt-2;
+}
+
+.ptr--icon {
+  @apply !dark:text-neutral-400;
+}
+
+.ptr--text {
+  @apply !dark:text-neutral-500 font-medium;
+}

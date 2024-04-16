@@ -53,7 +53,7 @@ export default function Events() {
 	const { user } = useGlobalCtx();
 
 	return (
-		<div className="container mx-auto min-h-[60vh]">
+		<div className="container mx-auto min-h-[60vh] pt-4">
 			<div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
 				<div className="col-span-1 lg:col-start-2 lg:col-span-2">
 					<h1 className="font-bold text-xl">Events</h1>
