@@ -47,7 +47,7 @@ function Navbar() {
 	const { user, unreadNotifications } = useGlobalCtx();
 
 	return (
-		<header className="container mx-auto border-b border-zinc-200 dark:border-zinc-800 mb-4 sticky top-0 bg-zinc-50 dark:bg-neutral-900 z-10">
+		<header className="container mx-auto border-b border-zinc-200 dark:border-zinc-800 sticky top-0 bg-zinc-50 dark:bg-neutral-900 z-10">
 			<div className="rounded-xl py-2">
 				<div className="flex justify-between items-center">
 					<div>

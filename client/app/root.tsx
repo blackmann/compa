@@ -55,7 +55,6 @@ export default function App() {
 
 	React.useEffect(() => {
 		if (scheme === "light") {
-			// dynamically change meta theme-color
 			document
 				.querySelector('meta[name="theme-color"]')
 				?.setAttribute("content", "#FAFAFA");

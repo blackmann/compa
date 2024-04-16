@@ -18,10 +18,11 @@ import {
 } from "./tag-input";
 import { Content } from "./content";
 import { FileInput } from "./file-input";
+import { Jsonify } from "type-fest";
 
 interface Props {
 	level?: number;
-	parent?: Post;
+	parent?: Post | Jsonify<Post>;
 }
 
 const ATTACHMENT_LIMIT = 5 * 1024 * 1024; // 5MB limit

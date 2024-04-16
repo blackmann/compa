@@ -38,7 +38,7 @@ export default function ConcentratedDiscussion() {
 					<header className="mb-4">
 						<Link
 							to={`/discussions/${id}`}
-							className="bg-zinc-100 px-1 py-0.5 rounded-lg inline-flex items-center gap-2 text-secondary font-medium"
+							className="bg-zinc-100 dark:bg-neutral-800 px-1 py-0.5 rounded-lg inline-flex items-center gap-2 text-secondary font-medium"
 						>
 							<div className="i-lucide-arrow-left" /> Go to discussion
 						</Link>
@@ -46,7 +46,7 @@ export default function ConcentratedDiscussion() {
 
 					<PostContent post={post} />
 
-					<PostItem post={comment} expanded level={1} />
+					{comment && <PostItem post={comment} expanded level={1} />}
 				</div>
 			</div>
 		</div>

@@ -9,7 +9,7 @@ export const loader = async () => {
 		{
 			short_name: appName,
 			name: appName,
-			start_url: "/?version=2",
+			start_url: "/",
 			display: "standalone",
 			background_color: "#ffffff",
 			display_override: ["fullscreen"],
