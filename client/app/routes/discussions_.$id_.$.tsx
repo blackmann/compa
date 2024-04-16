@@ -32,7 +32,7 @@ export default function ConcentratedDiscussion() {
 	const { post, comment } = useLoaderData<typeof loader>();
 
 	return (
-		<div className="container mx-auto min-h-[60vh]">
+		<div className="container mx-auto min-h-[60vh] mt-2">
 			<div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
 				<div className="col-span-1 lg:col-span-2">
 					<header className="mb-4">

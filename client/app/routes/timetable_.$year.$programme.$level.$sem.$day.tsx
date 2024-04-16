@@ -114,7 +114,7 @@ export default function TimeTable() {
 
 	return (
 		<div className="container mx-auto pt-4">
-			<div className="grid grid-cols-1 lg:grid-cols-4 xl:grid-cols-6 gap-4 min-h-[70vh]">
+			<div className="grid grid-cols-1 lg:grid-cols-4 xl:grid-cols-6 gap-4 min-h-[60vh]">
 				<div
 					className={clsx(
 						"col-span-1 lg:col-span-2 xl:col-span-3",
