@@ -15,13 +15,13 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 		throw new Response("Not found", { status: 404 });
 	}
 
+	await prisma.notificationSubscriber.updateMany({
+		data: { read: true },
+		where: { notificationId, userId },
+	});
+
 	switch (notification.entityType) {
 		case "post": {
-			await prisma.notificationSubscriber.updateMany({
-				data: { read: true },
-				where: { notificationId, userId },
-			});
-
 			const post = await prisma.post.findFirst({
 				where: { id: notification.entityId },
 			});
@@ -30,14 +30,18 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 				throw json({}, { status: 404 });
 			}
 
-			const path = []
+			const path = [];
 			if (post.path) {
-				path.push(post.path)
+				path.push(post.path);
 			}
 
-			path.push(post.id)
+			path.push(post.id);
 
-			return redirect(`/discussions/${path.join('/')}`);
+			return redirect(`/discussions/${path.join("/")}`);
+		}
+
+		case "community": {
+			return redirect(`/communities/${notification.entityId}`);
 		}
 	}
 };

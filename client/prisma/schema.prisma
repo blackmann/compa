@@ -49,21 +49,24 @@ model Instructor {
 }
 
 model User {
-  id                    Int                      @id @default(autoincrement())
-  username              String                   @unique
-  email                 String                   @unique
-  AuthCredential        AuthCredential?
-  createdAt             DateTime                 @default(now())
-  updatedAt             DateTime                 @updatedAt
-  verified              Boolean                  @default(false)
-  PasswordResetRequest  PasswordResetRequest[]
-  Post                  Post[]
-  Vote                  Vote[]
-  Media                 Media[]
-  EventItem             EventItem[]
-  Resource              Repository[]
+  id                     Int                      @id @default(autoincrement())
+  username               String                   @unique
+  email                  String                   @unique
+  AuthCredential         AuthCredential?
+  createdAt              DateTime                 @default(now())
+  updatedAt              DateTime                 @updatedAt
+  verified               Boolean                  @default(false)
+  role                   String                   @default("common")
+  PasswordResetRequest   PasswordResetRequest[]
+  Post                   Post[]
+  Vote                   Vote[]
+  Media                  Media[]
+  EventItem              EventItem[]
+  Resource               Repository[]
   NotificationSubscriber NotificationSubscriber[]
-  Notification          Notification[]
+  Notification           Notification[]
+  Community              Community[]
+  CommunityMember        CommunityMember[]
 }
 
 model AuthCredential {
@@ -111,12 +114,12 @@ model Post {
   deleted       Boolean  @default(false)
 
   // JSON stringified array of tags
-  tags          String   @default("")
+  tags String @default("")
 
   // To show the lineage of the post. This is relevant for comments. Eg. for a
   // comment on a second level, the path will be 23/40. Where 23 is the id of the
   // OP, and 40 is the id of the comment under it.
-  path          String?
+  path String?
 }
 
 model Vote {
@@ -190,7 +193,7 @@ model Notification {
   createdAt              DateTime                 @default(now())
   updateAt               DateTime                 @updatedAt
   NotificationSubscriber NotificationSubscriber[]
-  user                   User                     @relation(fields: [actorId], references: [id])
+  actor                  User                     @relation(fields: [actorId], references: [id])
 }
 
 model NotificationSubscriber {
@@ -200,4 +203,29 @@ model NotificationSubscriber {
   read           Boolean      @default(false)
   user           User         @relation(fields: [userId], references: [id])
   notification   Notification @relation(fields: [notificationId], references: [id])
+}
+
+model Community {
+  id              Int               @id @default(autoincrement())
+  name            String            @unique
+  handle          String            @unique
+  description     String
+  modPhone        String
+  status          String // "pending-approval", "activated", "disabled"
+  members         Int               @default(0)
+  createdBy       User              @relation(fields: [createdById], references: [id])
+  createdById     Int
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  CommunityMember CommunityMember[]
+}
+
+model CommunityMember {
+  id          Int       @id @default(autoincrement())
+  community   Community @relation(fields: [communityId], references: [id])
+  communityId Int
+  user        User      @relation(fields: [userId], references: [id])
+  userId      Int
+  role        String    @default("common") // moderator, common
+  createdAt   DateTime  @default(now())
 }

@@ -1,12 +1,12 @@
 import { LoaderFunctionArgs, MetaFunction, json } from "@remix-run/node";
 import { NavLink, useLoaderData } from "@remix-run/react";
+import clsx from "clsx";
+import parse from "html-react-parser";
+import { postTime } from "~/components/post-time";
 import { checkAuth } from "~/lib/check-auth";
 import { prisma } from "~/lib/prisma.server";
 import { render } from "~/lib/render.server";
 import { values } from "~/lib/values.server";
-import parse from "html-react-parser";
-import clsx from "clsx";
-import { postTime } from "~/components/post-time";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
 	const userId = await checkAuth(request);
@@ -39,38 +39,45 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
 export default function Notifications() {
 	const { notifications } = useLoaderData<typeof loader>();
 
+	console.log(notifications);
+
 	return (
 		<div className="container mx-auto min-h-[60vh]">
 			<h1 className="font-bold text-xl mb-2">Notifications</h1>
 
 			<ul>
 				{notifications.map((notification) => {
-					switch (notification.notification.entityType) {
-						case "post": {
-							return (
-								<li key={notification.id}>
-									<NavLink
-										to={`/notifications/${notification.notification.id}`}
-										className={clsx("flex hover:bg-zinc-100 dark:hover:bg-neutral-800 px-2 py-1", {
-											"opacity-60": notification.read,
-										})}
-									>
-										<div className="i-lucide-message-square me-2 text-secondary mt-1" />
+					const notificationType = notification.notification.entityType;
+					return (
+						<li key={notification.id}>
+							<NavLink
+								to={`/notifications/${notification.notification.id}`}
+								className={clsx(
+									"flex hover:bg-zinc-100 dark:hover:bg-neutral-800 px-2 py-1",
+									{
+										"opacity-60": notification.read,
+									},
+								)}
+							>
+								<div
+									className={clsx("me-2 text-secondary mt-1", {
+										"i-lucide-message-square": notificationType === "post",
+										"i-lucide-users": notificationType === "community",
+									})}
+								/>
 
-										<div className="flex flex-1 gap-2 max-sm:block">
-											<div className="flex-1">
-												{parse(notification.notification.message)}
-											</div>
+								<div className="flex flex-1 gap-2 max-sm:block">
+									<div className="flex-1">
+										{parse(notification.notification.message)}
+									</div>
 
-											<div className="text-sm text-secondary">
-												{postTime(notification.notification.createdAt)}
-											</div>
-										</div>
-									</NavLink>
-								</li>
-							);
-						}
-					}
+									<div className="text-sm text-secondary">
+										{postTime(notification.notification.createdAt)}
+									</div>
+								</div>
+							</NavLink>
+						</li>
+					);
 				})}
 			</ul>
 
