@@ -66,7 +66,7 @@ export default function Events() {
 						</div>
 
 						<div>
-							<Anchor href="/events/add" className={clsx({ "!hidden": !user })}>
+							<Anchor to="/events/add" className={clsx({ "!hidden": !user })}>
 								<div className="i-lucide-plus opacity-60" /> Add event
 							</Anchor>
 						</div>

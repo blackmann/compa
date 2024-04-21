@@ -126,7 +126,7 @@ export default function EventDetail() {
 
 						<div className="max-lg:mt-4 lg:text-end flex gap-2 items-start">
 							<Anchor
-								href={`/downloads/events/${event.id}`}
+								to={`/downloads/events/${event.id}`}
 								className="shrink-0"
 								variant="neutral"
 							>

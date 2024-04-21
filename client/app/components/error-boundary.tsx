@@ -73,7 +73,7 @@ function ErrorBoundary() {
 							</p>
 
 							<div className="mt-2">
-								<Anchor href="/discussions">
+								<Anchor to="/discussions">
 									Go Home <div className="i-lucide-arrow-right opacity-50" />
 								</Anchor>
 							</div>

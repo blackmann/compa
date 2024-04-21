@@ -33,7 +33,7 @@ const links = [
 	},
 	{
 		title: "Marketplace",
-		href: "/marketplace",
+		href: "/market",
 		icon: "i-lucide-shopping-bag",
 	},
 	{

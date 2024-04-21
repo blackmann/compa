@@ -72,7 +72,7 @@ function TimetableSaveToCalender() {
 							Cancel
 						</Button>
 
-						<Anchor href={url}>Download ics file</Anchor>
+						<Anchor to={url} download reloadDocument>Download ics file</Anchor>
 					</footer>
 				</div>
 			</Modal>

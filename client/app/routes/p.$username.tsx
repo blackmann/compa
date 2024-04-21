@@ -54,9 +54,9 @@ export default function Profile() {
 	const outlet = useOutlet();
 
 	return (
-		<main className="container mx-auto min-h-[60vh]">
-			<div className="grid lg:grid-cols-4">
-				<div className="col-span-1 lg:col-span-2 lg:col-start-2">
+		<main className="container mx-auto min-h-[60vh] mt-2">
+			<div className="grid lg:grid-cols-3">
+				<div className="col-span-1 lg:col-span-2">
 					<div className="flex gap-2 pb-5 border-b dark:border-neutral-800">
 						<Avatar name={user.username} />
 
