@@ -28,7 +28,7 @@ function CommunityInfo({ community }: Props) {
 				</p>
 
 				<div className="mt-2">
-					<Button>Join community</Button>
+					<Button variant="secondary">Join community</Button>
 				</div>
 			</div>
 
@@ -42,7 +42,7 @@ function CommunityInfo({ community }: Props) {
 
 			<div className="flex gap-2 items-center mt-2 font-medium text-secondary text-sm max-lg:hidden">
 				<div className="i-lucide-users-2 inline-block" />
-				13 members
+				{community.members} members
 			</div>
 		</>
 	);

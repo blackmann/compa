@@ -39,8 +39,6 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
 export default function Notifications() {
 	const { notifications } = useLoaderData<typeof loader>();
 
-	console.log(notifications);
-
 	return (
 		<div className="container mx-auto min-h-[60vh]">
 			<h1 className="font-bold text-xl mb-2">Notifications</h1>
