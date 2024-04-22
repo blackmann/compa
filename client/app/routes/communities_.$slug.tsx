@@ -3,6 +3,7 @@ import { useLoaderData } from "@remix-run/react";
 import { CommunityInfo } from "~/components/community-info";
 import { CommunityMod } from "~/components/community-mod";
 import { PostInput } from "~/components/post-input";
+import { checkAuth } from "~/lib/check-auth";
 import { checkMod } from "~/lib/check-mod";
 import { prisma } from "~/lib/prisma.server";
 import { values } from "~/lib/values.server";
@@ -25,7 +26,24 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 		}
 	}
 
-	return json({ community, school: values.meta() });
+	let userId: number | undefined;
+	try {
+		userId = await checkAuth(request);
+	} catch {}
+
+	const members = await prisma.communityMember.findMany({
+		where: { communityId: community.id },
+		orderBy: { role: "desc" },
+		include: { user: true },
+	});
+
+	const isMember = userId
+		? (await prisma.communityMember.count({
+				where: { communityId: community.id, userId },
+		  })) === 1
+		: false;
+
+	return json({ community, members, isMember, school: values.meta() });
 };
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
@@ -49,13 +67,13 @@ export default function Community() {
 					<CommunityMod community={community} />
 
 					<div className="lg:hidden mb-2">
-						<CommunityInfo community={community} />
+						<CommunityInfo />
 					</div>
 					<PostInput />
 				</div>
 
 				<div className="col-span-1 max-lg:hidden">
-					<CommunityInfo community={community} />
+					<CommunityInfo />
 				</div>
 			</div>
 		</div>

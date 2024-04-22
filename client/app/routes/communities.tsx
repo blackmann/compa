@@ -5,7 +5,7 @@ import { values } from "~/lib/values.server";
 
 export const loader = async () => {
 	const communities = await prisma.community.findMany({
-		where: { status: "active" },
+		where: { status: "activated" },
 		orderBy: { name: "asc" },
 	});
 
