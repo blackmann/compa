@@ -41,7 +41,12 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 		}
 
 		case "community": {
-			return redirect(`/communities/${notification.entityId}`);
+			const community = await prisma.community.findFirst({
+				where: { id: notification.entityId },
+				select: { handle: true },
+			});
+
+			return redirect(`/communities/${community?.handle}`);
 		}
 	}
 };
