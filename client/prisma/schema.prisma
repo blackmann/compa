@@ -119,7 +119,9 @@ model Post {
   // To show the lineage of the post. This is relevant for comments. Eg. for a
   // comment on a second level, the path will be 23/40. Where 23 is the id of the
   // OP, and 40 is the id of the comment under it.
-  path String?
+  path        String?
+  community   Community? @relation(fields: [communityId], references: [id])
+  communityId Int?
 }
 
 model Vote {
@@ -218,14 +220,16 @@ model Community {
   createdAt       DateTime          @default(now())
   updatedAt       DateTime          @updatedAt
   CommunityMember CommunityMember[]
+  Post            Post[]
 }
 
 model CommunityMember {
-  id          Int       @id @default(autoincrement())
   community   Community @relation(fields: [communityId], references: [id])
   communityId Int
   user        User      @relation(fields: [userId], references: [id])
   userId      Int
   role        String    @default("common") // moderator, common
   createdAt   DateTime  @default(now())
+
+  @@id([userId, communityId])
 }

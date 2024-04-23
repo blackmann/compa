@@ -1,14 +1,16 @@
-import { FieldValues, useForm } from "react-hook-form";
-import { Button } from "./button";
-import { useFetcher } from "react-router-dom";
 import { Post } from "@prisma/client";
-import React from "react";
-import { FileSelectItem } from "./file-select-item";
 import clsx from "clsx";
+import React from "react";
+import { FieldValues, useForm } from "react-hook-form";
+import { useFetcher } from "react-router-dom";
+import { Jsonify } from "type-fest";
+import { useGlobalCtx } from "~/lib/global-ctx";
 import { uploadMedia } from "~/lib/upload-media";
 import { AudioRecorder } from "./audio-recorder";
-import { useGlobalCtx } from "~/lib/global-ctx";
-import { TagSelect } from "./tag-select";
+import { Button } from "./button";
+import { Content } from "./content";
+import { FileInput } from "./file-input";
+import { FileSelectItem } from "./file-select-item";
 import {
 	DEFAULT_SELECTIONS,
 	SelectionId,
@@ -16,18 +18,18 @@ import {
 	TagInput,
 	stringifySelections,
 } from "./tag-input";
-import { Content } from "./content";
-import { FileInput } from "./file-input";
-import { Jsonify } from "type-fest";
+import { TagSelect } from "./tag-select";
 
 interface Props {
 	level?: number;
 	parent?: Post | Jsonify<Post>;
+	dataExtra?: Record<string, any>;
+	disabled?: boolean;
 }
 
 const ATTACHMENT_LIMIT = 5 * 1024 * 1024; // 5MB limit
 
-function PostInput({ level = 0, parent }: Props) {
+function PostInput({ disabled, level = 0, parent, dataExtra }: Props) {
 	const { getValues, handleSubmit, register, setValue, watch, reset } = useForm(
 		{
 			defaultValues: {
@@ -77,10 +79,12 @@ function PostInput({ level = 0, parent }: Props) {
 				parentId: parent?.id,
 				media,
 				tags: stringifiedTags,
+				...dataExtra,
 			}),
 			{
 				encType: "application/json",
 				method: "POST",
+				action: !parent ? "/discussions" : undefined,
 			},
 		);
 	}
@@ -266,7 +270,7 @@ function PostInput({ level = 0, parent }: Props) {
 					</div>
 
 					<div>
-						<Button disabled={posting || !user}>
+						<Button disabled={posting || !user || disabled}>
 							{posting ? (
 								<>
 									<span className="i-svg-spinners-180-ring-with-bg" /> Posting…

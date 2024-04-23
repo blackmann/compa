@@ -1,8 +1,10 @@
 import { LoaderFunctionArgs, MetaFunction, json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
+import React from "react";
 import { CommunityInfo } from "~/components/community-info";
 import { CommunityMod } from "~/components/community-mod";
 import { PostInput } from "~/components/post-input";
+import { PostItem, PostItemProps } from "~/components/post-item";
 import { checkAuth } from "~/lib/check-auth";
 import { checkMod } from "~/lib/check-mod";
 import { prisma } from "~/lib/prisma.server";
@@ -37,13 +39,17 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 		include: { user: true },
 	});
 
-	const isMember = userId
-		? (await prisma.communityMember.count({
-				where: { communityId: community.id, userId },
-		  })) === 1
-		: false;
+	const membership = await prisma.communityMember.findFirst({
+		where: { communityId: community.id, userId },
+	});
 
-	return json({ community, members, isMember, school: values.meta() });
+	const posts = await prisma.post.findMany({
+		where: { communityId: community.id, parentId: null },
+		include: { user: true, media: true },
+		orderBy: { createdAt: "desc" },
+	});
+
+	return json({ community, members, membership, posts, school: values.meta() });
 };
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
@@ -58,7 +64,7 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
 };
 
 export default function Community() {
-	const { community } = useLoaderData<typeof loader>();
+	const { community, membership, posts } = useLoaderData<typeof loader>();
 
 	return (
 		<div className="container mt-2">
@@ -69,7 +75,18 @@ export default function Community() {
 					<div className="lg:hidden mb-2">
 						<CommunityInfo />
 					</div>
-					<PostInput />
+
+					<PostInput disabled={!membership} dataExtra={{ communityId: community.id }} />
+
+					{posts.map((post, i) => (
+						<React.Fragment key={post.id}>
+							<PostItem limit post={post as unknown as PostItemProps["post"]} />
+
+							{i < posts.length - 1 && (
+								<hr className="me-2 ms-12 dark:border-neutral-700" />
+							)}
+						</React.Fragment>
+					))}
 				</div>
 
 				<div className="col-span-1 max-lg:hidden">

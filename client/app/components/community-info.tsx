@@ -1,10 +1,20 @@
-import { useLoaderData } from "@remix-run/react";
+import { useFetcher, useLoaderData, useParams } from "@remix-run/react";
+import dayjs from "dayjs";
 import { loader } from "~/routes/communities_.$slug";
 import { Avatar } from "./avatar";
 import { Button } from "./button";
 
 function CommunityInfo() {
-	const { community, isMember, members } = useLoaderData<typeof loader>();
+	const { community, membership, members } = useLoaderData<typeof loader>();
+	const { slug } = useParams();
+	const fetcher = useFetcher();
+
+	async function join() {
+		fetcher.submit("", {
+			action: `/communities/${slug}/members`,
+			method: "POST",
+		});
+	}
 
 	return (
 		<>
@@ -17,7 +27,7 @@ function CommunityInfo() {
 
 			<p className="">{community.description}</p>
 
-			{!isMember && (
+			{!membership && (
 				<div className="border dark:border-neutral-800 rounded-lg p-2 mt-2">
 					<header className="font-mono text-xs text-secondary">
 						Join to interact
@@ -28,8 +38,27 @@ function CommunityInfo() {
 					</p>
 
 					<div className="mt-2">
-						<Button variant="secondary">Join community</Button>
+						<Button
+							variant="secondary"
+							disabled={fetcher.state === "submitting"}
+							onClick={join}
+						>
+							{fetcher.state === "submitting" ? (
+								<>Joining</>
+							) : (
+								<>Join community</>
+							)}
+						</Button>
 					</div>
+				</div>
+			)}
+
+			{membership && (
+				<div className="flex gap-2">
+					<div className="text-xs text-secondary">
+						Member since {dayjs(membership.createdAt).format("DD MMM YYYY")}
+					</div>
+					{/** [ ] Add "leave community" */}
 				</div>
 			)}
 
@@ -49,20 +78,20 @@ function CommunityInfo() {
 
 				<ul>
 					{members.map((member) => (
-						<li key={member.id}>
-						<div className="flex gap-2 py-1 px-2 rounded-lg hover:bg-zinc-100 items-center hover-bg-light">
-							<Avatar size={22} name={member.user.username} />
+						<li key={member.userId}>
+							<div className="flex gap-2 py-1 px-2 rounded-lg hover:bg-zinc-100 items-center hover-bg-light">
+								<Avatar size={22} name={member.user.username} />
 
-							<div>
-								{member.user.username}{" "}
-								{member.role === "moderator" && (
-									<span className="bg-zinc-200 dark:bg-neutral-800 rounded-full px-2 text-sm text-secondary font-medium">
-										MOD
-									</span>
-								)}
+								<div>
+									{member.user.username}{" "}
+									{member.role === "moderator" && (
+										<span className="bg-zinc-200 dark:bg-neutral-800 rounded-full px-2 text-sm text-secondary font-medium">
+											MOD
+										</span>
+									)}
+								</div>
 							</div>
-						</div>
-					</li>
+						</li>
 					))}
 				</ul>
 			</div>

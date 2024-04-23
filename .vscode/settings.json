@@ -2,8 +2,5 @@
 	"editor.defaultFormatter": "biomejs.biome",
 	"[prisma]": {
 		"editor.defaultFormatter": "Prisma.prisma"
-	},
-	"[jsonc]": {
-		"editor.defaultFormatter": "vscode.json-language-features"
 	}
 }
