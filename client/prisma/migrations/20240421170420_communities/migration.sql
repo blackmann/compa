@@ -2,7 +2,7 @@
 CREATE TABLE "Community" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "name" TEXT NOT NULL,
-    "handle" TEXT NOT NULL,
+    "handle" TEXT NOT NULL COLLATE NOCASE,
     "description" TEXT NOT NULL,
     "modPhone" TEXT NOT NULL,
     "status" TEXT NOT NULL,
