@@ -36,7 +36,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 
 			const notification = await prisma.notification.create({
 				data: {
-					message: `Congratulations 🎉! Your community (${community.name}) has been approved.`,
+					message: `Congratulations 🎉, your community (${community.name}) has been approved.`,
 					entityId: community.id,
 					entityType: "community",
 					actorId: mod.id,

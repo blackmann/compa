@@ -1,4 +1,5 @@
 import { Media, Prisma } from "@prisma/client";
+import { Link } from "@remix-run/react";
 import React from "react";
 import { Jsonify } from "type-fest";
 import { Avatar } from "./avatar";
@@ -55,10 +56,12 @@ function PostContent({ post }: Props) {
 						<Content content={post.content} />
 
 						{post.community && (
-							<div className="inline-flex gap-2 items-center font-medium text-sm bg-blue-50 dark:bg-blue-800 dark:bg-opacity-20 px-1 rounded-md text-blue-500">
-								<div className="inline-block i-lucide-creative-commons" />
-								{post.community.name}
-							</div>
+							<Link to={`/communities/${post.community.handle}`}>
+								<div className="inline-flex gap-2 items-center font-medium text-sm bg-blue-50 dark:bg-blue-800 dark:bg-opacity-20 px-1 rounded-md text-blue-500">
+									<div className="inline-block i-lucide-creative-commons" />
+									{post.community.name}
+								</div>
+							</Link>
 						)}
 
 						{post.media.length > 0 && (

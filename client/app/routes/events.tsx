@@ -3,6 +3,7 @@ import { ActionFunctionArgs, MetaFunction, redirect } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
 import clsx from "clsx";
 import dayjs from "dayjs";
+import { Jsonify } from "type-fest";
 import { Anchor } from "~/components/anchor";
 import { PostTime } from "~/components/post-time";
 import { Username } from "~/components/username";
@@ -11,7 +12,6 @@ import { useGlobalCtx } from "~/lib/global-ctx";
 import { prisma } from "~/lib/prisma.server";
 import { timeToString } from "~/lib/time";
 import { values } from "~/lib/values.server";
-import { Jsonify } from "type-fest";
 
 export const loader = async () => {
 	const events = await prisma.eventItem.findMany({
@@ -54,7 +54,7 @@ export default function Events() {
 	const { user } = useGlobalCtx();
 
 	return (
-		<div className="container mx-auto min-h-[60vh] pt-4">
+		<div className="container mx-auto min-h-[60vh]">
 			<div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
 				<div className="col-span-1 lg:col-span-3">
 					<h1 className="font-bold text-xl">Events</h1>

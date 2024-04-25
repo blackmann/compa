@@ -22,12 +22,21 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 		data: { communityId: community.id, userId },
 	});
 
+	const count = await prisma.communityMember.count({
+		where: { communityId: community.id },
+	});
+
+	await prisma.community.update({
+		where: { id: community.id },
+		data: { members: count },
+	});
+
 	const notification = await prisma.notification.create({
 		data: {
 			message: `You have a new member (@${user?.username}) in your community (${community.name}).`,
 			entityId: community.id,
 			entityType: "community",
-			actorId: userId
+			actorId: userId,
 		},
 	});
 
@@ -35,8 +44,8 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 		data: {
 			notificationId: notification.id,
 			userId: community.createdById,
-		}
-	})
+		},
+	});
 
 	return null;
 };

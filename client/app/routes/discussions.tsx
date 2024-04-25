@@ -121,7 +121,7 @@ export default function Discussions() {
 	}, [revalidator]);
 
 	return (
-		<div className="container mx-auto min-h-[60vh] pt-2" ref={contentRef}>
+		<div className="container mx-auto min-h-[60vh]" ref={contentRef}>
 			<div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
 				<div className="col-span-1 lg:col-span-2">
 					<div className="mb-4">

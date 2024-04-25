@@ -105,7 +105,7 @@ export default function Login() {
 	const $email = watch("email");
 
 	return (
-		<div className="container mx-auto mt-2">
+		<div className="container mx-auto">
 			<div className="min-h-[60vh]">
 				<div className="lg:max-w-[24rem] mx-auto">
 					<form

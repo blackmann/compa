@@ -69,7 +69,7 @@ export default function Community() {
 	const { community, membership, posts } = useLoaderData<typeof loader>();
 
 	return (
-		<div className="container mt-2">
+		<div className="container">
 			<div className="grid grid-cols-1 lg:grid-cols-3 min-h-[60vh] gap-4">
 				<div className="col-span-1 lg:col-span-2">
 					<CommunityMod community={community} />

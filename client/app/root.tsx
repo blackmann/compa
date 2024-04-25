@@ -1,6 +1,7 @@
 import "@unocss/reset/tailwind.css";
 import "./style.css";
 
+import { User } from "@prisma/client";
 import { cssBundleHref } from "@remix-run/css-bundle";
 import type { LinksFunction, LoaderFunctionArgs } from "@remix-run/node";
 import {
@@ -12,18 +13,26 @@ import {
 	ScrollRestoration,
 	json,
 	useLoaderData,
+	useLocation,
 	useRevalidator,
 } from "@remix-run/react";
-import { BottomNav, Navbar, SideNav } from "./components/navbar";
+import clsx from "clsx";
+import React from "react";
+import { CommonHead } from "./components/common-head";
 import { Footer } from "./components/footer";
+import { BottomNav, Navbar, SideNav } from "./components/navbar";
 import { PendingUI } from "./components/pending-ui";
 import { checkAuth } from "./lib/check-auth";
-import { prisma } from "./lib/prisma.server";
 import { GlobalCtx } from "./lib/global-ctx";
-import { User } from "@prisma/client";
-import { CommonHead } from "./components/common-head";
+import { prisma } from "./lib/prisma.server";
 import { useColorScheme } from "./lib/use-color-scheme";
-import React from "react";
+
+const authRoutes = [
+	"/login",
+	"/create-account",
+	"/forgot-password",
+	"/reset-password",
+];
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
 	let user: User | undefined | null;
@@ -52,6 +61,9 @@ export default function App() {
 	const { user, unreadNotifications } = useLoaderData<typeof loader>();
 	const scheme = useColorScheme();
 	const revalidator = useRevalidator();
+	const location = useLocation()
+
+	const hideNav = authRoutes.includes(location.pathname);
 
 	React.useEffect(() => {
 		if (scheme === "light") {
@@ -105,13 +117,21 @@ export default function App() {
 					<Navbar />
 					<div className="container mx-auto !max-md:px-0">
 						<div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
-							<div className="col-span-1 max-lg:hidden">
+							<div
+								className={clsx("col-span-1 max-lg:hidden", {
+									hidden: hideNav,
+								})}
+							>
 								<div className="max-w-[15rem] sticky top-[4rem]">
 									<SideNav />
 								</div>
 							</div>
 
-							<div className="col-span-1 lg:col-span-4">
+							<div
+								className={clsx("col-span-1 lg:col-span-4 mt-2", {
+									"lg:col-span-5": hideNav,
+								})}
+							>
 								<Outlet />
 							</div>
 						</div>

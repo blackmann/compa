@@ -1,14 +1,14 @@
-import React from "react";
-import { LargeSelect } from "./large-select";
-import { Input } from "./input";
-import { FieldValues, useForm, useFormContext } from "react-hook-form";
-import { useAsyncFetcher } from "~/lib/use-async-fetcher";
-import { Button } from "./button";
-import dayjs from "dayjs";
 import { useLoaderData, useParams, useSubmit } from "@remix-run/react";
+import dayjs from "dayjs";
+import React from "react";
+import { FieldValues, useForm, useFormContext } from "react-hook-form";
 import { days } from "~/lib/days";
-import { AddLessonLoader } from "~/routes/timetable_.$year.$programme.$level.$sem.$day.add";
 import { isBefore } from "~/lib/time";
+import { useAsyncFetcher } from "~/lib/use-async-fetcher";
+import { AddLessonLoader } from "~/routes/timetable_.$year.$programme.$level.$sem.$day.add";
+import { Button } from "./button";
+import { Input } from "./input";
+import { LargeSelect } from "./large-select";
 
 interface Props {
 	courses: { id: number; code: string; name: string }[];
@@ -120,7 +120,7 @@ function LessonForm({
 			</div>
 
 			<div className="text-secondary flex gap-2 mt-2">
-				<div className="i-lucide-corner-left-up"></div> You're adding a lesson
+				<div className="i-lucide-corner-left-up" /> You're adding a lesson
 				for the above
 			</div>
 
@@ -220,7 +220,7 @@ function LessonForm({
 
 			<div className="mt-2">
 				<Button>
-					<div className="i-lucide-corner-down-left opacity-50"></div> Save
+					<div className="i-lucide-corner-down-left opacity-50" /> Save
 					lesson
 				</Button>
 			</div>

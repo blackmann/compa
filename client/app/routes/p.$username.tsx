@@ -42,11 +42,13 @@ const pageLinks = [
 	{
 		title: "Posts",
 		href: "",
+		icon: "i-lucide-message-circle",
 	},
-	// {
-	// 	title: "Comments",
-	// 	href: "comments",
-	// },
+	{
+		title: "Communities",
+		href: "communities",
+		icon: "i-lucide-users-round",
+	},
 ];
 
 export default function Profile() {
@@ -57,7 +59,7 @@ export default function Profile() {
 		<main className="container mx-auto min-h-[60vh] mt-2">
 			<div className="grid lg:grid-cols-3">
 				<div className="col-span-1 lg:col-span-2">
-					<div className="flex gap-2 pb-5 border-b dark:border-neutral-800">
+					<div className="flex gap-2 pb-5">
 						<Avatar name={user.username} />
 
 						<div>
@@ -79,11 +81,12 @@ export default function Profile() {
 						<header>
 							<ul className="flex gap-2 my-2 ms-10">
 								{pageLinks.map((link) => (
-									<li className="block" key={link.href}>
+									<li key={link.href}>
 										<NavLink
+											end
 											className={({ isActive }) =>
 												clsx(
-													"block text-center font-medium flex-1 px-2 py-1 bg-zinc-200 dark:bg-neutral-800 rounded-lg text-secondary hover:bg-zinc-300 dark:hover:bg-neutral-700 transition-[background] duration-200",
+													"flex gap-2 items-center text-center font-medium flex-1 px-2 py-1 bg-zinc-100 dark:bg-neutral-800 rounded-lg text-secondary hover:bg-zinc-200 dark:hover:bg-neutral-700 transition-[background] duration-200",
 													{
 														"!bg-blue-600 !text-white": isActive,
 													},
@@ -91,6 +94,9 @@ export default function Profile() {
 											}
 											to={link.href}
 										>
+											<div
+												className={clsx("inline-block opacity-70", link.icon)}
+											/>
 											{link.title}
 										</NavLink>
 									</li>
