@@ -10,7 +10,7 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
 
 	const post = await prisma.post.findFirst({
 		where: { id: Number(params.id) },
-		include: { user: true, media: true },
+		include: { user: true, media: true, community: true },
 	});
 
 	if (!post) {

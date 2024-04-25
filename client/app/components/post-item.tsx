@@ -1,25 +1,27 @@
-import { Link } from "@remix-run/react";
-import { Avatar } from "./avatar";
 import { Prisma } from "@prisma/client";
-import { PostTime } from "~/components/post-time";
-import { PostInput } from "./post-input";
-import { useMounted } from "~/lib/use-mounted";
-import { NestedComments } from "./nested-comments";
-import { Votes } from "./votes";
+import { Link } from "@remix-run/react";
 import clsx from "clsx";
-import { PostMenu } from "./post-menu";
+import React from "react";
+import { Jsonify } from "type-fest";
+import { PostTime } from "~/components/post-time";
 import { useGlobalCtx } from "~/lib/global-ctx";
+import { useMounted } from "~/lib/use-mounted";
+import { Avatar } from "./avatar";
+import { Content } from "./content";
 import { LoginComment } from "./login-comment";
 import { MediaItem } from "./media-item";
+import { NestedComments } from "./nested-comments";
+import { PostInput } from "./post-input";
+import { PostMenu } from "./post-menu";
 import { Tags } from "./tags";
-import { Content } from "./content";
 import { Username } from "./username";
-import React from "react";
-import { Jsonify } from 'type-fest'
+import { Votes } from "./votes";
 
-type Post = Prisma.PostGetPayload<{ include: { user: true; media: true } }> & {
+type Post = Prisma.PostGetPayload<{
+	include: { user: true; media: true; community: true };
+}> & {
 	vote?: boolean;
-}
+};
 
 interface Props {
 	level?: number;
@@ -91,7 +93,7 @@ function PostItem({
 }
 
 interface PostContentProps {
-	post: Props['post'];
+	post: Props["post"];
 	active: boolean;
 	limit?: boolean;
 	level: number;
@@ -155,6 +157,13 @@ function PostContent({ full, post, active, level, limit }: PostContentProps) {
 					)}
 				</div>
 
+				{post.community && (
+					<div className="inline-flex gap-2 items-center font-medium text-sm bg-blue-50 dark:bg-blue-800 dark:bg-opacity-20 px-1 rounded-md text-blue-500">
+						<div className="inline-block i-lucide-creative-commons" />
+						{post.community.name}
+					</div>
+				)}
+
 				{level < 2 && (
 					<footer className="mt-2 flex justify-between">
 						<span className="inline-flex items-center gap-2 text-secondary">
@@ -193,3 +202,4 @@ function SubComment({ post }: { post: Props["post"] }) {
 
 export { PostItem };
 export type { Props as PostItemProps };
+

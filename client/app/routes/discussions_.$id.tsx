@@ -1,3 +1,4 @@
+import { User } from "@prisma/client";
 import {
 	ActionFunctionArgs,
 	LoaderFunctionArgs,
@@ -9,26 +10,25 @@ import { useLoaderData } from "@remix-run/react";
 import React from "react";
 import { Avatar } from "~/components/avatar";
 import { LoginComment } from "~/components/login-comment";
+import { PostContent } from "~/components/post-content";
 import { PostInput } from "~/components/post-input";
 import { PostItem, PostItemProps } from "~/components/post-item";
 import { PostPeople } from "~/components/post-people";
 import { checkAuth } from "~/lib/check-auth";
 import { createPost } from "~/lib/create-post";
+import { createPostNotification } from "~/lib/create-post-notification";
 import { useGlobalCtx } from "~/lib/global-ctx";
+import { includeVotes } from "~/lib/include-votes";
 import { prisma } from "~/lib/prisma.server";
 import { render } from "~/lib/render.server";
 import { values } from "~/lib/values.server";
-import { includeVotes } from "~/lib/include-votes";
-import { Media, User } from "@prisma/client";
-import { createPostNotification } from "~/lib/create-post-notification";
-import { PostContent } from "~/components/post-content";
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 	const postId = Number(params.id as string);
 
 	const post = await prisma.post.findFirst({
 		where: { id: postId },
-		include: { user: true, media: true },
+		include: { user: true, media: true, community: true },
 	});
 
 	if (!post) {

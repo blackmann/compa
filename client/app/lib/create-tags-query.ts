@@ -11,9 +11,9 @@ function createTagsQuery(tagsParam: Record<string, any> = {}) {
 		},
 	);
 
-	const tagsFilter = tags.length ? { AND: tags } : {};
+	const tagsFilter = tags.length ? tags : [];
 
   return tagsFilter
 }
 
-export { createTagsQuery }
+export { createTagsQuery };

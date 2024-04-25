@@ -1,10 +1,13 @@
 import { useFetcher, useLoaderData, useParams } from "@remix-run/react";
 import dayjs from "dayjs";
+import { useGlobalCtx } from "~/lib/global-ctx";
 import { loader } from "~/routes/communities_.$slug";
+import { Anchor } from "./anchor";
 import { Avatar } from "./avatar";
 import { Button } from "./button";
 
 function CommunityInfo() {
+	const { user } = useGlobalCtx();
 	const { community, membership, members } = useLoaderData<typeof loader>();
 	const { slug } = useParams();
 	const fetcher = useFetcher();
@@ -38,22 +41,26 @@ function CommunityInfo() {
 					</p>
 
 					<div className="mt-2">
-						<Button
-							variant="secondary"
-							disabled={fetcher.state === "submitting"}
-							onClick={join}
-						>
-							{fetcher.state === "submitting" ? (
-								<>Joining</>
-							) : (
-								<>Join community</>
-							)}
-						</Button>
+						{!user ? (
+							<Anchor to="/login">Login & join</Anchor>
+						) : (
+							<Button
+								variant="secondary"
+								disabled={fetcher.state === "submitting"}
+								onClick={join}
+							>
+								{fetcher.state === "submitting" ? (
+									<>Joining</>
+								) : (
+									<>Join community</>
+								)}
+							</Button>
+						)}
 					</div>
 				</div>
 			)}
 
-			{membership && (
+			{user && membership && (
 				<div className="flex gap-2">
 					<div className="text-xs text-secondary">
 						Member since {dayjs(membership.createdAt).format("DD MMM YYYY")}

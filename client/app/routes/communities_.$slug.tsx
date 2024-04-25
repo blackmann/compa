@@ -39,13 +39,15 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 		include: { user: true },
 	});
 
-	const membership = await prisma.communityMember.findFirst({
-		where: { communityId: community.id, userId },
-	});
+	const membership = userId
+		? await prisma.communityMember.findFirst({
+				where: { communityId: community.id, userId },
+		  })
+		: null;
 
 	const posts = await prisma.post.findMany({
 		where: { communityId: community.id, parentId: null },
-		include: { user: true, media: true },
+		include: { user: true, media: true, community: false },
 		orderBy: { createdAt: "desc" },
 	});
 
@@ -76,17 +78,25 @@ export default function Community() {
 						<CommunityInfo />
 					</div>
 
-					<PostInput disabled={!membership} dataExtra={{ communityId: community.id }} />
+					<PostInput
+						disabled={!membership}
+						dataExtra={{ communityId: community.id }}
+					/>
 
-					{posts.map((post, i) => (
-						<React.Fragment key={post.id}>
-							<PostItem limit post={post as unknown as PostItemProps["post"]} />
+					<div className="mt-2">
+						{posts.map((post, i) => (
+							<React.Fragment key={post.id}>
+								<PostItem
+									limit
+									post={post as unknown as PostItemProps["post"]}
+								/>
 
-							{i < posts.length - 1 && (
-								<hr className="me-2 ms-12 dark:border-neutral-700" />
-							)}
-						</React.Fragment>
-					))}
+								{i < posts.length - 1 && (
+									<hr className="me-2 ms-12 dark:border-neutral-700" />
+								)}
+							</React.Fragment>
+						))}
+					</div>
 				</div>
 
 				<div className="col-span-1 max-lg:hidden">

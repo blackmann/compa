@@ -11,22 +11,22 @@ import {
 	useLocation,
 	useRevalidator,
 } from "@remix-run/react";
+import PullToRefresh from "pulltorefreshjs";
+import qs from "qs";
 import React from "react";
-import { TagsFilter } from "~/components/tags-filter";
+import { DiscussionsEmpty } from "~/components/discussions-empty";
 import { PostInput } from "~/components/post-input";
 import { PostItem, PostItemProps } from "~/components/post-item";
+import { TagsFilter } from "~/components/tags-filter";
 import { checkAuth } from "~/lib/check-auth";
 import { createPost } from "~/lib/create-post";
+import { createTagsQuery } from "~/lib/create-tags-query";
 import { useGlobalCtx } from "~/lib/global-ctx";
+import { includeVotes } from "~/lib/include-votes";
 import { prisma } from "~/lib/prisma.server";
+import { renderSummary } from "~/lib/render-summary.server";
 import { values } from "~/lib/values.server";
 import { withUserPrefs } from "~/lib/with-user-prefs";
-import qs from "qs";
-import { DiscussionsEmpty } from "~/components/discussions-empty";
-import { renderSummary } from "~/lib/render-summary.server";
-import { createTagsQuery } from "~/lib/create-tags-query";
-import { includeVotes } from "~/lib/include-votes";
-import PullToRefresh from "pulltorefreshjs";
 
 const PAGE_SIZE = 50;
 
@@ -36,12 +36,28 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
 	const tagsFilter = createTagsQuery(queryParams.tags as qs.ParsedQs);
 	const $lt = (queryParams.createdAt as qs.ParsedQs)?.$lt as string | null;
-	const timestampFilter = $lt ? { createdAt: { lt: new Date($lt) } } : {};
+	const timestampFilter = $lt ? { lt: new Date($lt) } : undefined;
+
+	let memberships: number[] = [];
+	try {
+		const userId = await checkAuth(request);
+		memberships = (
+			await prisma.communityMember.findMany({
+				where: { userId },
+				select: { communityId: true },
+			})
+		).map((m) => m.communityId);
+	} catch {}
 
 	const posts = await prisma.post.findMany({
 		take: PAGE_SIZE,
-		where: { parentId: null, ...tagsFilter, ...timestampFilter },
-		include: { user: true, media: true },
+		where: {
+			parentId: null,
+			OR: [{ communityId: null }, { communityId: { in: memberships } }],
+			AND: [...tagsFilter],
+			createdAt: timestampFilter,
+		},
+		include: { user: true, media: true, community: true },
 		orderBy: { createdAt: "desc" },
 	});
 

@@ -4,6 +4,7 @@ import { prisma } from "~/lib/prisma.server";
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {
 	const userId = await checkAuth(request);
+	const user = await prisma.user.findUnique({ where: { id: userId } });
 
 	if (request.method !== "POST") {
 		return json({}, { status: 405 });
@@ -20,6 +21,22 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 	await prisma.communityMember.create({
 		data: { communityId: community.id, userId },
 	});
+
+	const notification = await prisma.notification.create({
+		data: {
+			message: `You have a new member (@${user?.username}) in your community (${community.name}).`,
+			entityId: community.id,
+			entityType: "community",
+			actorId: userId
+		},
+	});
+
+	await prisma.notificationSubscriber.create({
+		data: {
+			notificationId: notification.id,
+			userId: community.createdById,
+		}
+	})
 
 	return null;
 };
