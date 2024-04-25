@@ -1,17 +1,20 @@
 import { Media, Prisma } from "@prisma/client";
+import { Link } from "@remix-run/react";
+import React from "react";
+import { Jsonify } from "type-fest";
 import { Avatar } from "./avatar";
 import { Content } from "./content";
 import { MediaItem } from "./media-item";
+import { MediaPreview } from "./media-preview";
 import { PostMenu } from "./post-menu";
 import { PostTime } from "./post-time";
 import { Tags } from "./tags";
 import { Username } from "./username";
 import { Votes } from "./votes";
-import { Jsonify } from "type-fest";
-import { MediaPreview } from "./media-preview";
-import React from "react";
 
-type Post = Prisma.PostGetPayload<{ include: { user: true; media: true } }> & {
+type Post = Prisma.PostGetPayload<{
+	include: { user: true; media: true; community: true };
+}> & {
 	vote?: boolean;
 };
 
@@ -51,6 +54,15 @@ function PostContent({ post }: Props) {
 
 					<div className="-mt-2">
 						<Content content={post.content} />
+
+						{post.community && (
+							<Link to={`/communities/${post.community.handle}`}>
+								<div className="inline-flex gap-2 items-center font-medium text-sm bg-blue-50 dark:bg-blue-800 dark:bg-opacity-20 px-1 rounded-md text-blue-500">
+									<div className="inline-block i-lucide-creative-commons" />
+									{post.community.name}
+								</div>
+							</Link>
+						)}
 
 						{post.media.length > 0 && (
 							<div className="grid xl:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-2 flex-wrap mt-2">

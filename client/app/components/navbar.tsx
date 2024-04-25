@@ -1,8 +1,9 @@
-import { Link, NavLink } from "@remix-run/react";
+import { Link, NavLink, useLocation } from "@remix-run/react";
 import clsx from "clsx";
 import { useGlobalCtx } from "~/lib/global-ctx";
 import { Avatar } from "./avatar";
 import { Username } from "./username";
+import React from "react";
 
 const links = [
 	{
@@ -16,14 +17,29 @@ const links = [
 		icon: "i-lucide-calendar-range",
 	},
 	{
+		title: "Library",
+		href: "/library",
+		icon: "i-lucide-library-square",
+	},
+	{
 		title: "Events",
 		href: "/events",
 		icon: "i-lucide-sparkle",
 	},
 	{
-		title: "Library",
-		href: "/library",
-		icon: "i-lucide-library-square",
+		title: "Communities",
+		href: "/communities",
+		icon: "i-lucide-users-round",
+	},
+	{
+		title: "Marketplace",
+		href: "/market",
+		icon: "i-lucide-shopping-bag",
+	},
+	{
+		title: "Games",
+		href: "/games",
+		icon: "i-lucide-gamepad-2",
 	},
 ];
 
@@ -41,29 +57,6 @@ function Navbar() {
 							</Link>
 						</div>
 					</div>
-
-					<nav className="max-md:hidden">
-						<ul className="flex gap-2">
-							{links.map((link) => (
-								<li key={link.href}>
-									<NavLink
-										to={link.href}
-										className={({ isActive }) =>
-											clsx(
-												"px-2 py-1 bg-zinc-200 bg-opacity-50 !hover:bg-opacity-100 dark:bg-opacity-40 dark:bg-neutral-700 rounded-lg font-medium flex items-center gap-2 transition-[background] duration-200",
-												{
-													"!bg-blue-600 !text-white !bg-opacity-100": isActive,
-												},
-											)
-										}
-									>
-										<div className={clsx("opacity-70", link.icon)} />{" "}
-										{link.title}
-									</NavLink>
-								</li>
-							))}
-						</ul>
-					</nav>
 
 					<div className="flex gap-2 items-center">
 						{Boolean(user) && (
@@ -117,14 +110,49 @@ function Navbar() {
 }
 
 function BottomNav() {
+	const [showMore, setShowMore] = React.useState(false);
+	const location = useLocation();
+
+	React.useEffect(() => {
+		setShowMore(false);
+	}, [location.pathname]);
+
 	return (
-		<div className="fixed left-0 bottom-0 w-full md:hidden">
+		<div className="fixed left-0 bottom-0 w-full lg:hidden">
+			<div
+				className={clsx(
+					"bg-zinc-50 dark:bg-neutral-900 p-4 border-t dark:border-neutral-700 container mx-auto h-[11rem] group overflow-hidden transition-[height] duration-200",
+					{ "!h-0 !py-0 collapsed": !showMore },
+				)}
+			>
+				<ul className="flex flex-col items-end">
+					{links.slice(3).map((link) => (
+						<li key={link.href}>
+							<NavLink
+								className={({ isActive }) =>
+									clsx(
+										"px-2 py-1 block rounded-lg flex items-center gap-4 hover:bg-zinc-100 dark:hover:bg-neutral-800 group text-secondary",
+										{ "!bg-blue-600 !text-white is-active": isActive },
+									)
+								}
+								to={link.href}
+							>
+								<div>{link.title}</div>
+
+								<div className="text-secondary group-[.is-active]:!bg-blue-600 group-[.is-active]:!text-white text-xl py-1 rounded-full">
+									<div className={link.icon} />
+								</div>
+							</NavLink>
+						</li>
+					))}
+				</ul>
+			</div>
 			<nav
-				className="border-t border-zinc-200 dark:border-neutral-800 bg-zinc-50 dark:bg-zinc-900 static z-10"
+				className=" border-zinc-200 dark:border-neutral-800 bg-zinc-50 dark:bg-zinc-900 static z-10"
 				style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
 			>
 				<ul className="flex p-2 justify-around">
-					{links.map((link) => (
+					{links.slice(0, 3).map((link) => (
 						<li key={link.href}>
 							<NavLink
 								to={link.href}
@@ -137,17 +165,56 @@ function BottomNav() {
 									)
 								}
 							>
-								<div className="text-secondary group-[.is-active]:!bg-blue-600 group-[.is-active]:!text-white text-xl px-4 py-1 rounded-full">
+								<div className="text-secondary group-hover:bg-zinc-100 group-hover:dark:bg-neutral-800 group-[.is-active]:!bg-blue-600 group-[.is-active]:!text-white text-xl px-4 py-1 rounded-full">
 									<div className={link.icon} />
 								</div>
 								<span className="text-xs text-secondary">{link.title}</span>
 							</NavLink>
 						</li>
 					))}
+
+					<li>
+						<button
+							type="button"
+							className={clsx("group", { "is-active": showMore })}
+							onClick={() => setShowMore(!showMore)}
+						>
+							<div className="text-secondary group-[.is-active]:!bg-amber-600 group-[.is-active]:!text-white text-xl px-4 py-1 rounded-full">
+								<div className="i-lucide-menu" />
+							</div>
+
+							<span className="text-xs text-secondary">More</span>
+						</button>
+					</li>
 				</ul>
 			</nav>
 		</div>
 	);
 }
 
-export { BottomNav, Navbar };
+function SideNav() {
+	return (
+		<ul className="">
+			{links.map((link) => (
+				<li key={link.href}>
+					<NavLink
+						to={link.href}
+						className={({ isActive }) =>
+							clsx(
+								"px-2 py-1 hover:bg-zinc-100 dark:hover:bg-neutral-800 rounded-full font-medium flex items-center gap-2 transition-[background] duration-200",
+								{
+									"!bg-zinc-200 !dark:bg-neutral-800": isActive,
+									"text-secondary": !isActive,
+								},
+							)
+						}
+					>
+						<div className={clsx("opacity-70", link.icon)} /> {link.title}
+					</NavLink>
+				</li>
+			))}
+		</ul>
+	);
+}
+
+export { BottomNav, Navbar, SideNav };

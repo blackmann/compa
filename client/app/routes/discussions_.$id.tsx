@@ -1,3 +1,4 @@
+import { User } from "@prisma/client";
 import {
 	ActionFunctionArgs,
 	LoaderFunctionArgs,
@@ -9,26 +10,25 @@ import { useLoaderData } from "@remix-run/react";
 import React from "react";
 import { Avatar } from "~/components/avatar";
 import { LoginComment } from "~/components/login-comment";
+import { PostContent } from "~/components/post-content";
 import { PostInput } from "~/components/post-input";
 import { PostItem, PostItemProps } from "~/components/post-item";
 import { PostPeople } from "~/components/post-people";
 import { checkAuth } from "~/lib/check-auth";
 import { createPost } from "~/lib/create-post";
+import { createPostNotification } from "~/lib/create-post-notification";
 import { useGlobalCtx } from "~/lib/global-ctx";
+import { includeVotes } from "~/lib/include-votes";
 import { prisma } from "~/lib/prisma.server";
 import { render } from "~/lib/render.server";
 import { values } from "~/lib/values.server";
-import { includeVotes } from "~/lib/include-votes";
-import { Media, User } from "@prisma/client";
-import { createPostNotification } from "~/lib/create-post-notification";
-import { PostContent } from "~/components/post-content";
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 	const postId = Number(params.id as string);
 
 	const post = await prisma.post.findFirst({
 		where: { id: postId },
-		include: { user: true, media: true },
+		include: { user: true, media: true, community: true },
 	});
 
 	if (!post) {
@@ -137,9 +137,9 @@ export default function Discussion() {
 	const { user } = useGlobalCtx();
 
 	return (
-		<div className="container mx-auto min-h-[60vh] mt-2">
-			<div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
-				<div className="col-span-1 lg:col-span-2 lg:col-start-2">
+		<div className="container mx-auto min-h-[60vh]">
+			<div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+				<div className="col-span-1 lg:col-span-2">
 					<PostContent post={post} />
 
 					<div className="flex gap-2 mt-4">

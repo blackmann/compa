@@ -1,14 +1,16 @@
+import { Link } from "@remix-run/react";
+import { RemixLinkProps } from "@remix-run/react/dist/components";
 import clsx from "clsx";
 import React from "react";
 
-interface Props extends React.ComponentProps<"a"> {
+interface Props extends RemixLinkProps {
 	variant?: "primary" | "neutral";
 }
 
 const Anchor = React.forwardRef<HTMLAnchorElement, Props>(
 	({ className, variant = "primary", ...props }, ref) => {
 		return (
-			<a
+			<Link
 				ref={ref}
 				className={clsx(
 					"inline-flex items-center gap-2 rounded-lg bg-blue-600 px-2 py-1 font-medium",

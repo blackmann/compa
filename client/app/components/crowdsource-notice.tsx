@@ -2,7 +2,7 @@ function CrowdsourceNotice() {
 	return (
 		<div className="p-2 rounded-lg border bg-white dark:bg-neutral-800 dark:border-neutral-700">
 			<header className="font-bold flex gap-2 items-center mb-2">
-				<div className="i-lucide-badge-check text-green-500"></div>
+				<div className="i-lucide-badge-check text-green-500" />
 				<span>Crowdsourcing</span>
 			</header>
 			<p>

@@ -12,10 +12,12 @@ import {
 	useNavigate,
 } from "@remix-run/react";
 import clsx from "clsx";
+import qs from "qs";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { Button } from "~/components/button";
 import { FileInput } from "~/components/file-input";
+import { FileMenu } from "~/components/file-menu";
 import { FileSelectItem } from "~/components/file-select-item";
 import { Input } from "~/components/input";
 import { Thumbnail } from "~/components/media-item";
@@ -32,14 +34,12 @@ import { Tags } from "~/components/tags";
 import { TagsFilter } from "~/components/tags-filter";
 import { Username } from "~/components/username";
 import { checkAuth } from "~/lib/check-auth";
+import { createTagsQuery } from "~/lib/create-tags-query";
 import { ellipsizeFilename, humanizeSize } from "~/lib/files";
 import { useGlobalCtx } from "~/lib/global-ctx";
 import { prisma } from "~/lib/prisma.server";
 import { uploadMedia } from "~/lib/upload-media";
 import { values } from "~/lib/values.server";
-import qs from "qs";
-import { createTagsQuery } from "~/lib/create-tags-query";
-import { FileMenu } from "~/components/file-menu";
 
 const FILE_SIZE_LIMIT = 5 * 1024 * 1024;
 
@@ -197,9 +197,9 @@ export default function Library() {
 	const editMode = Boolean($files.length);
 
 	return (
-		<div className="min-h-[60vh] container mx-auto pt-4">
-			<div className="grid grid-cols-1 md:grid-cols-5">
-				<div className="col-span-1 md:col-span-3 md:col-start-2">
+		<div className="min-h-[60vh] container mx-auto">
+			<div className="grid grid-cols-1 lg:grid-cols-5">
+				<div className="col-span-1 lg:col-span-4">
 					<div className="flex">
 						<div className="flex-1">
 							<h1 className="font-bold text-xl">Library</h1>

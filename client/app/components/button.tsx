@@ -2,7 +2,7 @@ import clsx from "clsx";
 import React from "react";
 
 interface Props extends React.ComponentProps<"button"> {
-	variant?: "primary" | "neutral";
+	variant?: "primary" | "neutral" | "secondary";
 }
 
 const Button = React.forwardRef<HTMLButtonElement, Props>(
@@ -15,6 +15,7 @@ const Button = React.forwardRef<HTMLButtonElement, Props>(
 					{
 						"bg-zinc-200 px-2 py-1 dark:bg-neutral-800": variant === "neutral",
 						"text-white": variant === "primary",
+						"!bg-amber-500 text-white": variant === "secondary",
 						"opacity-60": props.disabled,
 					},
 					className,

@@ -15,6 +15,7 @@ async function createPost(data: Record<string, any>, userId: number) {
 			people: 1,
 			tags: data.tags,
 			path,
+			communityId: data.communityId,
 		},
 	});
 

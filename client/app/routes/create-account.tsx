@@ -19,6 +19,7 @@ import { Input } from "~/components/input";
 import { hash } from "~/lib/password.server";
 import { prisma } from "~/lib/prisma.server";
 import { sendEmailVerification } from "~/lib/send-email-verification";
+import { USERNAME_REGEX } from "~/lib/username-regex";
 import { values } from "~/lib/values.server";
 
 export const loader = async () => {
@@ -76,8 +77,6 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
 	return [{ title: `Create Account | ${data?.school} ✽ compa` }];
 };
-
-const USERNAME_REGEX = /^(?=[a-zA-Z0-9._]{4,20}$)(?!.*[_.]{2})[^_.].*[^_.]$/g;
 
 export default function CreateAccount() {
 	const { emailExtensions } = useLoaderData<typeof loader>();

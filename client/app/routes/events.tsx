@@ -3,6 +3,7 @@ import { ActionFunctionArgs, MetaFunction, redirect } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
 import clsx from "clsx";
 import dayjs from "dayjs";
+import { Jsonify } from "type-fest";
 import { Anchor } from "~/components/anchor";
 import { PostTime } from "~/components/post-time";
 import { Username } from "~/components/username";
@@ -53,9 +54,9 @@ export default function Events() {
 	const { user } = useGlobalCtx();
 
 	return (
-		<div className="container mx-auto min-h-[60vh] pt-4">
+		<div className="container mx-auto min-h-[60vh]">
 			<div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
-				<div className="col-span-1 lg:col-start-2 lg:col-span-2">
+				<div className="col-span-1 lg:col-span-3">
 					<h1 className="font-bold text-xl">Events</h1>
 					<header className="mb-2 flex justify-between">
 						<div>
@@ -65,7 +66,7 @@ export default function Events() {
 						</div>
 
 						<div>
-							<Anchor href="/events/add" className={clsx({ "!hidden": !user })}>
+							<Anchor to="/events/add" className={clsx({ "!hidden": !user })}>
 								<div className="i-lucide-plus opacity-60" /> Add event
 							</Anchor>
 						</div>
@@ -101,10 +102,12 @@ export default function Events() {
 	);
 }
 
+type EventItem = Prisma.EventItemGetPayload<{
+	include: { user: true; poster: true };
+}>;
+
 interface EventItemProps {
-	event: Prisma.EventItemGetPayload<{
-		include: { user: true; poster: true };
-	}>;
+	event: Jsonify<EventItem> | EventItem;
 }
 
 function EventItem({ event }: EventItemProps) {

@@ -10,7 +10,7 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
 
 	const post = await prisma.post.findFirst({
 		where: { id: Number(params.id) },
-		include: { user: true, media: true },
+		include: { user: true, media: true, community: true },
 	});
 
 	if (!post) {
@@ -33,8 +33,8 @@ export default function ConcentratedDiscussion() {
 
 	return (
 		<div className="container mx-auto min-h-[60vh] mt-2">
-			<div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
-				<div className="col-span-1 lg:col-span-2 lg:col-start-2">
+			<div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+				<div className="col-span-1 lg:col-span-2">
 					<header className="mb-4">
 						<Link
 							to={`/discussions/${id}`}
