@@ -11,6 +11,7 @@ import { Input } from "~/components/input";
 import { checkAuth } from "~/lib/check-auth";
 import { getModerators } from "~/lib/get-moderators";
 import { prisma } from "~/lib/prisma.server";
+import { USERNAME_REGEX } from "~/lib/username-regex";
 import { values } from "~/lib/values.server";
 
 export const loader = async () => {
@@ -90,7 +91,10 @@ export default function CreateCommunity() {
 							Handle
 							<Input
 								maxLength={32}
-								{...register("handle", { required: true })}
+								{...register("handle", {
+									pattern: USERNAME_REGEX,
+									required: true,
+								})}
 							/>
 							<div className="text-secondary text-sm">
 								This is like the username of the community.
@@ -103,13 +107,21 @@ export default function CreateCommunity() {
 								className="w-full rounded-lg bg-zinc-100 dark:bg-neutral-800 border-zinc-200 dark:border-neutral-700 p-2 h-30"
 								maxLength={512}
 								placeholder="Talk about the community."
-								{...register("description", { required: true })}
+								{...register("description", {
+									required: true,
+									setValueAs(value) {
+										return value.trim();
+									},
+								})}
 							/>
 						</label>
 
 						<label className="mb-2">
 							Phone
-							<Input type="tel" {...register("modPhone", { required: true })} />
+							<Input
+								type="tel"
+								{...register("modPhone", { pattern: /\d{10}/, required: true })}
+							/>
 							<div className="text-secondary text-sm">
 								For verification and correspondence purposes.
 							</div>

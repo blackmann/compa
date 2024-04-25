@@ -1,10 +1,13 @@
 import { Prisma } from "@prisma/client";
 import { useFetcher } from "@remix-run/react";
+import { Jsonify } from "type-fest";
 import { useGlobalCtx } from "~/lib/global-ctx";
 import { DropdownMenu } from "./dropdown-menu";
 
+type RepositoryFile = Prisma.RepositoryGetPayload<{ include: { user: true } }>;
+
 interface Props {
-	file: Prisma.RepositoryGetPayload<{ include: { user: true } }>;
+	file: RepositoryFile | Jsonify<RepositoryFile>;
 }
 
 function FileMenu({ file }: Props) {
