@@ -8,6 +8,7 @@ import { useFetcher } from "@remix-run/react";
 import { FieldValues, useForm } from "react-hook-form";
 import { Button } from "~/components/button";
 import { Input } from "~/components/input";
+import { Textarea } from "~/components/textarea";
 import { checkAuth } from "~/lib/check-auth";
 import { getModerators } from "~/lib/get-moderators";
 import { prisma } from "~/lib/prisma.server";
@@ -103,8 +104,7 @@ export default function CreateCommunity() {
 
 						<label>
 							Description
-							<textarea
-								className="w-full rounded-lg bg-zinc-100 dark:bg-neutral-800 border-zinc-200 dark:border-neutral-700 p-2 h-30"
+							<Textarea
 								maxLength={512}
 								placeholder="Talk about the community."
 								{...register("description", {

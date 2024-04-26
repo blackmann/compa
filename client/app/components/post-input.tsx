@@ -19,6 +19,7 @@ import {
 	stringifySelections,
 } from "./tag-input";
 import { TagSelect } from "./tag-select";
+import { Textarea } from "./textarea";
 
 interface Props {
 	level?: number;
@@ -167,11 +168,8 @@ function PostInput({ disabled, level = 0, parent, dataExtra }: Props) {
 					</header>
 				)}
 
-				<textarea
-					className={clsx(
-						"w-full rounded-lg bg-zinc-100 dark:bg-neutral-800 border-zinc-200 dark:border-neutral-700 p-2 h-30",
-						{ hidden: !hidePreview },
-					)}
+				<Textarea
+					className={clsx({ hidden: !hidePreview })}
 					placeholder={
 						isComment ? "What do you think?" : "What have you got to share?"
 					}

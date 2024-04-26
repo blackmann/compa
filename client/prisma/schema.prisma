@@ -57,6 +57,7 @@ model User {
   updatedAt              DateTime                 @updatedAt
   verified               Boolean                  @default(false)
   role                   String                   @default("common")
+  bio                    String?
   PasswordResetRequest   PasswordResetRequest[]
   Post                   Post[]
   Vote                   Vote[]

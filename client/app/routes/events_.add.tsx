@@ -7,6 +7,7 @@ import { FieldValues, useForm } from "react-hook-form";
 import { Button } from "~/components/button";
 import { FileInput } from "~/components/file-input";
 import { Input } from "~/components/input";
+import { Textarea } from "~/components/textarea";
 import { timeFromString } from "~/lib/time";
 import { uploadMedia } from "~/lib/upload-media";
 
@@ -167,8 +168,7 @@ export default function AddEvent() {
 
 						<label className="block mt-2">
 							Description*
-							<textarea
-								className="w-full rounded-lg bg-zinc-100 dark:bg-neutral-800 border-zinc-200 dark:border-neutral-700 p-2 h-30"
+							<Textarea
 								maxLength={512}
 								{...register("description", {
 									required: true,

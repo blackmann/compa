@@ -192,3 +192,7 @@ input {
 .ptr--text {
   @apply !dark:text-neutral-500 font-medium;
 }
+
+.bio a {
+  @apply text-blue-500 underline font-medium;
+}
