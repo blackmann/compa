@@ -1,100 +1,182 @@
 ---
+import CompaSwag from '../components/CompaSwag.astro'
 import Shell from '../layouts/Shell.astro'
 ---
 
 <Shell title="Home">
 	<div class="container mx-auto">
-		<div class="grid lg:grid-cols-2 my-8">
-			<div class="col-span-1">
-				<h1 class="font-medium text-4xl">
-					It's all on compa. An open initiative to promote collaboration and knowledge sharing among students of higher education.
-				</h1>
-			</div>
+		<div class="text-secondary mx-auto max-w-[20rem] text-center font-medium">
+			The higher education campus experience could be a lot better and exciting.
 		</div>
 
-		<section class="mt-8">
-			<h2 class="font-bold ms-2 text-slate-600">Features</h2>
+		<div class="py-16">
+			<CompaSwag />
+		</div>
 
-			<div class="grid md:grid-cols-2 lg:grid-cols-4 mt-4 gap-4">
+		<div class="mx-auto text-center font-medium md:max-w-[35rem]">
+			<span class="text-secondary">So we introduce</span>
+			<h1 class="inline">
+				compa: An open initiative to promote collaboration and knowledge sharing
+				among students of higher education
+			</h1>
+		</div>
+
+		<section class="mt-14">
+			<h2 class="mb-8 text-center text-3xl font-bold md:text-5xl">
+				The compa suite comes with <br /> a lot to make this possible.
+			</h2>
+
+			<div class="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-3">
 				<div class="col-span-1">
-					<div class=" bg-slate-100 bg-opacity- rounded-xl p-4">
-						<h3 class="font-bold text-slate-700 text-lg">Discussions</h3>
+					<h3 class="mb-2 text-xl font-bold">Discussions</h3>
 
-						<p class=" mt-2">Talk about anything with anyone. You can ask for help, share a discovery, make a notice; anything! Everybody else is allowed to make comments under conversations.</p>
+					<p>
+						Talk about anything with anyone. You can ask for help, share a
+						discovery, make a notice; anything! Everybody else is allowed to
+						make comments under conversations.
+					</p>
 
-						<p class="mt-2 text-slate-500">You can attach files, audio recordings and images to your posts.</p>
-					</div>
+					<p class="text-secondary mt-2">
+						You can attach files, audio recordings and images to your posts.
+					</p>
 				</div>
 
 				<div class="col-span-1">
-					<div class=" bg-slate-100 bg-opacity- rounded-xl p-4">
-						<h3 class="font-bold text-slate-700 text-lg">Events</h3>
+					<h3 class="mb-2 text-xl font-bold">Events</h3>
 
-						<p class=" mt-2">Find upcoming events around campus. Don't miss out on any fun or lecture!</p>
+					<p>
+						Find upcoming events around campus. Don't miss out on any fun or
+						lecture!
+					</p>
 
-						<p class="mt-2 text-slate-500">Anyone can post events for the visibility of everyone else.</p>
-					</div>
+					<p class="text-secondary mt-2">
+						Anyone can post events for the visibility of everyone else.
+					</p>
 				</div>
 
 				<div class="col-span-1">
-					<div class=" bg-slate-100 bg-opacity- rounded-xl p-4">
-						<h3 class="font-bold text-slate-700 text-lg">Timetable</h3>
+					<h3 class="mb-2 text-xl font-bold">Timetable</h3>
 
-						<p class=" mt-2">The timetable is also a crowdsourced attempt to gather schedule for all courses, programmes and level.</p>
+					<p>
+						The timetable is also a crowdsourced attempt to gather schedule for
+						all courses, programmes and level.
+					</p>
 
-						<p class="mt-2 text-slate-500">You can attach files, audio recordings and images to your posts.</p>
-					</div>
+					<p class="text-secondary mt-2">
+						You can download timetables as calendar events so you get reminders
+						for lessons. [ ] Include how-to
+					</p>
 				</div>
 
 				<div class="col-span-1">
-					<div class=" bg-slate-100 bg-opacity- rounded-xl p-4">
-						<h3 class="font-bold text-slate-700 text-lg">Communities</h3>
+					<h3 class="mb-2 text-xl font-bold">Communities</h3>
 
-						<p class=" mt-2">Wondering how to join like minded individuals? The upcoming Communities feature will allow to discover and join interest groups and interact with them.</p>
+					<p>
+						Wondering how to join like minded individuals? The Communities
+						feature will allow to discover and join interest groups and interact
+						with them about things you're passionate about.
+					</p>
 
-						<p class="mt-2 text-slate-500">This is going to be exciting!</p>
-					</div>
+					<p class="text-secondary mt-2">Together, we can.</p>
 				</div>
 
 				<div class="col-span-1">
-					<div class=" bg-slate-100 bg-opacity- rounded-xl p-4">
-						<h3 class="font-bold text-slate-700 text-lg">Resources</h3>
+					<h3 class="mb-2 text-xl font-bold">Library</h3>
 
-						<p class=" mt-2">No more scattered documents! Compa will provide an intuitive way to organize documents for lessons, courses and programmes.</p>
+					<p>
+						Sharing and accessing lesson materials over whatsapp can be
+						overwhelming and slow. With compa Library, there is a quick filter
+						and search filter at your whim.
+					</p>
 
-						<p class="mt-2 text-slate-500">We shouldn't be shuffling through many chatrooms looking for files!</p>
-					</div>
+					<p class="text-secondary mt-2">
+						Anyone can upload/share files on compa. Just log in.
+					</p>
+				</div>
+
+				<div class="col-span-1">
+					<h3 class="mb-2 text-xl font-bold">Marketplace</h3>
+
+					<p>
+						If you're selling, reach your customers right on campus. If you're
+						buying, there's a high chance you'll find someone on campus ready to
+						sell.
+					</p>
+
+					<p class="text-secondary mt-2">
+						Selling is open to everyone. Go ahead! Put your used textbooks on
+						display.
+					</p>
+				</div>
+
+				<div class="col-span-1">
+					<h3 class="mb-2 text-xl font-bold">Games</h3>
+
+					<p>
+						For those who want some daily fun. For others who love to compete.
+						This is your place.
+					</p>
+
+					<p class="text-secondary mt-2">
+						Everyday in the morning, there's a new challenge for everyone to
+						tackle.
+					</p>
 				</div>
 			</div>
 		</section>
 
-		<section class="mt-8">
-			<h2 class="text-3xl font-medium">compa is designed and developed for every school.</h2>
-			<p class="text-amber-600">We're working on ways to easily deploy an instance for your school. Stay tuned!</p>
+		<section class="mt-14">
+			<h2 class="mb-8 text-center text-5xl font-bold">
+				compa works on a few principles
+			</h2>
 
-			<div class="grid md:grid-cols-2">
+			<div class="grid grid-cols-1 md:grid-cols-2">
+				<div class="col-span-1"></div>
+
 				<div class="col-span-1">
-					<p class="mt-4">compa is designed agnostic of any school. The features are meant to be in their simplest form so they work accross many school structures. However, we have an instance live for KNUST. You can check it out.</p>
+					<h3 class="mb-2 text-2xl font-bold">Open</h3>
+					<p>
+						Your school's compa succeeds when everyone contributes. Be it lesson
+						materials, timetable entries, events, discussions, etc. Nothing is
+						the responsibility* of one person or a few people. As long as you
+						can log in, you can contribute to anything.
+					</p>
+
+					<p class="text-secondary mt-3">
+						Anything published on compa is open to the world. Even if the person
+						is not part of your school. However, contribution is limited to only
+						logged in users.
+					</p>
+
+					<h3 class="mb-2 mt-6 text-2xl font-bold">Privacy</h3>
+
+					<p>
+						Compa does not gather what you do not share. You only provide a
+						username of choice and school email during sign up and that's all
+						the personal details we require.
+					</p>
+
+					<p class="text-secondary mt-3">
+						*Note that voluntaringly sharing other details via conversations or
+						other methods are your responsibility.
+					</p>
+
+					<h3 class="mb-2 mt-6 text-2xl font-bold">Silo</h3>
+
+					<p>
+						Every instance of compa is separate from the other. This means, a
+						compa instance hosted for KNUST shares nothing with a compa instance
+						hosted for University of Ghana. Therefore, only students of the
+						related school can sign up and log in to the respective schools.
+					</p>
+
+					<p class="text-secondary mt-3">
+						This design allows each instance to customize their experience
+						however needed, keep systems fast and protected from combined
+						attacks.
+					</p>
 				</div>
 			</div>
-			<div class="mt-4">
-				<a href="https://knust.compa.so" target="_blank" class="inline-block bg-slate-200 rounded-lg px-2 py-1 font-medium">
-					knust.compa.so
-				</a>
-			</div>
 		</section>
-
-		<section class="mt-8">
-			<h2 class="text-3xl font-medium">Opensource</h2>
-			<p class="text-amber-600">Yes, compa is open all through — even its source code.</p>
-
-			<div class="mt-4">
-				<a href="https://github.com/blackmann/compa" target="_blank" class="inline-block bg-slate-200 rounded-lg px-2 py-1 font-medium">
-					github.com/blackmann/compa
-				</a>
-			</div>
-		</section>
-
-		<footer class="mt-12"></footer>
 	</div>
 </Shell>
