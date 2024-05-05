@@ -1622,17 +1622,17 @@
   resolved "https://registry.yarnpkg.com/@humanwhocodes/object-schema/-/object-schema-2.0.2.tgz#d9fae00a2d5cb40f92cfe64b47ad749fbc38f917"
   integrity sha512-6EwiSjwWYP7pTckG6I5eyFANjPhmPjUX9JRLUSfNPC7FX7zK9gyZAfUEaECL6ALTpGX5AjnBq3C9XmVWPitNpw==
 
-"@iconify-json/lucide@^1.1.156":
-  version "1.1.156"
-  resolved "https://registry.yarnpkg.com/@iconify-json/lucide/-/lucide-1.1.156.tgz#4330c346757bce9f2eb8fea39bbb8bcacd5284bb"
-  integrity sha512-1fwiaikvgJMdesyb1nee9bkyCr3bRye+hb+nGFQA44AatrYVTitRQk+Gd/RXLWjGRWBmuBfIo+jEdxWVojLK0w==
-  dependencies:
-    "@iconify/types" "*"
-
 "@iconify-json/lucide@^1.1.160":
   version "1.1.160"
   resolved "https://registry.yarnpkg.com/@iconify-json/lucide/-/lucide-1.1.160.tgz#f90eb0327004ca61503401b20c185774a95333ea"
   integrity sha512-wQJvbP+wliSEEAcQZUWvEFSo9vEzpGbK21dE4kQjISix8joS3ud3vIrxP82YGWCEScYcXi1T+gBxqej3SQLzTg==
+  dependencies:
+    "@iconify/types" "*"
+
+"@iconify-json/lucide@^1.1.186":
+  version "1.1.186"
+  resolved "https://registry.yarnpkg.com/@iconify-json/lucide/-/lucide-1.1.186.tgz#c38fe933dcff36b49d13e29650858d921041105a"
+  integrity sha512-T+ZwxEJ2773EtHE3waU6RmLhvwvtXqmA+6WNbyfN5hg9SwNMhnPxYXcZrEWkaRPbUszsao6YOdtH5G56pgebFg==
   dependencies:
     "@iconify/types" "*"
 

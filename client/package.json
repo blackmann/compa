@@ -58,7 +58,7 @@
     "unified": "^11.0.4"
   },
   "devDependencies": {
-    "@iconify-json/lucide": "^1.1.156",
+    "@iconify-json/lucide": "^1.1.186",
     "@iconify-json/svg-spinners": "^1.1.2",
     "@julr/unocss-preset-forms": "^0.1.0",
     "@remix-run/dev": "^2.5.1",
