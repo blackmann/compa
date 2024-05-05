@@ -1,5 +1,8 @@
+import { useFetcher, useLoaderData } from "@remix-run/react";
 import React from "react";
-import { useForm } from "react-hook-form";
+import { FieldValues, useForm } from "react-hook-form";
+import { uploadMedia } from "~/lib/upload-media";
+import { loader } from "~/routes/market_.add";
 import { Button } from "./button";
 import { FileInput } from "./file-input";
 import { Input } from "./input";
@@ -9,10 +12,38 @@ import { Textarea } from "./textarea";
 const MAX_FILES = 5;
 
 function ProductForm() {
+	const { categories } = useLoaderData<typeof loader>();
+
 	const { register, handleSubmit } = useForm();
 	const [imagesToUpload, setImagesToUpload] = React.useState<File[]>([]);
+	const [uploading, setUploading] = React.useState(false);
 
-	async function save() {}
+	const fetcher = useFetcher();
+
+	async function save(data: FieldValues) {
+		const newMedia = [];
+		if (imagesToUpload.length) {
+			setUploading(true);
+
+			try {
+				for (const image of imagesToUpload) {
+					newMedia.push(await uploadMedia(image));
+				}
+			} catch (err) {
+				// [ ] Observe
+				return;
+			} finally {
+				setUploading(false);
+			}
+		}
+
+		data.images = JSON.stringify(newMedia);
+
+		fetcher.submit(JSON.stringify(data), {
+			method: "POST",
+			encType: "application/json",
+		});
+	}
 
 	function handleImageSelect(event: React.ChangeEvent<HTMLInputElement>) {
 		const files = event.target.files;
@@ -36,6 +67,7 @@ function ProductForm() {
 
 	// [ ] Add uploaded images
 	const canUploadImage = imagesToUpload.length < MAX_FILES;
+	const saving = fetcher.state === "submitting" || uploading;
 
 	return (
 		<form onSubmit={handleSubmit(save)}>
@@ -46,8 +78,14 @@ function ProductForm() {
 
 			<label className="mt-2">
 				Category
-				<Select {...register("category", { required: true })}>
-					<option value="clothing-outfit">Clothing & Outfits</option>
+				<Select
+					{...register("category", { required: true, valueAsNumber: true })}
+				>
+					{categories.map((category) => (
+						<option key={category.id} value={category.id}>
+							{category.title}
+						</option>
+					))}
 				</Select>
 			</label>
 
@@ -65,13 +103,16 @@ function ProductForm() {
 
 			<label className="mt-2">
 				Description <span className="text-secondary text-sm">(optional)</span>
-				<Textarea {...register("description")} />
+				<Textarea
+					placeholder="Talk about the product. Mention available sizes, variants, etc."
+					{...register("description", { maxLength: 720 })}
+				/>
 			</label>
 
 			<div className="grid grid-cols-5 gap-2 my-2">
 				{imagesToUpload.map((img, i) => {
 					return (
-						<div className="col-span-1">
+						<div className="col-span-1" key={img.name}>
 							<div className="relative">
 								<img
 									src={URL.createObjectURL(img)}
@@ -111,7 +152,7 @@ function ProductForm() {
 			</div>
 
 			<footer className="mt-4">
-				<Button>Add product</Button>
+				<Button disabled={saving}>{saving ? "Saving…" : "Add product"}</Button>
 			</footer>
 		</form>
 	);

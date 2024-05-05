@@ -1,13 +1,36 @@
-import { MetaFunction } from "@remix-run/node";
-import { Link } from "@remix-run/react";
+import { Media, User } from "@prisma/client";
+import { LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
+import { Link, useLoaderData } from "@remix-run/react";
 import { Anchor } from "~/components/anchor";
 import { Input } from "~/components/input";
 import { Select } from "~/components/select";
+import { checkAuth } from "~/lib/check-auth";
 import { useGlobalCtx } from "~/lib/global-ctx";
+import { prisma } from "~/lib/prisma.server";
 import { values } from "~/lib/values.server";
 
-export const loader = async () => {
-	return { school: values.meta() };
+export const loader = async ({ request }: LoaderFunctionArgs) => {
+	let user: User | null = null;
+
+	try {
+		const userId = await checkAuth(request);
+		user = await prisma.user.findFirst({ where: { id: userId } });
+	} catch {}
+
+	const sellerProfile = user
+		? await prisma.sellerProfile.findFirst({
+				where: { userId: user.id },
+		  })
+		: null;
+
+	const products = await prisma.product.findMany({
+		where: { status: "available" },
+		orderBy: { createdAt: "desc" },
+	});
+
+	const categories = await prisma.category.findMany();
+
+	return { categories, school: values.meta(), products, sellerProfile };
 };
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
@@ -21,61 +44,90 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
 };
 
 export default function Market() {
+	const { categories, products, sellerProfile } =
+		useLoaderData<typeof loader>();
 	const { user } = useGlobalCtx();
 
 	return (
 		<div className="container min-h-[60vh]">
 			<header className="mb-2">
-				<h1 className="font-bold text-xl">Market</h1>
+				<h1 className="font-bold text-xl">Marketplace</h1>
+
 				<div className="flex items-start gap-2">
 					<Input type="search" placeholder="Search product" />
 					<Select>
 						<option value="all">All Categories</option>
+						{categories.map((category) => (
+							<option key={category.id} value={category.id}>
+								{category.title}
+							</option>
+						))}
 					</Select>
 				</div>
 			</header>
 
-			<div className="flex gap-2 mb-2">
-				<Anchor to="/market/profile" variant="neutral">
-					Edit profile
-				</Anchor>
+			{sellerProfile && (
+				<div className="flex gap-2 mb-2">
+					<Anchor to="/market/profile" variant="neutral">
+						Edit profile
+					</Anchor>
 
-				<Anchor to="/market/add" variant="neutral">
-					View catalog
-				</Anchor>
+					<Anchor to={`/p/${user?.username}/catalog`} variant="neutral">
+						View catalog
+					</Anchor>
 
-				<Anchor to="/market/add">Add Product</Anchor>
-			</div>
+					<Anchor to="/market/add">Add Product</Anchor>
+				</div>
+			)}
 
-			<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mb-2">
-				<div className="col-span-1">
-					<div className="p-2 rounded-lg bg-zinc-100 border">
-						<header className="font-bold">Have a product?</header>
+			{!sellerProfile && (
+				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mb-2">
+					<div className="col-span-1">
+						<div className="p-2 rounded-lg bg-zinc-100 dark:bg-neutral-800 border dark:border-neutral-700">
+							<header className="font-bold">Have a product?</header>
 
-						<div className="mb-2 text-secondary">
-							Do you have anything to sell? You're welcome to upload any number
-							of products (used or new) you have.
+							<div className="mb-2 text-secondary">
+								Do you have anything to sell? You're welcome to upload any
+								number of products (used or new) you have.
+							</div>
+							{user ? (
+								<Anchor to="/market/profile">Create seller profile</Anchor>
+							) : (
+								<Anchor to="/login">Log in first</Anchor>
+							)}
 						</div>
-						{user ? (
-							<Anchor to="/market/profile">Create seller profile</Anchor>
-						) : (
-							<Anchor to="/login">Log in first</Anchor>
-						)}
 					</div>
 				</div>
-			</div>
+			)}
 
-			<div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
-				<div className="col-span-1">
-					<Link to={`/market/${1}`}>
-						<div className="aspect-square bg-zinc-100 rounded-lg mb-1" />
-						<header className="font-medium leading-none">Blue bikini</header>
-						<div className="text-sm text-secondary">Clothing & Outfits</div>
-						<div className="bg-zinc-200 rounded-lg inline px-1 font-mono text-sm">
-							GHS 320
+			<div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+				{products.map((product) => {
+					// [ ] Empty state for products
+					const images = JSON.parse(product.images) as Media[];
+
+					return (
+						<div className="col-span-1" key={product.id}>
+							<Link to={`/market/${product.id}`}>
+								<div className="aspect-square bg-zinc-100 dark:bg-neutral-800 rounded-lg mb-1 overflow-hidden">
+									<img
+										className="w-full aspect-square object-cover"
+										src={images[0].thumbnail || ""}
+										alt={product.name}
+									/>
+								</div>
+
+								<header className="font-medium leading-none">
+									{product.name}
+								</header>
+
+								<div className="text-sm text-secondary">Clothing & Outfits</div>
+								<div className="bg-zinc-200 dark:bg-neutral-800 rounded-lg inline px-1 font-mono text-sm">
+									GHS {Number(product.price).toFixed(2)}
+								</div>
+							</Link>
 						</div>
-					</Link>
-				</div>
+					);
+				})}
 			</div>
 		</div>
 	);
