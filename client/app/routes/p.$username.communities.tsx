@@ -1,18 +1,23 @@
 import { LoaderFunctionArgs, MetaFunction, json } from "@remix-run/node";
 import { Link, useLoaderData, useParams } from "@remix-run/react";
 import { Avatar } from "~/components/avatar";
-import { checkAuth } from "~/lib/check-auth";
 import { ellipsize } from "~/lib/ellipsize";
 import { useGlobalCtx } from "~/lib/global-ctx";
 import { prisma } from "~/lib/prisma.server";
+import { notFound } from "~/lib/responses";
 import { values } from "~/lib/values.server";
 
-export const loader = async ({ request }: LoaderFunctionArgs) => {
-	const userId = await checkAuth(request);
-	const user = await prisma.user.findUnique({ where: { id: userId } });
+export const loader = async ({ request, params }: LoaderFunctionArgs) => {
+	const user = await prisma.user.findFirst({
+		where: { username: params.username },
+	});
+
+	if (!user) {
+		throw notFound();
+	}
 
 	const memberships = await prisma.communityMember.findMany({
-		where: { userId },
+		where: { userId: user.id },
 		include: { community: true },
 	});
 
