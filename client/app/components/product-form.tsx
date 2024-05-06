@@ -140,7 +140,7 @@ function ProductForm({ product }: Props) {
 			<div className="grid grid-cols-5 gap-2 my-2">
 				{existingImages.map((img, i) => {
 					return (
-						<div className="col-span-1" key={img.id}>
+						<div className="col-span-1" key={img.url}>
 							<div className="relative">
 								<img
 									src={img.thumbnail as string}

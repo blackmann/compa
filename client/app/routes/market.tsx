@@ -1,8 +1,9 @@
-import { Media, User } from "@prisma/client";
+import { User } from "@prisma/client";
 import { LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
-import { Link, useLoaderData } from "@remix-run/react";
+import { useLoaderData } from "@remix-run/react";
 import { Anchor } from "~/components/anchor";
 import { Input } from "~/components/input";
+import { ProductItem } from "~/components/product-item";
 import { Select } from "~/components/select";
 import { checkAuth } from "~/lib/check-auth";
 import { useGlobalCtx } from "~/lib/global-ctx";
@@ -25,6 +26,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
 	const products = await prisma.product.findMany({
 		where: { status: "available" },
+		include: { category: true },
 		orderBy: { createdAt: "desc" },
 	});
 
@@ -103,28 +105,10 @@ export default function Market() {
 			<div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
 				{products.map((product) => {
 					// [ ] Empty state for products
-					const images = JSON.parse(product.images) as Media[];
 
 					return (
 						<div className="col-span-1" key={product.id}>
-							<Link to={`/market/${product.id}`}>
-								<div className="aspect-square bg-zinc-100 dark:bg-neutral-800 rounded-lg mb-1 overflow-hidden">
-									<img
-										className="w-full aspect-square object-cover"
-										src={images[0].thumbnail || ""}
-										alt={product.name}
-									/>
-								</div>
-
-								<header className="font-medium leading-none">
-									{product.name}
-								</header>
-
-								<div className="text-sm text-secondary">Clothing & Outfits</div>
-								<div className="bg-zinc-200 dark:bg-neutral-800 rounded-lg inline px-1 font-mono text-sm">
-									GHS {Number(product.price).toFixed(2)}
-								</div>
-							</Link>
+							<ProductItem product={product} />
 						</div>
 					);
 				})}
