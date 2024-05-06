@@ -42,13 +42,15 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 };
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
-	// [ ] Add og image
+	const images = JSON.parse(data?.product.images || "[]") as Media[];
+
 	return [
 		{ title: `${data?.product.name} | ${data?.school.shortName} ✽ compa` },
 		{
 			name: "description",
 			content: data?.product.description,
 		},
+		{ name: "og:image", content: images[0]?.url },
 	];
 };
 
@@ -190,13 +192,16 @@ export default function ProductDetail() {
 						{snapchat && (
 							<li className="mt-2">
 								<a
-									className="flex gap-2 items-center font-medium"
+									className="flex gap-2 font-medium"
 									href={`https://snapchat.com/add/${snapchat}`}
 									target="_blank"
 									rel="noreferrer"
 								>
 									<div className="i-lucide-ghost text-secondary" />
-									<div className="leading-none">@{snapchat}</div>
+									<div>
+										<div className="leading-none">{snapchat}</div>
+										<div className="text-sm text-secondary">Snapchat</div>
+									</div>
 								</a>
 							</li>
 						)}
