@@ -53,7 +53,9 @@ export default function AddEvent() {
 	function handleFileSelect(e: React.ChangeEvent<HTMLInputElement>) {
 		const files = e.target.files;
 		if (files) {
-			setValue("poster", files[0]);
+			const posterFile = files[0]
+			// [ ] Limit file size or compress/resize image
+			setValue("poster", posterFile);
 		}
 	}
 

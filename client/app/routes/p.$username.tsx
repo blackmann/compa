@@ -1,3 +1,4 @@
+import { SellerProfile } from "@prisma/client";
 import {
 	ActionFunctionArgs,
 	LoaderFunctionArgs,
@@ -28,6 +29,7 @@ import { useGlobalCtx } from "~/lib/global-ctx";
 import { prisma } from "~/lib/prisma.server";
 import { renderBio } from "~/lib/render-bio.server";
 import { renderSummary } from "~/lib/render-summary.server";
+import { notFound } from "~/lib/responses";
 import { values } from "~/lib/values.server";
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
@@ -36,7 +38,7 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
 	});
 
 	if (!user) {
-		throw json({}, { status: 404 });
+		throw notFound();
 	}
 
 	user.bio = await renderBio(user.bio || "");
@@ -51,7 +53,15 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
 		post.content = await renderSummary(post.content);
 	}
 
-	return { user, meta: values.meta(), posts };
+	const communities = await prisma.communityMember.count({
+		where: { userId: user.id },
+	});
+
+	const seller = await prisma.sellerProfile.findFirst({
+		where: { userId: user.id },
+	});
+
+	return { user, meta: values.meta(), posts, communities, seller };
 };
 
 export const action = async ({ params, request }: ActionFunctionArgs) => {
@@ -94,12 +104,22 @@ const pageLinks = [
 		title: "Communities",
 		href: "communities",
 		icon: "i-lucide-users-round",
+		show: ({ communities }: { communities: number }) => communities > 0,
+	},
+	{
+		title: "Catalog",
+		href: "catalog",
+		icon: "i-lucide-shopping-cart",
+		show: ({ seller }: { seller?: Jsonify<SellerProfile> }) => Boolean(seller),
 	},
 ];
 
 export default function Profile() {
-	const { user, posts } = useLoaderData<typeof loader>();
+	const { user, posts, communities, seller } = useLoaderData<typeof loader>();
 	const outlet = useOutlet();
+
+	const props = { communities, seller };
+	const tabs = pageLinks.filter((link) => link.show?.(props) ?? true);
 
 	return (
 		<main className="container mx-auto min-h-[60vh] mt-2">
@@ -132,7 +152,7 @@ export default function Profile() {
 					<div>
 						<header>
 							<ul className="flex gap-2 my-2 ms-10">
-								{pageLinks.map((link) => (
+								{tabs.map((link) => (
 									<li key={link.href}>
 										<NavLink
 											end

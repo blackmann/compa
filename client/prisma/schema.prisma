@@ -68,6 +68,7 @@ model User {
   Notification           Notification[]
   Community              Community[]
   CommunityMember        CommunityMember[]
+  SellerProfile          SellerProfile[]
 }
 
 model AuthCredential {
@@ -233,4 +234,39 @@ model CommunityMember {
   createdAt   DateTime  @default(now())
 
   @@id([userId, communityId])
+}
+
+model SellerProfile {
+  id           Int       @id @default(autoincrement())
+  user         User      @relation(fields: [userId], references: [id])
+  userId       Int
+  phone        String
+  whatsapp     String?
+  instagram    String?
+  snapchat     String?
+  businessName String?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  Product      Product[]
+}
+
+model Category {
+  id      Int       @id @default(autoincrement())
+  title   String    @unique
+  Product Product[]
+}
+
+model Product {
+  id              Int           @id @default(autoincrement())
+  name            String
+  category        Category      @relation(fields: [categoryId], references: [id])
+  price           Decimal
+  status          String        @default("available") // hidden | deleted
+  description     String?
+  seller          SellerProfile @relation(fields: [sellerProfileId], references: [id])
+  images          String // JSON array of media
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  categoryId      Int
+  sellerProfileId Int
 }

@@ -5,6 +5,8 @@ async function uploadMedia(file: File): Promise<Omit<Media, "postId">> {
 
 	formData.append("file", file);
 
+	// [ ] We need to compress images
+
 	const res = await fetch("/media", {
 		method: "POST",
 		body: formData,
