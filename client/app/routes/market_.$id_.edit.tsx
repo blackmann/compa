@@ -9,10 +9,9 @@ import { ProductForm } from "~/components/product-form";
 import { checkAuth } from "~/lib/check-auth";
 import { prisma } from "~/lib/prisma.server";
 import {
-	badRequest,
 	forbidden,
 	methodNotAllowed,
-	notFound,
+	notFound
 } from "~/lib/responses";
 import { values } from "~/lib/values.server";
 
@@ -46,19 +45,10 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 
 	const data = await request.json();
 
-	const sellerProfile = await prisma.sellerProfile.findFirst({
-		where: { userId },
-	});
-
-	if (!sellerProfile) {
-		throw badRequest();
-	}
-
 	await prisma.product.update({
-		where: { id: Number(params.id), sellerProfileId: sellerProfile.id },
+		where: { id: Number(params.id), seller: { userId } },
 		data: {
 			name: data.name,
-			sellerProfileId: sellerProfile.id,
 			categoryId: data.category,
 			price: data.price,
 			images: data.images,

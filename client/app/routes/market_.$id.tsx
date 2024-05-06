@@ -1,12 +1,18 @@
 import { Media } from "@prisma/client";
-import { LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
-import { Link, useLoaderData } from "@remix-run/react";
+import {
+	ActionFunctionArgs,
+	LoaderFunctionArgs,
+	MetaFunction,
+	redirect,
+} from "@remix-run/node";
+import { Link, useFetcher, useLoaderData } from "@remix-run/react";
 import { Anchor } from "~/components/anchor";
 import { Button } from "~/components/button";
 import { Username } from "~/components/username";
+import { checkAuth } from "~/lib/check-auth";
 import { useGlobalCtx } from "~/lib/global-ctx";
 import { prisma } from "~/lib/prisma.server";
-import { notFound } from "~/lib/responses";
+import { methodNotAllowed, notFound } from "~/lib/responses";
 import { values } from "~/lib/values.server";
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
@@ -20,6 +26,19 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
 	}
 
 	return { school: values.meta(), product };
+};
+
+export const action = async ({ request, params }: ActionFunctionArgs) => {
+	if (request.method !== "DELETE") {
+		throw methodNotAllowed();
+	}
+
+	const userId = await checkAuth(request);
+	await prisma.product.delete({
+		where: { id: Number(params.id), seller: { userId } },
+	});
+
+	return redirect("/market");
 };
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
@@ -38,15 +57,33 @@ export default function ProductDetail() {
 	const { user } = useGlobalCtx();
 
 	const { instagram, phone, snapchat, whatsapp } = product.seller;
+	const deleteFetcher = useFetcher();
 
 	const images = JSON.parse(product.images) as Media[];
+
+	async function handleDelete() {
+		const yes = confirm(
+			"Are you sure you want to delete this item? This cannot be undone.",
+		);
+
+		if (!yes) {
+			return;
+		}
+
+		deleteFetcher.submit("", { method: "DELETE" });
+	}
 
 	return (
 		<div className="container">
 			<div className="h-[30rem] bg-zinc-100 dark:bg-neutral-800 rounded-lg overflow-y-auto">
 				<div className="flex h-full gap-2">
 					{images.map((img) => (
-						<img className="h-full" src={img.url} alt={product.name} />
+						<img
+							className="h-full"
+							src={img.url}
+							alt={product.name}
+							key={img.thumbnail}
+						/>
 					))}
 				</div>
 			</div>
@@ -76,7 +113,16 @@ export default function ProductDetail() {
 								<Anchor variant="neutral" to={`/market/${product.id}/edit`}>
 									Edit product
 								</Anchor>
-								<Button variant="neutral">Delete</Button>
+
+								<Button
+									variant="neutral"
+									onClick={handleDelete}
+									disabled={deleteFetcher.state === "submitting"}
+								>
+									{deleteFetcher.state === "submitting"
+										? "Deleting…"
+										: "Delete"}
+								</Button>
 							</div>
 							<div className="text-sm ms-2 text-secondary">
 								Only you can see this
