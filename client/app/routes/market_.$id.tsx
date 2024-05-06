@@ -28,7 +28,7 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
 		{ title: `${data?.product.name} | ${data?.school.shortName} ✽ compa` },
 		{
 			name: "description",
-			content: "Looking for something to buy or sell? This is the place.",
+			content: data?.product.description,
 		},
 	];
 };

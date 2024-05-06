@@ -1,6 +1,8 @@
+import { Media, Product } from "@prisma/client";
 import { useFetcher, useLoaderData } from "@remix-run/react";
 import React from "react";
 import { FieldValues, useForm } from "react-hook-form";
+import { Jsonify } from "type-fest";
 import { uploadMedia } from "~/lib/upload-media";
 import { loader } from "~/routes/market_.add";
 import { Button } from "./button";
@@ -9,25 +11,51 @@ import { Input } from "./input";
 import { Select } from "./select";
 import { Textarea } from "./textarea";
 
+interface Props {
+	product?: Product | Jsonify<Product>;
+}
+
 const MAX_FILES = 5;
 
-function ProductForm() {
+function ProductForm({ product }: Props) {
 	const { categories } = useLoaderData<typeof loader>();
 
-	const { register, handleSubmit } = useForm();
+	const { register, handleSubmit } = useForm({
+		defaultValues: {
+			name: product?.name || "",
+			description: product?.name || "",
+			price: product?.price || "",
+			category: product?.categoryId || 1,
+		},
+	});
+
 	const [imagesToUpload, setImagesToUpload] = React.useState<File[]>([]);
+	const [existingImages, setExistingImages] = React.useState<
+		Omit<Media, "postId">[]
+	>(() => {
+		return JSON.parse(product?.images || "[]");
+	});
+
 	const [uploading, setUploading] = React.useState(false);
 
 	const fetcher = useFetcher();
 
+	const editMode = Boolean(product);
+
 	async function save(data: FieldValues) {
-		const newMedia = [];
+		if (existingImages.length + imagesToUpload.length === 0) {
+			alert("You need to add at least 1 image");
+			return;
+		}
+
+		const media = [...existingImages];
+
 		if (imagesToUpload.length) {
 			setUploading(true);
 
 			try {
 				for (const image of imagesToUpload) {
-					newMedia.push(await uploadMedia(image));
+					media.push(await uploadMedia(image));
 				}
 			} catch (err) {
 				// [ ] Observe
@@ -37,10 +65,10 @@ function ProductForm() {
 			}
 		}
 
-		data.images = JSON.stringify(newMedia);
+		data.images = JSON.stringify(media);
 
 		fetcher.submit(JSON.stringify(data), {
-			method: "POST",
+			method: editMode ? "PATCH" : "POST",
 			encType: "application/json",
 		});
 	}
@@ -52,7 +80,7 @@ function ProductForm() {
 		}
 
 		// [ ]: Include uploaded images count
-		const max = MAX_FILES - imagesToUpload.length;
+		const max = MAX_FILES - (imagesToUpload.length + existingImages.length);
 		const top = Array.from(files).slice(0, max);
 
 		if (top.length === 0) {
@@ -65,8 +93,8 @@ function ProductForm() {
 		setImagesToUpload((prev) => [...prev, ...top]);
 	}
 
-	// [ ] Add uploaded images
-	const canUploadImage = imagesToUpload.length < MAX_FILES;
+	const canUploadImage =
+		imagesToUpload.length + existingImages.length < MAX_FILES;
 	const saving = fetcher.state === "submitting" || uploading;
 
 	return (
@@ -110,6 +138,32 @@ function ProductForm() {
 			</label>
 
 			<div className="grid grid-cols-5 gap-2 my-2">
+				{existingImages.map((img, i) => {
+					return (
+						<div className="col-span-1" key={img.id}>
+							<div className="relative">
+								<img
+									src={img.thumbnail as string}
+									alt={`Existing ${i + 1}`}
+									className="w-full aspect-square object-cover rounded-lg"
+								/>
+
+								<button
+									className="absolute right-0 bottom-0 p-1 bg-red-500 text-white rounded-lg rounded-lb-0 rounded-rt-0"
+									type="button"
+									onClick={() => {
+										setExistingImages((prev) =>
+											prev.filter((it) => it !== img),
+										);
+									}}
+								>
+									<div className="i-lucide-trash-2" />
+								</button>
+							</div>
+						</div>
+					);
+				})}
+
 				{imagesToUpload.map((img, i) => {
 					return (
 						<div className="col-span-1" key={img.name}>
@@ -152,7 +206,9 @@ function ProductForm() {
 			</div>
 
 			<footer className="mt-4">
-				<Button disabled={saving}>{saving ? "Saving…" : "Add product"}</Button>
+				<Button disabled={saving}>
+					{saving ? "Saving…" : editMode ? "Update product" : "Add product"}
+				</Button>
 			</footer>
 		</form>
 	);
