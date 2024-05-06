@@ -7,7 +7,7 @@
 	"scripts": {
 		"build": "remix build",
 		"lint": "eslint --ignore-path .gitignore --cache --cache-location ./node_modules/.cache/eslint .",
-		"start": "yarn seed && prisma migrate deploy && prisma generate && remix-serve ./build/index.js",
+		"start": "prisma migrate deploy && prisma generate && yarn seed && remix-serve ./build/index.js",
 		"typecheck": "tsc",
 		"dev": "remix dev --manual",
 		"seed": "prisma db seed"
