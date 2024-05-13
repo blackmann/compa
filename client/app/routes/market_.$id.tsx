@@ -77,7 +77,7 @@ export default function ProductDetail() {
 
 	return (
 		<div className="container">
-			<div className="h-[30rem] bg-zinc-100 dark:bg-neutral-800 rounded-lg overflow-y-auto">
+			<div className="h-[30rem] bg-zinc-100 dark:bg-neutral-800 rounded-lg overflow-x-auto">
 				<div className="flex h-full gap-2">
 					{images.map((img) => (
 						<img
