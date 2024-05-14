@@ -1,9 +1,9 @@
 import { Link, NavLink, useLocation } from "@remix-run/react";
 import clsx from "clsx";
+import React from "react";
 import { useGlobalCtx } from "~/lib/global-ctx";
 import { Avatar } from "./avatar";
 import { Username } from "./username";
-import React from "react";
 
 const links = [
 	{
@@ -89,7 +89,7 @@ function Navbar() {
 									}
 								>
 									<Avatar
-										className="border-2 border-transparent group-[.is-active]:border-blue-600 group-[.is-active]:dark:border-amber-500 transition-[border-color] duration-200"
+										className="rounded-full border-2 border-transparent group-[.is-active]:border-blue-600 group-[.is-active]:dark:border-amber-500 transition-[border-color] duration-200"
 										size={22}
 										name={user.username}
 									/>{" "}
