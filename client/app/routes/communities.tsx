@@ -70,7 +70,8 @@ export default function Communities() {
 									<Avatar
 										name={community.handle}
 										variant="marble"
-										className="!rounded-lg"
+										className="!rounded-lg overflow-hidden"
+										square
 									/>
 
 									<div className="flex-1">
