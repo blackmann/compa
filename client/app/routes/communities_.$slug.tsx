@@ -8,6 +8,7 @@ import { PostItem, PostItemProps } from "~/components/post-item";
 import { checkAuth } from "~/lib/check-auth";
 import { checkMod } from "~/lib/check-mod";
 import { prisma } from "~/lib/prisma.server";
+import { renderSummary } from "~/lib/render-summary.server";
 import { values } from "~/lib/values.server";
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
@@ -50,6 +51,10 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 		include: { user: true, media: true, community: false },
 		orderBy: { createdAt: "desc" },
 	});
+
+	for (const post of posts) {
+		post.content = await renderSummary(post.content);
+	}
 
 	return json({ community, members, membership, posts, school: values.meta() });
 };
