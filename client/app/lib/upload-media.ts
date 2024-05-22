@@ -1,4 +1,4 @@
-import { Media } from "@prisma/client";
+import type { Media } from "@prisma/client";
 
 async function uploadMedia(file: File): Promise<Omit<Media, "postId">> {
 	const formData = new FormData();

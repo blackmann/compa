@@ -1,8 +1,8 @@
 import {
-	ActionFunctionArgs,
-	MetaFunction,
 	json,
 	redirect,
+	type ActionFunctionArgs,
+	type MetaFunction,
 } from "@remix-run/node";
 import { ProductForm } from "~/components/product-form";
 import { checkAuth } from "~/lib/check-auth";

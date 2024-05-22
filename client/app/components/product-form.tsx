@@ -1,10 +1,10 @@
-import { Media, Product } from "@prisma/client";
+import type { Media, Product } from "@prisma/client";
 import { useFetcher, useLoaderData } from "@remix-run/react";
 import React from "react";
-import { FieldValues, useForm } from "react-hook-form";
-import { Jsonify } from "type-fest";
+import { useForm, type FieldValues } from "react-hook-form";
+import type { Jsonify } from "type-fest";
 import { uploadMedia } from "~/lib/upload-media";
-import { loader } from "~/routes/market_.add";
+import type { loader } from "~/routes/market_.add";
 import { Button } from "./button";
 import { FileInput } from "./file-input";
 import { Input } from "./input";

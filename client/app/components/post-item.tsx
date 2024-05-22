@@ -1,8 +1,8 @@
-import { Prisma } from "@prisma/client";
+import type { Prisma } from "@prisma/client";
 import { Link } from "@remix-run/react";
 import clsx from "clsx";
 import React from "react";
-import { Jsonify } from "type-fest";
+import type { Jsonify } from "type-fest";
 import { PostTime } from "~/components/post-time";
 import { useGlobalCtx } from "~/lib/global-ctx";
 import { useMounted } from "~/lib/use-mounted";
@@ -140,7 +140,6 @@ function PostContent({ full, post, active, level, limit }: PostContentProps) {
 									{limit ? (
 										<MediaItem noPlay={limit} media={media} />
 									) : (
-										// biome-ignore lint/a11y/useValidAnchor: <explanation>
 										<a
 											className="block"
 											href={media.url}
