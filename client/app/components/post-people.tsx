@@ -1,7 +1,7 @@
 import { Prisma } from "@prisma/client";
+import { Jsonify } from "type-fest";
 import { usePostPeople } from "~/lib/use-post-people";
 import { Avatar } from "./avatar";
-import { Jsonify } from "type-fest";
 
 type Post = Prisma.PostGetPayload<{ include: { user: true } }>;
 

@@ -5,17 +5,17 @@
  */
 
 import { RemixBrowser } from "@remix-run/react";
-import { startTransition, StrictMode } from "react";
-import { hydrateRoot } from "react-dom/client";
-import posthog from "posthog-js";
 import AudioRecorder from "audio-recorder-polyfill";
 import mpegEncoder from "audio-recorder-polyfill/mpeg-encoder";
+import posthog from "posthog-js";
+import { StrictMode, startTransition } from "react";
+import { hydrateRoot } from "react-dom/client";
 
 AudioRecorder.encoder = mpegEncoder;
 AudioRecorder.prototype.mimeType = "audio/mpeg";
 window.MediaRecorder = AudioRecorder;
 
-if (process.env.NODE_ENV === "production") {
+if (import.meta.env.NODE_ENV === "production") {
 	posthog.init("phc_qmxF7NTz6XUnYUDoMpkTign6mujS8F8VqR75wb0Bsl7", {
 		api_host: "https://eu.posthog.com",
 	});

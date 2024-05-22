@@ -1,7 +1,7 @@
 import { type EmailVerificationRequest } from "@prisma/client";
+import { send } from "./mail.server";
 import { prisma } from "./prisma.server";
 import { randomStr } from "./random-str";
-import { send } from "./mail.server";
 
 async function sendEmailVerification(email: string) {
 	const existingVerification = await prisma.emailVerificationRequest.findFirst({

@@ -1,12 +1,12 @@
+import { Link } from "@remix-run/react";
+import clsx from "clsx";
 import React from "react";
-import { Modal } from "./modal";
-import { Button } from "./button";
-import { Input } from "./input";
+import type { UseData } from "~/lib/tag-use-data";
 import { useTagCourses } from "~/lib/use-tag-courses";
 import { useTagProgrammes } from "~/lib/use-tag-programmes";
-import { Link } from "@remix-run/react";
-import { UseData } from "~/lib/tag-use-data";
-import clsx from "clsx";
+import { Button } from "./button";
+import { Input } from "./input";
+import { Modal } from "./modal";
 
 // TODO: Add custom
 type SelectionStage = "type" | "course" | "programme" | "level";
@@ -86,7 +86,7 @@ function TagInput({
 			<button
 				type="button"
 				className={clsx(
-					"size-8 bg-zinc-200 dark:bg-neutral-800 inline-flex justify-center items-center transition-[width] duration-200 px-2 gap-2",
+					"size-8 !bg-zinc-200 !dark:bg-neutral-800 inline-flex justify-center items-center transition-[width] duration-200 px-2 gap-2",
 					className,
 				)}
 				title="Add tag"
@@ -334,6 +334,7 @@ function stringifySelections(selections: Selections) {
 	return JSON.stringify(normalized);
 }
 
-export { TagInput, DEFAULT_SELECTIONS, stringifySelections };
+export { DEFAULT_SELECTIONS, TagInput, stringifySelections };
 
-export type { SelectionId, Selections };
+	export type { SelectionId, Selections };
+

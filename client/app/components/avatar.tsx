@@ -1,4 +1,4 @@
-import BoringAvatar, { AvatarProps } from "boring-avatars";
+import BoringAvatar, { type AvatarProps } from "boring-avatars";
 import clsx from "clsx";
 
 interface Props {
@@ -11,7 +11,10 @@ interface Props {
 
 const colors = ["#ffe12e", "#4d8c3a", "#0060ff", "#ff7d10", "#4e412b"];
 
-const BA = BoringAvatar.default;
+const BA =
+	typeof BoringAvatar.default !== "undefined"
+		? BoringAvatar.default
+		: BoringAvatar;
 
 function Avatar({
 	className,

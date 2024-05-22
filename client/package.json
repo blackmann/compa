@@ -5,11 +5,11 @@
 	"type": "module",
 	"version": "0.0.0",
 	"scripts": {
-		"build": "remix build",
+		"build": "remix vite:build",
+		"dev": "remix vite:dev",
 		"lint": "eslint --ignore-path .gitignore --cache --cache-location ./node_modules/.cache/eslint .",
 		"start": "prisma migrate deploy && prisma generate && npm run seed && remix-serve ./build/index.js",
 		"typecheck": "tsc",
-		"dev": "remix dev --manual",
 		"seed": "prisma db seed"
 	},
 	"prisma": {
@@ -21,14 +21,14 @@
 		"@prisma/client": "^5.8.1",
 		"@radix-ui/react-dropdown-menu": "^2.0.6",
 		"@remix-run/css-bundle": "^2.5.1",
-		"@remix-run/node": "^2.5.1",
-		"@remix-run/react": "^2.5.1",
-		"@remix-run/serve": "^2.5.1",
+		"@remix-run/node": "^2.9.2",
+		"@remix-run/react": "^2.9.2",
+		"@remix-run/serve": "^2.9.2",
 		"@shikijs/rehype": "^1.1.1",
 		"audio-recorder-polyfill": "^0.4.1",
 		"aws-sdk": "^2.1550.0",
 		"bcrypt": "^5.1.1",
-		"boring-avatars": "^1.10.1",
+		"boring-avatars": "^1.10.2",
 		"clsx": "^2.1.0",
 		"dayjs": "^1.11.10",
 		"dotenv": "^16.3.1",
@@ -57,7 +57,7 @@
 		"remark-rehype": "^11.1.0",
 		"remark-smartypants": "^2.1.0",
 		"resend": "^3.1.0",
-		"sharp": "^0.33.3",
+		"sharp": "^0.33.4",
 		"strip-markdown": "^6.0.0",
 		"unified": "^11.0.4"
 	},
@@ -65,7 +65,7 @@
 		"@iconify-json/lucide": "^1.1.186",
 		"@iconify-json/svg-spinners": "^1.1.2",
 		"@julr/unocss-preset-forms": "^0.1.0",
-		"@remix-run/dev": "^2.5.1",
+		"@remix-run/dev": "^2.9.2",
 		"@types/bcrypt": "^5.0.2",
 		"@types/jsonwebtoken": "^9.0.5",
 		"@types/multer": "^1.4.11",
@@ -73,9 +73,9 @@
 		"@types/react": "^18.2.20",
 		"@types/react-dom": "^18.2.7",
 		"@typescript-eslint/eslint-plugin": "^6.7.4",
-		"@unocss/postcss": "^0.58.3",
-		"@unocss/preset-icons": "^0.58.3",
-		"@unocss/reset": "^0.58.3",
+		"@unocss/postcss": "^0.60.3",
+		"@unocss/preset-icons": "^0.60.3",
+		"@unocss/reset": "^0.60.3",
 		"eslint": "^8.38.0",
 		"eslint-config-prettier": "^9.0.0",
 		"eslint-import-resolver-typescript": "^3.6.1",
@@ -86,7 +86,8 @@
 		"glob": "^10.3.10",
 		"npm-run-all": "^4.1.5",
 		"typescript": "^5.1.6",
-		"unocss": "^0.58.3"
+		"unocss": "^0.60.3",
+		"vite": "^5.2.11"
 	},
 	"engines": {
 		"node": ">=18.0.0"

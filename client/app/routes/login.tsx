@@ -71,13 +71,12 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 	}
 
 	const token = signUser(user);
-	const previousAuth = await authCookie.parse(request.headers.get("Cookie"));
 
 	return json(
 		{ type: "success", message: "Login successful" },
 		{
 			headers: {
-				"Set-Cookie": await authCookie.serialize({ ...previousAuth, token }),
+				"Set-Cookie": await authCookie.serialize({ token }),
 				Location: "/",
 			},
 			status: 302,

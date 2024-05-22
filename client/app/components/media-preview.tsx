@@ -1,13 +1,13 @@
 import { Media, Prisma } from "@prisma/client";
-import { Modal } from "./modal";
-import { Jsonify } from "type-fest";
 import clsx from "clsx";
-import { Thumbnail } from "./media-item";
 import React from "react";
-import { Avatar } from "./avatar";
-import { Username } from "./username";
-import { postTime } from "./post-time";
+import { Jsonify } from "type-fest";
 import { ellipsizeFilename } from "~/lib/files";
+import { Avatar } from "./avatar";
+import { Thumbnail } from "./media-item";
+import { Modal } from "./modal";
+import { postTime } from "./post-time";
+import { Username } from "./username";
 
 type Post = Prisma.PostGetPayload<{ include: { user: true; media: true } }>;
 

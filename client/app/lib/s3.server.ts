@@ -1,9 +1,9 @@
 import { S3Client } from "@aws-sdk/client-s3";
 import { Upload } from "@aws-sdk/lib-storage";
 import aws from "aws-sdk";
-import { Readable } from "stream";
+import { Readable } from "node:stream";
 
-const endpoint = new aws.Endpoint(process.env.AWS_UPLOAD_ENDPOINT);
+const endpoint = new aws.Endpoint(process.env.AWS_UPLOAD_ENDPOINT as string);
 
 // @ts-ignore
 const s3 = new S3Client({

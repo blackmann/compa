@@ -1,9 +1,9 @@
-import { Post } from "@prisma/client";
+import type { Post } from "@prisma/client";
 import clsx from "clsx";
 import React from "react";
-import { FieldValues, useForm } from "react-hook-form";
+import { useForm, type FieldValues } from "react-hook-form";
 import { useFetcher } from "react-router-dom";
-import { Jsonify } from "type-fest";
+import type { Jsonify } from "type-fest";
 import { useGlobalCtx } from "~/lib/global-ctx";
 import { uploadMedia } from "~/lib/upload-media";
 import { AudioRecorder } from "./audio-recorder";
@@ -13,10 +13,10 @@ import { FileInput } from "./file-input";
 import { FileSelectItem } from "./file-select-item";
 import {
 	DEFAULT_SELECTIONS,
-	SelectionId,
-	Selections,
 	TagInput,
 	stringifySelections,
+	type SelectionId,
+	type Selections,
 } from "./tag-input";
 import { TagSelect } from "./tag-select";
 import { Textarea } from "./textarea";
@@ -248,7 +248,7 @@ function PostInput({ disabled, level = 0, parent, dataExtra }: Props) {
 									{!parent && <TagInput value={tags} onDone={setTags} />}
 
 									<button
-										className="size-8 bg-zinc-200 dark:bg-neutral-800 inline-flex justify-center items-center"
+										className="size-8 !bg-zinc-200 !dark:bg-neutral-800 inline-flex justify-center items-center"
 										type="button"
 										title={isPreviewing ? "Edit mode" : "Preview mode"}
 										onClick={togglePreview}

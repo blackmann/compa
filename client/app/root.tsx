@@ -1,12 +1,13 @@
+import "virtual:uno.css";
+
 import "@unocss/reset/tailwind.css";
 import "./style.css";
 
-import { User } from "@prisma/client";
+import type { User } from "@prisma/client";
 import { cssBundleHref } from "@remix-run/css-bundle";
 import type { LinksFunction, LoaderFunctionArgs } from "@remix-run/node";
 import {
 	Links,
-	LiveReload,
 	Meta,
 	Outlet,
 	Scripts,
@@ -61,7 +62,7 @@ export default function App() {
 	const { user, unreadNotifications } = useLoaderData<typeof loader>();
 	const scheme = useColorScheme();
 	const revalidator = useRevalidator();
-	const location = useLocation()
+	const location = useLocation();
 
 	const hideNav = authRoutes.includes(location.pathname);
 
@@ -140,7 +141,6 @@ export default function App() {
 
 				<ScrollRestoration />
 				<Scripts />
-				<LiveReload />
 				<Footer />
 				<BottomNav />
 			</body>

@@ -1,8 +1,8 @@
 import {
-	ActionFunctionArgs,
-	LoaderFunctionArgs,
-	MetaFunction,
 	json,
+	type ActionFunctionArgs,
+	type LoaderFunctionArgs,
+	type MetaFunction,
 } from "@remix-run/node";
 import { Link, Outlet, useLoaderData, useOutlet } from "@remix-run/react";
 import clsx from "clsx";
@@ -116,12 +116,9 @@ export default function TimeTable() {
 		<div className="container mx-auto">
 			<div className="grid grid-cols-1 lg:grid-cols-4 xl:grid-cols-6 gap-4 min-h-[60vh]">
 				<div
-					className={clsx(
-						"col-span-1 lg:col-span-2 xl:col-span-3",
-						{
-							"max-lg:hidden": outlet,
-						},
-					)}
+					className={clsx("col-span-1 lg:col-span-2 xl:col-span-3", {
+						"max-lg:hidden": outlet,
+					})}
 				>
 					<TimetableFilter programmes={programmes} />
 

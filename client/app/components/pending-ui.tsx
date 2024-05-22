@@ -12,7 +12,7 @@ function PendingUI() {
 		const loader = divRef.current;
 		if (["loading", "submitting"].includes(navigation.state)) {
 			intervalRef.current = setInterval(() => {
-				const previous = parseInt(loader.style.width);
+				const previous = Number.parseInt(loader.style.width);
 
 				if (previous >= 80) {
 					clearInterval(intervalRef.current);

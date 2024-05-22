@@ -1,8 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap');
 
-@unocss;
-
 :root {
   @apply bg-zinc-50 dark:bg-neutral-900 dark:text-white;
   font-family: 'Inter', system-ui, sans-serif;

@@ -81,7 +81,7 @@ export default function ProductDetail() {
 				<div className="flex h-full gap-2">
 					{images.map((img) => (
 						<img
-							className="h-full"
+							className="h-full w-auto"
 							src={img.url}
 							alt={product.name}
 							key={img.thumbnail}

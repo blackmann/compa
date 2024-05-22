@@ -1,12 +1,12 @@
-import { ActionFunctionArgs, json } from "@remix-run/node";
+import { json, type ActionFunctionArgs } from "@remix-run/node";
 import { useFetcher } from "@remix-run/react";
-import { FieldValues, useForm } from "react-hook-form";
+import dayjs from "dayjs";
+import { useForm, type FieldValues } from "react-hook-form";
 import { Button } from "~/components/button";
 import { Input } from "~/components/input";
 import { send } from "~/lib/mail.server";
 import { prisma } from "~/lib/prisma.server";
 import { randomStr } from "~/lib/random-str";
-import dayjs from "dayjs";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
 	if (request.method !== "POST") {

@@ -6,11 +6,11 @@ import {
 	useLocation,
 	useRouteError,
 } from "@remix-run/react";
-import { Footer } from "./footer";
+import posthog from "posthog-js";
+import React from "react";
 import { Anchor } from "./anchor";
 import { CommonHead } from "./common-head";
-import React from "react";
-import posthog from "posthog-js";
+import { Footer } from "./footer";
 import { Navbar } from "./navbar";
 import { SymOutline } from "./sym-outline";
 
