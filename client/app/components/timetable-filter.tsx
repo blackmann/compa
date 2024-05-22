@@ -1,6 +1,6 @@
 import { useNavigate, useParams } from "@remix-run/react";
 import React from "react";
-import { FieldValues, useForm, useFormContext } from "react-hook-form";
+import { useForm, useFormContext, type FieldValues } from "react-hook-form";
 import { useAsyncFetcher } from "~/lib/use-async-fetcher";
 import { Input } from "./input";
 import { LargeSelect } from "./large-select";
@@ -8,9 +8,10 @@ import { Select } from "./select";
 
 interface Props {
 	programmes: { name: string; slug: string }[];
+	currentSem?: number
 }
 
-function TimetableFilter({ programmes }: Props) {
+function TimetableFilter({ currentSem, programmes }: Props) {
 	const params = useParams();
 
 	const [programmeSelectOpen, setProgrammeSelectOpen] = React.useState(false);
@@ -19,7 +20,7 @@ function TimetableFilter({ programmes }: Props) {
 		defaultValues: {
 			programme: params.programme,
 			level: params.level,
-			sem: params.sem,
+			sem: params.sem ?? currentSem ?? "1",
 			year: params.year,
 		},
 	});

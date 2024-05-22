@@ -1,9 +1,9 @@
-import { LoaderFunctionArgs } from "@remix-run/node";
-import { prisma } from "~/lib/prisma.server";
-import ics from "ics";
+import type { LoaderFunctionArgs } from "@remix-run/node";
 import dayjs from "dayjs";
+import ics from "ics";
+import crypto from "node:crypto";
+import { prisma } from "~/lib/prisma.server";
 import { values } from "~/lib/values.server";
-import crypto from "crypto";
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
 	const { year, programme, level, sem } = params;
@@ -20,7 +20,7 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
 		},
 	});
 
-	const semesterEnd = (values.get("semester.end") as string).replace(/-/g, "");
+	const semesterEnd = (values.get("examination.start") as string).replace(/-/g, "");
 	const schoolId = values.get("id");
 
 	const events: ics.EventAttributes[] = schedule.map((lesson) => {

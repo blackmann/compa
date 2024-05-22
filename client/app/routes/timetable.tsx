@@ -20,9 +20,10 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 		orderBy: { name: "asc" },
 	});
 
-	const school = values.get("shortName");
+	const school = values.get("shortName") as string;
+	const schoolSem = values.get("semester.number") as number;
 
-	return { programmes, school };
+	return { programmes, school, schoolSem };
 };
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
@@ -30,13 +31,13 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
 };
 
 export default function Timetable() {
-	const { programmes } = useLoaderData<typeof loader>();
+	const { programmes, schoolSem } = useLoaderData<typeof loader>();
 
 	return (
 		<div className="container mx-auto min-h-[70vh] pt-4">
 			<div className="grid grid-cols-1 lg:grid-cols-5">
 				<div className="col-span-1 lg:col-span-3">
-					<TimetableFilter programmes={programmes} />
+					<TimetableFilter currentSem={schoolSem} programmes={programmes} />
 				</div>
 			</div>
 		</div>

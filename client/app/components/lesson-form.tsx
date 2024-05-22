@@ -1,11 +1,11 @@
 import { useLoaderData, useParams, useSubmit } from "@remix-run/react";
 import dayjs from "dayjs";
 import React from "react";
-import { FieldValues, useForm, useFormContext } from "react-hook-form";
+import { useForm, useFormContext, type FieldValues } from "react-hook-form";
 import { days } from "~/lib/days";
 import { isBefore } from "~/lib/time";
 import { useAsyncFetcher } from "~/lib/use-async-fetcher";
-import { AddLessonLoader } from "~/routes/timetable_.$year.$programme.$level.$sem.$day.add";
+import type { AddLessonLoader } from "~/routes/timetable_.$year.$programme.$level.$sem.$day.add";
 import { Button } from "./button";
 import { Input } from "./input";
 import { LargeSelect } from "./large-select";
@@ -120,8 +120,8 @@ function LessonForm({
 			</div>
 
 			<div className="text-secondary flex gap-2 mt-2">
-				<div className="i-lucide-corner-left-up" /> You're adding a lesson
-				for the above
+				<div className="i-lucide-corner-left-up" /> You're adding a lesson for
+				the above
 			</div>
 
 			<label className="block mt-4">
@@ -220,8 +220,7 @@ function LessonForm({
 
 			<div className="mt-2">
 				<Button>
-					<div className="i-lucide-corner-down-left opacity-50" /> Save
-					lesson
+					<div className="i-lucide-corner-down-left opacity-50" /> Save lesson
 				</Button>
 			</div>
 		</form>

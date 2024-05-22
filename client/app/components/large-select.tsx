@@ -1,9 +1,9 @@
-import React from "react";
-import { Modal } from "./modal";
-import { FieldValues, FormProvider, set, useForm } from "react-hook-form";
-import { RequestState } from "~/lib/request-state";
 import clsx from "clsx";
+import React from "react";
+import { FormProvider, useForm, type FieldValues } from "react-hook-form";
+import type { RequestState } from "~/lib/request-state";
 import { Input } from "./input";
+import { Modal } from "./modal";
 
 interface Props extends React.PropsWithChildren {
 	label: string;
@@ -51,7 +51,7 @@ function LargeSelect({
 	return (
 		<>
 			<button
-				className="bg-zinc-200 dark:bg-neutral-800 px-2 py-1 rounded-lg font-medium flex-1 text-start flex items-center w-full"
+				className="!bg-zinc-200 !dark:bg-neutral-800 px-2 py-1 rounded-lg font-medium flex-1 text-start flex items-center w-full"
 				type="button"
 				onClick={() => onToggle(true)}
 			>
@@ -155,7 +155,7 @@ function SelectState({
 
 			<footer className="border-t border-zinc-200 dark:border-neutral-800 flex justify-between p-2">
 				<button
-					className="inline-flex gap-2 items-center bg-zinc-200 dark:bg-neutral-800 px-2 rounded-md font-medium"
+					className="inline-flex gap-2 items-center !bg-zinc-200 !dark:bg-neutral-800 px-2 rounded-md font-medium"
 					onClick={onShowAdd}
 					type="button"
 				>
@@ -218,7 +218,7 @@ function FormState({ form, label, onAdd, onCancel }: FormStateProps) {
 
 					<button
 						type="submit"
-						className="inline-flex gap-2 items-center bg-zinc-200 dark:bg-neutral-800 px-2 rounded-md font-medium"
+						className="inline-flex gap-2 items-center !bg-zinc-200 !dark:bg-neutral-800 px-2 rounded-md font-medium"
 					>
 						<div
 							className={clsx("text-secondary", {
