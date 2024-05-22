@@ -1,9 +1,9 @@
-import { Media } from "@prisma/client";
+import type { Media } from "@prisma/client";
 import {
-	ActionFunctionArgs,
-	LoaderFunctionArgs,
-	MetaFunction,
 	redirect,
+	type ActionFunctionArgs,
+	type LoaderFunctionArgs,
+	type MetaFunction,
 } from "@remix-run/node";
 import { Link, useFetcher, useLoaderData } from "@remix-run/react";
 import { Anchor } from "~/components/anchor";
