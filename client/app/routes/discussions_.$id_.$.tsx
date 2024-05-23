@@ -24,6 +24,10 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
 		include: { user: true, media: true },
 	});
 
+	if (comment) {
+		comment.content = await render(comment.content);
+	}
+
 	return { post, comment };
 };
 
