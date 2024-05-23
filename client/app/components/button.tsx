@@ -13,7 +13,8 @@ const Button = React.forwardRef<HTMLButtonElement, Props>(
 				className={clsx(
 					"inline-flex items-center gap-2 rounded-lg bg-blue-600 px-2 py-1 font-medium",
 					{
-						"bg-zinc-200 px-2 py-1 dark:bg-neutral-800": variant === "neutral",
+						"!bg-zinc-200 px-2 py-1 !dark:bg-neutral-800":
+							variant === "neutral",
 						"text-white": variant === "primary",
 						"!bg-amber-500 text-white": variant === "secondary",
 						"opacity-60": props.disabled,

@@ -13,4 +13,10 @@ export default defineConfig({
 	},
 	presets: [presetUno({ dark: "media" }), presetIcons(), presetForms()],
 	transformers: [transformerDirectives(), transformerVariantGroup()],
+	safelist: [
+		"!text-green-600",
+		"!no-underline",
+		"bg-green-700",
+		"bg-opacity-10",
+	],
 });

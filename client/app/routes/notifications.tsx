@@ -1,4 +1,8 @@
-import { LoaderFunctionArgs, MetaFunction, json } from "@remix-run/node";
+import {
+	json,
+	type LoaderFunctionArgs,
+	type MetaFunction,
+} from "@remix-run/node";
 import { NavLink, useLoaderData } from "@remix-run/react";
 import clsx from "clsx";
 import parse from "html-react-parser";
