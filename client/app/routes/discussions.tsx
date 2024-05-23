@@ -1,22 +1,15 @@
 import {
-	ActionFunctionArgs,
-	LoaderFunctionArgs,
-	MetaFunction,
 	json,
+	type ActionFunctionArgs,
+	type LoaderFunctionArgs,
+	type MetaFunction,
 } from "@remix-run/node";
-import {
-	Link,
-	useFetcher,
-	useLoaderData,
-	useLocation,
-	useRevalidator,
-} from "@remix-run/react";
-import PullToRefresh from "pulltorefreshjs";
+import { Link, useFetcher, useLoaderData, useLocation } from "@remix-run/react";
 import qs from "qs";
 import React from "react";
 import { DiscussionsEmpty } from "~/components/discussions-empty";
 import { PostInput } from "~/components/post-input";
-import { PostItem, PostItemProps } from "~/components/post-item";
+import { PostItem, type PostItemProps } from "~/components/post-item";
 import { TagsFilter } from "~/components/tags-filter";
 import { checkAuth } from "~/lib/check-auth";
 import { createPost } from "~/lib/create-post";
@@ -97,28 +90,8 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
 export default function Discussions() {
 	const { posts } = useLoaderData<typeof loader>();
 	const { user } = useGlobalCtx();
-	const revalidator = useRevalidator();
 
 	const contentRef = React.useRef<HTMLDivElement>(null);
-
-	React.useEffect(() => {
-		if (!contentRef.current) {
-			return;
-		}
-
-		PullToRefresh.init({
-			mainElement: contentRef.current,
-			onRefresh() {
-				return new Promise((resolve) => {
-					revalidator.revalidate();
-					setTimeout(resolve, 1500);
-				});
-			},
-			iconRefreshing: `<div class="i-svg-spinners-180-ring-with-bg text-xl inline-block" />`,
-		});
-
-		return PullToRefresh.destroyAll;
-	}, [revalidator]);
 
 	return (
 		<div className="container mx-auto min-h-[60vh]" ref={contentRef}>

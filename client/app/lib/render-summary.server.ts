@@ -1,14 +1,14 @@
-import { unified, type Plugin } from "unified";
-import remarkParse from "remark-parse";
-import remarkRehype from "remark-rehype";
+import rehypeShiki from "@shikijs/rehype";
+import rehypeKatex from "rehype-katex";
 import rehypeSanitize from "rehype-sanitize";
 import rehypeStringify from "rehype-stringify";
 import remarkGfm from "remark-gfm";
-import rehypeShiki from "@shikijs/rehype";
-import smartypants from "remark-smartypants";
-import { visit } from "unist-util-visit";
-import rehypeKatex from "rehype-katex";
 import remarkMath from "remark-math";
+import remarkParse from "remark-parse";
+import remarkRehype from "remark-rehype";
+import smartypants from "remark-smartypants";
+import { unified, type Plugin } from "unified";
+import { visit } from "unist-util-visit";
 import { removeCodeTrail } from "./remove-code-trail";
 
 // TODO: Implement image re-embed (we shouldn't show full images from markdown)
@@ -38,6 +38,7 @@ function removeLinks(): ReturnType<Plugin> {
 		visit(tree, "element", (child, index, parent) => {
 			if (child.tagName === "a") {
 				child.tagName = "span";
+				child.properties.href = undefined;
 				child.properties.className = "underline hyphens-auto";
 			}
 		});

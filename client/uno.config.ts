@@ -18,5 +18,6 @@ export default defineConfig({
 		"!no-underline",
 		"bg-green-700",
 		"bg-opacity-10",
+		"hyphens-auto",
 	],
 });
