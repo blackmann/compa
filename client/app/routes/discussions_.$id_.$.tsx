@@ -1,4 +1,4 @@
-import { LoaderFunctionArgs, json } from "@remix-run/node";
+import { json, type LoaderFunctionArgs } from "@remix-run/node";
 import { Link, useLoaderData, useParams } from "@remix-run/react";
 import { PostContent } from "~/components/post-content";
 import { PostItem } from "~/components/post-item";
@@ -21,7 +21,7 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
 
 	const comment = await prisma.post.findFirst({
 		where: { id: Number(splat[0]) },
-		include: { user: true, media: true },
+		include: { user: true, media: true, community: true },
 	});
 
 	if (comment) {
