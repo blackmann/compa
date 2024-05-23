@@ -1,6 +1,6 @@
+import type { Node } from "mdast";
 import { findAndReplace } from "mdast-util-find-and-replace";
 import type { Plugin } from "unified";
-import type { Node } from "mdast";
 
 const userGroup = "[\\da-z][-\\da-z_]{0,38}";
 const mentionRegex = new RegExp(`(?:^|\\s)@(${userGroup})`, "gi");
@@ -22,7 +22,7 @@ function replaceMention(value: string, username: string) {
 	if (username === "notgr") {
 		children.push({
 			type: "element",
-			tagName: "div",
+			tagName: "span",
 			properties: {
 				className: "i-lucide-crown text-amber-500 inline-block",
 			},
