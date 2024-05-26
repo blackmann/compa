@@ -1,4 +1,4 @@
-const dev = import.meta.env.NODE_ENV !== "production";
+const dev = process.env.NODE_ENV !== "production";
 
 function CommonHead() {
 	return (
