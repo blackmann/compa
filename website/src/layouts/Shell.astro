@@ -18,6 +18,13 @@ interface Props {
 		<meta name="description" content={Astro.props.description || 'An open initiative to promote collaboration and knowledge sharing among students of higher education'} />
 		<title>{Astro.props.title} ✽ compa</title>
 
+		{
+			process.env.NODE_ENV === 'production' && (
+			<!-- Observe Prod -->
+		<script src="https://0.observe.so/script.js" data-app="clwscqbfv00ayx3c8dm9kdzz7" />
+			)
+		}
+
     <slot name="head" />
 	</head>
 	<body>
