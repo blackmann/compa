@@ -15,7 +15,7 @@ const s3 = new S3Client({
 	region: process.env.AWS_REGION as string,
 });
 
-const DIR = 'compa'
+const DIR = process.env.AWS_BUCKET_DIR || 'compa'
 
 async function upload(
 	stream: AsyncIterable<Uint8Array> | Buffer,

@@ -1,13 +1,13 @@
 import {
-	ActionFunctionArgs,
 	json,
 	unstable_composeUploadHandlers,
 	unstable_parseMultipartFormData,
+	type ActionFunctionArgs,
 } from "@remix-run/node";
+import sharp from "sharp";
 import { checkAuth } from "~/lib/check-auth";
 import { randomStr } from "~/lib/random-str";
 import { upload } from "~/lib/s3.server";
-import sharp from "sharp";
 
 const uploadHandler = unstable_composeUploadHandlers(
 	async ({ name, contentType, data, filename }) => {
@@ -16,7 +16,7 @@ const uploadHandler = unstable_composeUploadHandlers(
 		}
 
 		const buffer = await asyncIterableToBuffer(data);
-		const fn = mangle(filename || "uknown_");
+		const fn = mangle(filename || "unknown_");
 
 		let thumbnailUrl: string | undefined;
 
