@@ -1,4 +1,4 @@
-name: Deploy App (knust)
+name: Deploy App
 
 on:
   push:
@@ -11,6 +11,9 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        instance: ['knust', 'ug']
     steps:
       - name: Cloning repo
         uses: actions/checkout@v4
@@ -25,7 +28,7 @@ jobs:
         with:
           # enable verbose git output
           git_push_flags: '-vvv'
-          git_remote_url: 'ssh://dokku@85.159.211.246:22/knust'
+          git_remote_url: 'ssh://dokku@85.159.211.246:22/${{ matrix.instance }}'
           ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
           # enable shell trace mode
           trace: '1'

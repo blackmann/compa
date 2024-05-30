@@ -1,0 +1,15 @@
+{
+	"id": "ug",
+	"name": "University of Ghana",
+	"shortName": "UG",
+	"semester": {
+		"number": 2,
+		"start": "2024-05-11",
+		"end": "2024-08-24"
+	},
+	"examination": {
+		"start": "2024-08-05",
+		"end": "2024-08-23"
+	},
+	"emailExtensions": ["ug.edu.gh"]
+}
