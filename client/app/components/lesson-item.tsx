@@ -1,12 +1,14 @@
-import { Prisma } from "@prisma/client";
-import { timeToString, isBefore } from "~/lib/time";
-import { Button } from "./button";
+import type { Prisma } from "@prisma/client";
+import { Link, useRouteLoaderData } from "@remix-run/react";
 import clsx from "clsx";
-import { Modal } from "./modal";
 import React from "react";
-import { Input } from "./input";
-import { FieldValues, useForm } from "react-hook-form";
+import { useForm, type FieldValues } from "react-hook-form";
+import { isBefore, timeToInputValue, timeToString } from "~/lib/time";
 import { useAsyncFetcher } from "~/lib/use-async-fetcher";
+import type { loader } from "~/root";
+import { Button } from "./button";
+import { Input } from "./input";
+import { Modal } from "./modal";
 
 interface Props {
 	lesson: Prisma.ScheduleGetPayload<{
@@ -19,6 +21,7 @@ interface Props {
 function LessonItem({ checked, lesson, onClick }: Props) {
 	const [showEdit, setShowEdit] = React.useState(false);
 	const fetcher = useAsyncFetcher();
+	const { user } = useRouteLoaderData<typeof loader>("root") || {};
 
 	const handleModalClose = React.useCallback(() => setShowEdit(false), []);
 
@@ -29,8 +32,8 @@ function LessonItem({ checked, lesson, onClick }: Props) {
 		formState: { errors },
 	} = useForm({
 		defaultValues: {
-			timeStart: timeToString(lesson.timeStart),
-			timeEnd: timeToString(lesson.timeEnd),
+			timeStart: timeToInputValue(lesson.timeStart),
+			timeEnd: timeToInputValue(lesson.timeEnd),
 			location: lesson.location,
 		},
 	});
@@ -128,6 +131,16 @@ function LessonItem({ checked, lesson, onClick }: Props) {
 							You're editing the lesson: <b>{lesson.course.name}</b>
 						</p>
 					</header>
+
+					{!user && (
+						<div className="bg-blue-50 text-blue-500 my-2 dark:bg-blue-700 dark:bg-opacity-10 dark:text-blue-400 mb-2 p-2 rounded-lg mx-2">
+							You need to{" "}
+							<Link className="underline" to="/login">
+								Login
+							</Link>{" "}
+							first to be able to add a timetable entry.
+						</div>
+					)}
 
 					<div className="p-2">
 						<div className="grid grid-cols-3 gap-2">

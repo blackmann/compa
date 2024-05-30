@@ -1,4 +1,9 @@
-import { ActionFunctionArgs, LoaderFunctionArgs, json } from "@remix-run/node";
+import {
+	json,
+	type ActionFunctionArgs,
+	type LoaderFunctionArgs,
+} from "@remix-run/node";
+import { checkAuth } from "~/lib/check-auth";
 import { prisma } from "~/lib/prisma.server";
 import { slugify } from "~/lib/slugify";
 
@@ -15,6 +20,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 			statusText: "Method Not Allowed",
 		});
 	}
+
+	await checkAuth(request)
 
 	const data = await request.json();
 

@@ -12,6 +12,7 @@ import { DaysHeader } from "~/components/days-header";
 import { LessonItem } from "~/components/lesson-item";
 import { TimetableFilter } from "~/components/timetable-filter";
 import { TimetableSaveToCalender } from "~/components/timetable-save-to-calendar";
+import { checkAuth } from "~/lib/check-auth";
 import { prisma } from "~/lib/prisma.server";
 import { timeFromString } from "~/lib/time";
 import { values } from "~/lib/values.server";
@@ -71,6 +72,8 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 			statusText: "Method Not Allowed",
 		});
 	}
+
+	await checkAuth(request)
 
 	const { year, level, day, sem } = params;
 	const { consent, timeEnd, timeStart, ...data } = await request.json();

@@ -1,4 +1,5 @@
-import { ActionFunctionArgs } from "@remix-run/node";
+import type { ActionFunctionArgs } from "@remix-run/node";
+import { checkAuth } from "~/lib/check-auth";
 import { prisma } from "~/lib/prisma.server";
 import { timeFromString } from "~/lib/time";
 
@@ -9,6 +10,8 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 			statusText: "Method Not Allowed",
 		});
 	}
+
+	await checkAuth(request)
 
 	if (request.method === "DELETE") {
 		await prisma.schedule.delete({ where: { id: Number(params.id) } });

@@ -1,10 +1,18 @@
-import { useLoaderData, useParams, useSubmit } from "@remix-run/react";
+import {
+	Link,
+	useLoaderData,
+	useNavigation,
+	useParams,
+	useRouteLoaderData,
+	useSubmit,
+} from "@remix-run/react";
 import dayjs from "dayjs";
 import React from "react";
 import { useForm, useFormContext, type FieldValues } from "react-hook-form";
 import { days } from "~/lib/days";
 import { isBefore } from "~/lib/time";
 import { useAsyncFetcher } from "~/lib/use-async-fetcher";
+import type { loader as rootLoader } from "~/root";
 import type { AddLessonLoader } from "~/routes/timetable_.$year.$programme.$level.$sem.$day.add";
 import { Button } from "./button";
 import { Input } from "./input";
@@ -21,6 +29,7 @@ function LessonForm({
 }: Props) {
 	const { level, day } = useParams();
 	const { programme } = useLoaderData<AddLessonLoader>();
+	const { user } = useRouteLoaderData<typeof rootLoader>("root") || {};
 
 	const {
 		handleSubmit,
@@ -45,6 +54,7 @@ function LessonForm({
 
 	const fetcher = useAsyncFetcher();
 	const submit = useSubmit();
+	const navigation = useNavigation();
 
 	const courses = React.useMemo(
 		() =>
@@ -104,6 +114,16 @@ function LessonForm({
 	return (
 		<form onSubmit={handleSubmit(addLesson)}>
 			<header className="font-bold text-lg mb-2">Add Lesson</header>
+
+			{!user && (
+				<div className="mb-2 p-2 rounded-lg bg-blue-50 text-blue-500 my-2 dark:bg-blue-700 dark:bg-opacity-10 dark:text-blue-400">
+					You need to{" "}
+					<Link className="underline" to="/login">
+						Login
+					</Link>{" "}
+					first to be able to add a timetable entry.
+				</div>
+			)}
 
 			<div className="flex gap-2">
 				<div className="border border-zinc-200 dark:border-neutral-600 rounded-lg px-2">
@@ -214,12 +234,12 @@ function LessonForm({
 					<a className="underline" href="/crowdsourcing#ethics">
 						crowdsourcing ethics
 					</a>
-					.
+					. Providing incorrect information can lead to permanent ban.
 				</div>
 			</label>
 
 			<div className="mt-2">
-				<Button>
+				<Button disabled={!user || navigation.state === "submitting"}>
 					<div className="i-lucide-corner-down-left opacity-50" /> Save lesson
 				</Button>
 			</div>
