@@ -1,0 +1,15 @@
+{
+	"id": "umat",
+	"name": "University of Mines and Technology",
+	"shortName": "UMaT",
+	"semester": {
+		"number": 2,
+		"start": "2024-06-01",
+		"end": "2024-09-14"
+	},
+	"examination": {
+		"start": "2024-08-26",
+		"end": "2024-09-13"
+	},
+	"emailExtensions": ["umat.edu.gh"]
+}
