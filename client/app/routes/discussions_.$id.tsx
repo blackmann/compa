@@ -1,27 +1,27 @@
-import { User } from "@prisma/client";
+import type { User } from "@prisma/client";
 import {
-	ActionFunctionArgs,
-	LoaderFunctionArgs,
-	MetaFunction,
 	json,
 	redirect,
+	type ActionFunctionArgs,
+	type LoaderFunctionArgs,
+	type MetaFunction,
 } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
+import { useLoaderData, useRouteLoaderData } from "@remix-run/react";
 import React from "react";
 import { Avatar } from "~/components/avatar";
 import { LoginComment } from "~/components/login-comment";
 import { PostContent } from "~/components/post-content";
 import { PostInput } from "~/components/post-input";
-import { PostItem, PostItemProps } from "~/components/post-item";
+import { PostItem, type PostItemProps } from "~/components/post-item";
 import { PostPeople } from "~/components/post-people";
 import { checkAuth } from "~/lib/check-auth";
 import { createPost } from "~/lib/create-post";
 import { createPostNotification } from "~/lib/create-post-notification";
-import { useGlobalCtx } from "~/lib/global-ctx";
 import { includeVotes } from "~/lib/include-votes";
 import { prisma } from "~/lib/prisma.server";
 import { render } from "~/lib/render.server";
 import { values } from "~/lib/values.server";
+import type { loader as rootLoader } from "~/root";
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 	const postId = Number(params.id as string);
@@ -134,7 +134,7 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
 
 export default function Discussion() {
 	const { comments, post } = useLoaderData<typeof loader>();
-	const { user } = useGlobalCtx();
+	const { user } = useRouteLoaderData<typeof rootLoader>("root") || {};
 
 	return (
 		<div className="container mx-auto min-h-[60vh]">

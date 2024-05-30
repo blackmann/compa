@@ -1,11 +1,12 @@
 import type { Post } from "@prisma/client";
+import { useRouteLoaderData } from "@remix-run/react";
 import clsx from "clsx";
 import React from "react";
 import { useForm, type FieldValues } from "react-hook-form";
 import { useFetcher } from "react-router-dom";
 import type { Jsonify } from "type-fest";
-import { useGlobalCtx } from "~/lib/global-ctx";
 import { uploadMedia } from "~/lib/upload-media";
+import type { loader } from "~/root";
 import { AudioRecorder } from "./audio-recorder";
 import { Button } from "./button";
 import { Content } from "./content";
@@ -48,7 +49,7 @@ function PostInput({ disabled, level = 0, parent, dataExtra }: Props) {
 	const fetcher = useFetcher();
 	const previewFetcher = useFetcher();
 
-	const { user } = useGlobalCtx();
+	const { user } = useRouteLoaderData<typeof loader>("root") || {};
 
 	const isComment = level > 0;
 	const $files = watch("files");

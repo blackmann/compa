@@ -1,11 +1,11 @@
 import type { Prisma } from "@prisma/client";
-import { Link } from "@remix-run/react";
+import { Link, useRouteLoaderData } from "@remix-run/react";
 import clsx from "clsx";
 import React from "react";
 import type { Jsonify } from "type-fest";
 import { PostTime } from "~/components/post-time";
-import { useGlobalCtx } from "~/lib/global-ctx";
 import { useMounted } from "~/lib/use-mounted";
+import type { loader } from "~/root";
 import { Avatar } from "./avatar";
 import { Content } from "./content";
 import { LoginComment } from "./login-comment";
@@ -182,7 +182,7 @@ function PostContent({ full, post, active, level, limit }: PostContentProps) {
 }
 
 function SubComment({ post }: { post: Props["post"] }) {
-	const { user } = useGlobalCtx();
+	const { user } = useRouteLoaderData<typeof loader>("root") || {};
 
 	return (
 		<div className="ms-12 border-s-2 ps-2 dark:border-neutral-700">

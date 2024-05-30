@@ -1,8 +1,8 @@
 import {
-	ActionFunctionArgs,
-	LoaderFunctionArgs,
-	MetaFunction,
 	json,
+	type ActionFunctionArgs,
+	type LoaderFunctionArgs,
+	type MetaFunction,
 } from "@remix-run/node";
 import {
 	Link,
@@ -10,6 +10,7 @@ import {
 	useLoaderData,
 	useLocation,
 	useNavigate,
+	useRouteLoaderData,
 } from "@remix-run/react";
 import clsx from "clsx";
 import qs from "qs";
@@ -24,10 +25,10 @@ import { Thumbnail } from "~/components/media-item";
 import { PostTime } from "~/components/post-time";
 import {
 	DEFAULT_SELECTIONS,
-	SelectionId,
-	Selections,
 	TagInput,
 	stringifySelections,
+	type SelectionId,
+	type Selections,
 } from "~/components/tag-input";
 import { TagSelect } from "~/components/tag-select";
 import { Tags } from "~/components/tags";
@@ -36,10 +37,10 @@ import { Username } from "~/components/username";
 import { checkAuth } from "~/lib/check-auth";
 import { createTagsQuery } from "~/lib/create-tags-query";
 import { ellipsizeFilename, humanizeSize } from "~/lib/files";
-import { useGlobalCtx } from "~/lib/global-ctx";
 import { prisma } from "~/lib/prisma.server";
 import { uploadMedia } from "~/lib/upload-media";
 import { values } from "~/lib/values.server";
+import type { loader as rootLoader } from "~/root";
 
 const FILE_SIZE_LIMIT = 5 * 1024 * 1024;
 
@@ -111,7 +112,8 @@ export default function Library() {
 			tags: DEFAULT_SELECTIONS as Selections,
 		},
 	});
-	const { user } = useGlobalCtx();
+
+	const { user } = useRouteLoaderData<typeof rootLoader>("root") || {};
 	const { count, repository } = useLoaderData<typeof loader>();
 	const fetcher = useFetcher();
 	const navigate = useNavigate();

@@ -5,15 +5,20 @@ import {
 	type LoaderFunctionArgs,
 	type MetaFunction,
 } from "@remix-run/node";
-import { Link, useFetcher, useLoaderData } from "@remix-run/react";
+import {
+	Link,
+	useFetcher,
+	useLoaderData,
+	useRouteLoaderData,
+} from "@remix-run/react";
 import { Anchor } from "~/components/anchor";
 import { Button } from "~/components/button";
 import { Username } from "~/components/username";
 import { checkAuth } from "~/lib/check-auth";
-import { useGlobalCtx } from "~/lib/global-ctx";
 import { prisma } from "~/lib/prisma.server";
 import { methodNotAllowed, notFound } from "~/lib/responses";
 import { values } from "~/lib/values.server";
+import type { loader as rootLoader } from "~/root";
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
 	const product = await prisma.product.findFirst({
@@ -56,7 +61,7 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
 
 export default function ProductDetail() {
 	const { product } = useLoaderData<typeof loader>();
-	const { user } = useGlobalCtx();
+	const { user } = useRouteLoaderData<typeof rootLoader>("root") || {};
 
 	const { instagram, phone, snapchat, whatsapp } = product.seller;
 	const deleteFetcher = useFetcher();

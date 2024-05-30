@@ -1,17 +1,21 @@
-import { Prisma } from "@prisma/client";
-import { ActionFunctionArgs, MetaFunction, redirect } from "@remix-run/node";
-import { Link, useLoaderData } from "@remix-run/react";
+import type { Prisma } from "@prisma/client";
+import {
+	redirect,
+	type ActionFunctionArgs,
+	type MetaFunction,
+} from "@remix-run/node";
+import { Link, useLoaderData, useRouteLoaderData } from "@remix-run/react";
 import clsx from "clsx";
 import dayjs from "dayjs";
-import { Jsonify } from "type-fest";
+import type { Jsonify } from "type-fest";
 import { Anchor } from "~/components/anchor";
 import { PostTime } from "~/components/post-time";
 import { Username } from "~/components/username";
 import { checkAuth } from "~/lib/check-auth";
-import { useGlobalCtx } from "~/lib/global-ctx";
 import { prisma } from "~/lib/prisma.server";
 import { timeToString } from "~/lib/time";
 import { values } from "~/lib/values.server";
+import type { loader as rootLoader } from "~/root";
 
 export const loader = async () => {
 	const events = await prisma.eventItem.findMany({
@@ -51,7 +55,7 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
 
 export default function Events() {
 	const { events } = useLoaderData<typeof loader>();
-	const { user } = useGlobalCtx();
+	const { user } = useRouteLoaderData<typeof rootLoader>("root") || {};
 
 	return (
 		<div className="container mx-auto min-h-[60vh]">

@@ -1,7 +1,7 @@
-import { Community } from "@prisma/client";
-import { useFetcher } from "@remix-run/react";
-import { Jsonify } from "type-fest";
-import { useGlobalCtx } from "~/lib/global-ctx";
+import type { Community } from "@prisma/client";
+import { useFetcher, useRouteLoaderData } from "@remix-run/react";
+import type { Jsonify } from "type-fest";
+import type { loader } from "~/root";
 import { Button } from "./button";
 
 interface Props {
@@ -9,7 +9,7 @@ interface Props {
 }
 
 function CommunityMod({ community }: Props) {
-	const { user } = useGlobalCtx();
+	const { user } = useRouteLoaderData<typeof loader>("root") || {};
 	const fetcher = useFetcher();
 
 	const actions: { title: string; id: string }[] = [];

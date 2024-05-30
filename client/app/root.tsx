@@ -24,7 +24,6 @@ import { Footer } from "./components/footer";
 import { BottomNav, Navbar, SideNav } from "./components/navbar";
 import { PendingUI } from "./components/pending-ui";
 import { checkAuth } from "./lib/check-auth";
-import { GlobalCtx } from "./lib/global-ctx";
 import { prisma } from "./lib/prisma.server";
 import { useColorScheme } from "./lib/use-color-scheme";
 
@@ -115,30 +114,28 @@ export default function App() {
 			<body>
 				<PendingUI />
 
-				<GlobalCtx.Provider value={{ user, unreadNotifications }}>
-					<Navbar />
-					<div className="container mx-auto !max-md:px-0">
-						<div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
-							<div
-								className={clsx("col-span-1 max-lg:hidden", {
-									hidden: hideNav,
-								})}
-							>
-								<div className="max-w-[15rem] sticky top-[4rem]">
-									<SideNav />
-								</div>
-							</div>
-
-							<div
-								className={clsx("col-span-1 lg:col-span-4 mt-2", {
-									"lg:col-span-5": hideNav,
-								})}
-							>
-								<Outlet />
+				<Navbar />
+				<div className="container mx-auto !max-md:px-0">
+					<div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
+						<div
+							className={clsx("col-span-1 max-lg:hidden", {
+								hidden: hideNav,
+							})}
+						>
+							<div className="max-w-[15rem] sticky top-[4rem]">
+								<SideNav />
 							</div>
 						</div>
+
+						<div
+							className={clsx("col-span-1 lg:col-span-4 mt-2", {
+								"lg:col-span-5": hideNav,
+							})}
+						>
+							<Outlet />
+						</div>
 					</div>
-				</GlobalCtx.Provider>
+				</div>
 
 				<ScrollRestoration />
 				<Scripts />

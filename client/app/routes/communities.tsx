@@ -1,10 +1,16 @@
-import { Link, MetaFunction, json, useLoaderData } from "@remix-run/react";
+import {
+	Link,
+	json,
+	useLoaderData,
+	useRouteLoaderData,
+	type MetaFunction,
+} from "@remix-run/react";
 import { Anchor } from "~/components/anchor";
 import { Avatar } from "~/components/avatar";
 import { ellipsize } from "~/lib/ellipsize";
-import { useGlobalCtx } from "~/lib/global-ctx";
 import { prisma } from "~/lib/prisma.server";
 import { values } from "~/lib/values.server";
+import type { loader as rootLoader } from "~/root";
 
 export const loader = async () => {
 	const communities = await prisma.community.findMany({
@@ -28,7 +34,7 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
 
 export default function Communities() {
 	const { communities } = useLoaderData<typeof loader>();
-	const { user } = useGlobalCtx();
+	const { user } = useRouteLoaderData<typeof rootLoader>("root") || {};
 
 	return (
 		<div className="container min-h-[60vh]">

@@ -1,7 +1,12 @@
-import { Link, NavLink, useLocation } from "@remix-run/react";
+import {
+	Link,
+	NavLink,
+	useLocation,
+	useRouteLoaderData,
+} from "@remix-run/react";
 import clsx from "clsx";
 import React from "react";
-import { useGlobalCtx } from "~/lib/global-ctx";
+import type { loader } from "~/root";
 import { Avatar } from "./avatar";
 import { Username } from "./username";
 
@@ -44,7 +49,8 @@ const links = [
 ];
 
 function Navbar() {
-	const { user, unreadNotifications } = useGlobalCtx();
+	const { user, unreadNotifications } =
+		useRouteLoaderData<typeof loader>("root") || {};
 
 	return (
 		<header className="container mx-auto border-b border-zinc-200 dark:border-zinc-800 sticky top-0 bg-zinc-50 dark:bg-neutral-900 z-10">

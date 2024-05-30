@@ -1,9 +1,9 @@
-import { SellerProfile } from "@prisma/client";
+import type { SellerProfile } from "@prisma/client";
 import {
-	ActionFunctionArgs,
-	LoaderFunctionArgs,
-	MetaFunction,
 	json,
+	type ActionFunctionArgs,
+	type LoaderFunctionArgs,
+	type MetaFunction,
 } from "@remix-run/node";
 import {
 	NavLink,
@@ -11,26 +11,27 @@ import {
 	useLoaderData,
 	useOutlet,
 	useParams,
+	useRouteLoaderData,
 } from "@remix-run/react";
 import clsx from "clsx";
 import parse from "html-react-parser";
 import React from "react";
-import { FieldValues, useForm } from "react-hook-form";
-import { Jsonify } from "type-fest";
+import { useForm, type FieldValues } from "react-hook-form";
+import type { Jsonify } from "type-fest";
 import { Avatar } from "~/components/avatar";
 import { Button } from "~/components/button";
 import { Modal } from "~/components/modal";
-import { PostItem, PostItemProps } from "~/components/post-item";
+import { PostItem, type PostItemProps } from "~/components/post-item";
 import { PostTime } from "~/components/post-time";
 import { Textarea } from "~/components/textarea";
 import { Username } from "~/components/username";
 import { checkAuth } from "~/lib/check-auth";
-import { useGlobalCtx } from "~/lib/global-ctx";
 import { prisma } from "~/lib/prisma.server";
 import { renderBio } from "~/lib/render-bio.server";
 import { renderSummary } from "~/lib/render-summary.server";
 import { notFound } from "~/lib/responses";
 import { values } from "~/lib/values.server";
+import type { loader as rootLoader } from "~/root";
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
 	const user = await prisma.user.findFirst({
@@ -207,7 +208,8 @@ function Posts({ posts }: { posts: Jsonify<PostItemProps["post"]>[] }) {
 
 function EditBio() {
 	const { username } = useParams();
-	const { user: authUser } = useGlobalCtx();
+	const { user: authUser } =
+		useRouteLoaderData<typeof rootLoader>("root") || {};
 	const { register, handleSubmit, watch } = useForm({
 		defaultValues: { bio: authUser?.bio },
 	});

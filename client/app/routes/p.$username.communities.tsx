@@ -1,11 +1,20 @@
-import { LoaderFunctionArgs, MetaFunction, json } from "@remix-run/node";
-import { Link, useLoaderData, useParams } from "@remix-run/react";
+import {
+	json,
+	type LoaderFunctionArgs,
+	type MetaFunction,
+} from "@remix-run/node";
+import {
+	Link,
+	useLoaderData,
+	useParams,
+	useRouteLoaderData,
+} from "@remix-run/react";
 import { Avatar } from "~/components/avatar";
 import { ellipsize } from "~/lib/ellipsize";
-import { useGlobalCtx } from "~/lib/global-ctx";
 import { prisma } from "~/lib/prisma.server";
 import { notFound } from "~/lib/responses";
 import { values } from "~/lib/values.server";
+import type { loader as rootLoader } from "~/root";
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 	const user = await prisma.user.findFirst({
@@ -35,7 +44,7 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
 };
 
 export default function ProfileCommunities() {
-	const { user } = useGlobalCtx();
+	const { user } = useRouteLoaderData<typeof rootLoader>("root") || {};
 	const { username } = useParams();
 	const { communities } = useLoaderData<typeof loader>();
 
@@ -43,7 +52,7 @@ export default function ProfileCommunities() {
 		<div>
 			<ul>
 				{communities.map((community) => (
-					<li>
+					<li key={community.id}>
 						<Link
 							className="flex gap-2 p-2 rounded-lg hover:bg-zinc-100 dark:hover:bg-neutral-800"
 							to={`/communities/${community.handle}`}

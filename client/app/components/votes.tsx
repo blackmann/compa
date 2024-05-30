@@ -1,8 +1,8 @@
 import type { Prisma } from "@prisma/client";
-import { useFetcher } from "@remix-run/react";
+import { useFetcher, useRouteLoaderData } from "@remix-run/react";
 import clsx from "clsx";
 import type { Jsonify } from "type-fest";
-import { useGlobalCtx } from "~/lib/global-ctx";
+import type { loader } from "~/root";
 
 type Post = Prisma.PostGetPayload<{ include: { user: true } }> & {
 	vote?: boolean;
@@ -14,7 +14,7 @@ interface Props {
 
 function Votes({ post }: Props) {
 	const fetcher = useFetcher();
-	const { user } = useGlobalCtx();
+	const { user } = useRouteLoaderData<typeof loader>("root") || {};
 
 	async function vote(up: boolean) {
 		fetcher.submit(JSON.stringify({ up }), {

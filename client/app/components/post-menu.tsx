@@ -1,8 +1,8 @@
-import { Prisma } from "@prisma/client";
-import { useFetcher } from "@remix-run/react";
+import type { Prisma } from "@prisma/client";
+import { useFetcher, useRouteLoaderData } from "@remix-run/react";
+import type { Jsonify } from "type-fest";
+import type { loader } from "~/root";
 import { DropdownMenu } from "./dropdown-menu";
-import { useGlobalCtx } from "~/lib/global-ctx";
-import { Jsonify } from "type-fest";
 
 type Post = Prisma.PostGetPayload<{ include: { user: true } }>;
 
@@ -11,7 +11,7 @@ interface Props {
 }
 
 function PostMenu({ post }: Props) {
-	const { user } = useGlobalCtx();
+	const { user } = useRouteLoaderData<typeof loader>("root") || {};
 	const fetcher = useFetcher();
 
 	if (user?.id !== post.userId) {

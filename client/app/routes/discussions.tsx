@@ -4,7 +4,13 @@ import {
 	type LoaderFunctionArgs,
 	type MetaFunction,
 } from "@remix-run/node";
-import { Link, useFetcher, useLoaderData, useLocation } from "@remix-run/react";
+import {
+	Link,
+	useFetcher,
+	useLoaderData,
+	useLocation,
+	useRouteLoaderData,
+} from "@remix-run/react";
 import qs from "qs";
 import React from "react";
 import { DiscussionsEmpty } from "~/components/discussions-empty";
@@ -14,12 +20,12 @@ import { TagsFilter } from "~/components/tags-filter";
 import { checkAuth } from "~/lib/check-auth";
 import { createPost } from "~/lib/create-post";
 import { createTagsQuery } from "~/lib/create-tags-query";
-import { useGlobalCtx } from "~/lib/global-ctx";
 import { includeVotes } from "~/lib/include-votes";
 import { prisma } from "~/lib/prisma.server";
 import { renderSummary } from "~/lib/render-summary.server";
 import { values } from "~/lib/values.server";
 import { withUserPrefs } from "~/lib/with-user-prefs";
+import type { loader as rootLoader } from "~/root";
 
 const PAGE_SIZE = 50;
 
@@ -89,7 +95,7 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
 
 export default function Discussions() {
 	const { posts } = useLoaderData<typeof loader>();
-	const { user } = useGlobalCtx();
+	const { user } = useRouteLoaderData<typeof rootLoader>("root") || {};
 
 	const contentRef = React.useRef<HTMLDivElement>(null);
 

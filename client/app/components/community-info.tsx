@@ -1,13 +1,18 @@
-import { useFetcher, useLoaderData, useParams } from "@remix-run/react";
+import {
+	useFetcher,
+	useLoaderData,
+	useParams,
+	useRouteLoaderData,
+} from "@remix-run/react";
 import dayjs from "dayjs";
-import { useGlobalCtx } from "~/lib/global-ctx";
-import { loader } from "~/routes/communities_.$slug";
+import type { loader as rootLoader } from "~/root";
+import type { loader } from "~/routes/communities_.$slug";
 import { Anchor } from "./anchor";
 import { Avatar } from "./avatar";
 import { Button } from "./button";
 
 function CommunityInfo() {
-	const { user } = useGlobalCtx();
+	const { user } = useRouteLoaderData<typeof rootLoader>("root") || {};
 	const { community, membership, members } = useLoaderData<typeof loader>();
 	const { slug } = useParams();
 	const fetcher = useFetcher();

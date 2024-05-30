@@ -1,7 +1,7 @@
-import { Prisma } from "@prisma/client";
-import { useFetcher } from "@remix-run/react";
-import { Jsonify } from "type-fest";
-import { useGlobalCtx } from "~/lib/global-ctx";
+import type { Prisma } from "@prisma/client";
+import { useFetcher, useRouteLoaderData } from "@remix-run/react";
+import type { Jsonify } from "type-fest";
+import type { loader } from "~/root";
 import { DropdownMenu } from "./dropdown-menu";
 
 type RepositoryFile = Prisma.RepositoryGetPayload<{ include: { user: true } }>;
@@ -11,7 +11,7 @@ interface Props {
 }
 
 function FileMenu({ file }: Props) {
-	const { user } = useGlobalCtx();
+	const { user } = useRouteLoaderData<typeof loader>("root") || {};
 	const fetcher = useFetcher();
 
 	if (user?.id !== file.userId) {

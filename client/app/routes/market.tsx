@@ -1,14 +1,14 @@
-import { User } from "@prisma/client";
-import { LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
+import type { User } from "@prisma/client";
+import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
+import { useLoaderData, useRouteLoaderData } from "@remix-run/react";
 import { Anchor } from "~/components/anchor";
 import { Input } from "~/components/input";
 import { ProductItem } from "~/components/product-item";
 import { Select } from "~/components/select";
 import { checkAuth } from "~/lib/check-auth";
-import { useGlobalCtx } from "~/lib/global-ctx";
 import { prisma } from "~/lib/prisma.server";
 import { values } from "~/lib/values.server";
+import type { loader as rootLoader } from "~/root";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
 	let user: User | null = null;
@@ -21,7 +21,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 	const sellerProfile = user
 		? await prisma.sellerProfile.findFirst({
 				where: { userId: user.id },
-		  })
+			})
 		: null;
 
 	const products = await prisma.product.findMany({
@@ -48,7 +48,7 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
 export default function Market() {
 	const { categories, products, sellerProfile } =
 		useLoaderData<typeof loader>();
-	const { user } = useGlobalCtx();
+	const { user } = useRouteLoaderData<typeof rootLoader>("root") || {};
 
 	return (
 		<div className="container min-h-[60vh]">
