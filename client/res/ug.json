@@ -4,12 +4,12 @@
 	"shortName": "UG",
 	"semester": {
 		"number": 2,
-		"start": "2024-05-11",
-		"end": "2024-08-24"
+		"start": "2024-05-06",
+		"end": "2024-08-18"
 	},
 	"examination": {
-		"start": "2024-08-05",
-		"end": "2024-08-23"
+		"start": "2024-08-03",
+		"end": "2024-08-08"
 	},
-	"emailExtensions": ["ug.edu.gh"]
+	"emailExtensions": ["st.ug.edu.gh"]
 }
