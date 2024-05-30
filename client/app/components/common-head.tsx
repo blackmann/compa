@@ -1,4 +1,5 @@
 const dev = process.env.NODE_ENV !== "production";
+const observeAppId = import.meta.env.VITE_OBSERVE_APP_ID;
 
 function CommonHead() {
 	return (
@@ -16,11 +17,8 @@ function CommonHead() {
 				href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"
 				rel="stylesheet"
 			/>
-			{!dev && (
-				<script
-					src="https://0.observe.so/script.js"
-					data-app="clwnp4jnp0000ze4wmdyiawle"
-				/>
+			{!dev && observeAppId && (
+				<script src="https://0.observe.so/script.js" data-app={observeAppId} />
 			)}
 		</>
 	);
