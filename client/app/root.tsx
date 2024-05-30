@@ -33,6 +33,7 @@ const authRoutes = [
 	"/create-account",
 	"/forgot-password",
 	"/reset-password",
+	"/account-created",
 ];
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {

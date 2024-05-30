@@ -1,8 +1,10 @@
-import { LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
+import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
+import { values } from "~/lib/values.server";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-	return { email: new URL(request.url).searchParams.get("email") };
+	const school = values.get("id") as string;
+	return { email: new URL(request.url).searchParams.get("email"), school };
 };
 
 export const meta: MetaFunction = () => {
@@ -10,24 +12,49 @@ export const meta: MetaFunction = () => {
 };
 
 export default function AccountCreated() {
-	const { email } = useLoaderData<typeof loader>();
+	const { email, school } = useLoaderData<typeof loader>();
 
 	return (
 		<div className="container mx-auto h-[60vh]">
 			<div className="mx-auto max-w-[24rem] rounded-lg border  bg-white p-4 dark:border-neutral-700 dark:bg-neutral-800">
 				<h1 className="mb-2 text-2xl font-bold">Account created</h1>
-
 				<p>
 					A verification link has been sent to this email:{" "}
 					<span className="font-medium text-blue-600 dark:text-blue-500">
 						{email}
 					</span>
 				</p>
-
 				<p className="mt-2">
 					You may not be able to add or edit content on compa until you verify
 					your account.
 				</p>
+
+				{school === "knust" && (
+					<div className="bg-red-50 dark:bg-red-700 dark:bg-opacity-10 p-2 rounded-lg mt-4">
+						To log into your email, go to{" "}
+						<a
+							className="underline text-red-500 dark:text-red-400"
+							target="_blank"
+							href="https://outlook.com"
+							rel="noreferrer"
+						>
+							outlook.com
+						</a>
+						, enter your school email and password to access your account.
+					</div>
+				)}
+
+				<div className="mt-2 text-secondary">
+					<a
+						className="underline"
+						target="_blank"
+						href="https://wa.me/233247812093"
+						rel="noreferrer"
+					>
+						Click here
+					</a>{" "}
+					to send a DM if you need help.
+				</div>
 			</div>
 		</div>
 	);

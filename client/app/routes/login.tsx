@@ -1,11 +1,15 @@
-import { ActionFunctionArgs, MetaFunction, json } from "@remix-run/node";
+import {
+	json,
+	type ActionFunctionArgs,
+	type MetaFunction,
+} from "@remix-run/node";
 import {
 	Link,
 	useActionData,
 	useNavigation,
 	useSubmit,
 } from "@remix-run/react";
-import { FieldValues, useForm } from "react-hook-form";
+import { useForm, type FieldValues } from "react-hook-form";
 import { Button } from "~/components/button";
 import { Input } from "~/components/input";
 import { authCookie } from "~/lib/cookies.server";
@@ -112,6 +116,11 @@ export default function Login() {
 						onSubmit={handleSubmit(login)}
 					>
 						<h1 className="font-bold text-2xl mb-2">Login</h1>
+
+						<div className="rounded-lg p-2 bg-blue-50 text-blue-500 my-2 dark:bg-blue-700 dark:bg-opacity-10 dark:text-blue-400">
+							<i className="i-lucide-hand inline-block" /> If this is your first time here, you might need to create an
+							account.
+						</div>
 
 						{actionData && (
 							<div className="p-2 rounded-lg bg-red-50 text-red-500 dark:bg-red-700 dark:bg-opacity-10 dark:text-red-400 mb-2">

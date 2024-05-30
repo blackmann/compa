@@ -1,9 +1,9 @@
-import { Prisma, User } from "@prisma/client";
+import { Prisma, type User } from "@prisma/client";
 import {
-	ActionFunctionArgs,
-	MetaFunction,
 	json,
 	redirect,
+	type ActionFunctionArgs,
+	type MetaFunction,
 } from "@remix-run/node";
 import {
 	Link,
@@ -13,7 +13,7 @@ import {
 	useSubmit,
 } from "@remix-run/react";
 import React from "react";
-import { FieldValues, useForm } from "react-hook-form";
+import { useForm, type FieldValues } from "react-hook-form";
 import { Button } from "~/components/button";
 import { Input } from "~/components/input";
 import { hash } from "~/lib/password.server";

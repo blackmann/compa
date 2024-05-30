@@ -1,18 +1,39 @@
-import fs from "fs";
+import lodashGet from "lodash.get";
+import fs from "node:fs";
+import type { Paths } from "type-fest";
 
-type JsonObject = { [key: string]: JsonValue };
+export interface Values {
+	id: string;
+	name: string;
+	shortName: string;
+	semester: Semester;
+	examination: Examination;
+	emailExtensions: string[];
+}
 
-type JsonValue = null | boolean | number | string | JsonValue[] | JsonObject;
+export interface Semester {
+	number: number;
+	start: string;
+	end: string;
+}
+
+export interface Examination {
+	start: string;
+	end: string;
+}
 
 const values = {
-	values: null as Record<string, JsonValue> | null,
-	get(key: string) {
-		if (!this.values) {
+	initialized: false,
+	values: {} as Values,
+	get(key: Paths<Values>) {
+		if (!this.initialized) {
 			const json = fs.readFileSync(`res/${process.env.SCHOOL}.json`, "utf-8");
 			this.values = JSON.parse(json);
+
+			this.initialized = true;
 		}
 
-		return query(this.values!, key);
+		return lodashGet(this.values, key);
 	},
 	meta() {
 		return {
@@ -21,20 +42,5 @@ const values = {
 		};
 	},
 };
-
-function query(record: Record<string, JsonValue>, key: string): JsonValue {
-	// return value from nested key like "a.b.c"
-	const keys = key.split(".");
-	let value: JsonValue = record;
-	for (const k of keys) {
-		value = value[k];
-
-		if (typeof value !== "object") {
-			break;
-		}
-	}
-
-	return value;
-}
 
 export { values };
