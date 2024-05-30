@@ -1,5 +1,7 @@
 dokku apps:create $1
 
+dokku builder:set $1 build-dir client
+
 COOKIE_SECRET_1=$(openssl rand -hex 16)
 COOKIE_SECRET_2=$(openssl rand -hex 16)
 dokku config:set $1 SCHOOL=$1
@@ -17,3 +19,8 @@ dokku config:set $1 AWS_BUCKET=compa
 dokku config:set $1 AWS_BUCKET_DIR=$1-compa
 
 dokku domains:set $1 $1.compa.so
+
+dokku storage:ensure-directory $1
+dokku storage:mount $1 /var/lib/dokku/data/storage/$1:/app/prisma/data
+
+dokku config:set $1 DATABASE_URL="file:./data/$1.db"
