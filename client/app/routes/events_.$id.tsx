@@ -110,17 +110,19 @@ export default function EventDetail() {
 
 							<div className="flex gap-2 font-medium text-secondary items-center">
 								<div className="i-lucide-map" />
-								{event.venue}
-								{event.mapsLink && (
-									<a
-										target="_blank"
-										href={event.mapsLink}
-										className="underline text-zinc-800 dark:text-white"
-										rel="noreferrer"
-									>
-										View on map
-									</a>
-								)}
+								<div className="flex-1">
+									<div>{event.venue}</div>
+									{event.mapsLink && (
+										<a
+											target="_blank"
+											href={event.mapsLink}
+											className="underline text-zinc-800 dark:text-white"
+											rel="noreferrer"
+										>
+											View on map
+										</a>
+									)}
+								</div>
 							</div>
 						</div>
 
