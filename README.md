@@ -34,6 +34,7 @@ Your open, compact, companion and compass. That is _Compa_.
 ## Schools
 
 - [x] Kwame Nkrumah University of Science and Technology (KNUST) - <https://knust.compa.so>
+- [x] University of Ghana (UG) - <https://ug.compa.so>
 
 ### Deploy an instance for your school
 
