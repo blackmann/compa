@@ -14,6 +14,26 @@ import { Footer } from "./footer";
 import { Navbar } from "./navbar";
 import { SymOutline } from "./sym-outline";
 
+const errorLabels: Record<number, string> = {
+	600: "An unexpected error occured",
+	404: "Not Found",
+	401: "Login Required",
+};
+
+const errorDescriptions: Record<number, string> = {
+	600: "This must be strange to you. It's strange to us too. we will look into this and resolve it as soon as possible.",
+	404: "There is nothing on this page. Perhaps, what was on this page is long gone. Sorry!",
+	401: "You need to be logged in to perform this action or access this page.",
+};
+
+function getErrorLabel(code: number) {
+	return errorLabels[code] || errorLabels[600];
+}
+
+function getErrorDescription(code: number) {
+	return errorDescriptions[code] || errorDescriptions[600];
+}
+
 function ErrorBoundary() {
 	const error = useRouteError();
 	const location = useLocation();
@@ -60,17 +80,9 @@ function ErrorBoundary() {
 						</div>
 
 						<div>
-							<h1 className="font-bold">
-								{statusCode === 404
-									? "404: Not found"
-									: `${statusCode}: An unexpected error occured`}
-							</h1>
+							<h1 className="font-bold">{getErrorLabel(statusCode)}</h1>
 
-							<p className="text-gray-500">
-								{statusCode === 404
-									? "There is nothing on this page. Perhaps, what was on this page is long gone. Sorry!"
-									: "This must be strange to you. It's strange to us too. we will look into this and resolve it as soon as possible."}
-							</p>
+							<p className="text-gray-500">{getErrorDescription(statusCode)}</p>
 
 							<div className="mt-2">
 								<Anchor to="/discussions">
