@@ -63,10 +63,9 @@ function ErrorBoundary() {
 			<head>
 				<CommonHead />
 				<title>
-					{statusCode === 404
-						? "404 Not Found"
-						: `${statusCode} An unexpected Error`}
+					{statusCode}: {getErrorLabel(statusCode)}
 				</title>
+
 				<Meta />
 				<Links />
 			</head>
@@ -80,7 +79,9 @@ function ErrorBoundary() {
 						</div>
 
 						<div>
-							<h1 className="font-bold">{getErrorLabel(statusCode)}</h1>
+							<h1 className="font-bold">
+								{statusCode}: {getErrorLabel(statusCode)}
+							</h1>
 
 							<p className="text-gray-500">{getErrorDescription(statusCode)}</p>
 
