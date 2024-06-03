@@ -144,10 +144,10 @@ export default function Discussion() {
 
 					<div className="flex gap-2 mt-4">
 						{user ? (
-							<> 
-                                <Link to={`/p/${user.username}`}>
-								    <Avatar name={user?.username || ""} />
-                                </Link>
+							<>
+								<Link to={`/p/${user.username}`}>
+									<Avatar name={user?.username || ""} />
+								</Link>
 								<div className="flex-1">
 									<PostInput
 										parent={post as unknown as PostItemProps["post"]}
