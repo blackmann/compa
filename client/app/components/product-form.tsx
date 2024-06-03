@@ -23,7 +23,7 @@ function ProductForm({ product }: Props) {
 	const { register, handleSubmit } = useForm({
 		defaultValues: {
 			name: product?.name || "",
-			description: product?.name || "",
+			description: product?.description || "",
 			price: product?.price || "",
 			category: product?.categoryId || 1,
 		},
