@@ -1,6 +1,6 @@
 import { ellipsizeFilename, humanizeSize } from "~/lib/files";
-import { FileThumbnail } from "./non-image-thumb";
 import { AudioItem } from "./audio-item";
+import { FileThumbnail } from "./non-image-thumb";
 
 interface Props {
 	file: File;
@@ -38,7 +38,7 @@ function FileSelectItem({ file, onRemove }: Props) {
 			<div>
 				<button
 					type="button"
-					className="p-2 rounded-full bg-zinc-100 dark:bg-neutral-800 hover:bg-zinc-200 dark:hover:bg-neutral-700 transition-[background] duration-200"
+					className="p-2 rounded-full !bg-zinc-100 !dark:bg-neutral-800 hover:bg-zinc-200 dark:hover:bg-neutral-700 transition-[background] duration-200"
 					onClick={onRemove}
 				>
 					<div className="i-lucide-x" />

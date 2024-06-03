@@ -212,7 +212,7 @@ function LessonForm({
 					<label className="block">
 						<span>Location</span>
 						<Input {...register("location", { required: true })} />
-						<small className="text-secondary">Eg. SF24</small>
+						<small className="text-secondary">Eg. SF24 (Group 1)</small>
 					</label>
 				</div>
 			</div>
@@ -234,7 +234,7 @@ function LessonForm({
 					<a className="underline" href="/crowdsourcing#ethics">
 						crowdsourcing ethics
 					</a>
-					. Providing incorrect information can lead to permanent ban.
+					. Providing false information can lead to permanent ban.
 				</div>
 			</label>
 

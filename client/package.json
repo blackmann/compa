@@ -29,6 +29,7 @@
 		"aws-sdk": "^2.1550.0",
 		"bcrypt": "^5.1.1",
 		"boring-avatars": "^1.10.2",
+		"browser-image-compression": "^2.0.2",
 		"clsx": "^2.1.0",
 		"dayjs": "^1.11.10",
 		"dotenv": "^16.3.1",

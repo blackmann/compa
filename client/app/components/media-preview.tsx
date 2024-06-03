@@ -1,7 +1,7 @@
-import { Media, Prisma } from "@prisma/client";
+import type { Media, Prisma } from "@prisma/client";
 import clsx from "clsx";
 import React from "react";
-import { Jsonify } from "type-fest";
+import type { Jsonify } from "type-fest";
 import { ellipsizeFilename } from "~/lib/files";
 import { Avatar } from "./avatar";
 import { Thumbnail } from "./media-item";
@@ -48,14 +48,14 @@ function MediaPreview({ media, open, onClose, post, setMedia }: Props) {
 							<video className="w-full" playsInline src={media.url} controls />
 						) : (
 							<div className="w-full justify-center text-secondary flex items-center gap-2 font-medium">
-								<div className="i-lucide-tower-control" /> Cannot preview this file.
-								Download instead.
+								<div className="i-lucide-tower-control" /> Cannot preview this
+								file. Download instead.
 							</div>
 						)}
 
 						<button
 							type="button"
-							className="size-7 rounded-full bg-zinc-200 dark:bg-neutral-700 flex items-center justify-center text-secondary absolute right-2 top-2"
+							className="size-7 rounded-full !bg-zinc-200 !dark:bg-neutral-700 flex items-center justify-center text-secondary absolute right-2 top-2"
 							onClick={() => onClose?.()}
 						>
 							<div className="i-lucide-x" />
