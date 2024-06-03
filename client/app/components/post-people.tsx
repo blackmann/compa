@@ -1,7 +1,8 @@
-import { Prisma } from "@prisma/client";
-import { Jsonify } from "type-fest";
+import type { Prisma } from "@prisma/client";
+import type { Jsonify } from "type-fest";
 import { usePostPeople } from "~/lib/use-post-people";
 import { Avatar } from "./avatar";
+import { Link } from "@remix-run/react";
 
 type Post = Prisma.PostGetPayload<{ include: { user: true } }>;
 
@@ -25,8 +26,9 @@ function PostPeople({ post }: Props) {
 				{people.map((person) => (
 					<li key={person.id}>
 						<div className="flex gap-2 py-1 px-2 rounded-lg hover:bg-zinc-100 items-center hover-bg-light">
-							<Avatar size={22} name={person.username} />
-
+							<Link to={`/p/${person.username}`}>
+								<Avatar size={22} name={person.username} />
+							</Link>
 							<div>
 								{person.username}{" "}
 								{person.id === post.user.id && (
