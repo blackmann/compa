@@ -24,10 +24,11 @@ function PostPeople({ post }: Props) {
 
 			<ul>
 				{people.map((person) => (
-					<Link to={`/p/${person.username}`}>
+					<li key={person.id}>
 						<div className="flex gap-2 py-1 px-2 rounded-lg hover:bg-zinc-100 items-center hover-bg-light">
-							<Avatar size={22} name={person.username} />
-
+                            <Link to={`/p/${person.username}`}>
+							    <Avatar size={22} name={person.username} />
+                            </Link>
 							<div>
 								{person.username}{" "}
 								{person.id === post.user.id && (
@@ -37,7 +38,7 @@ function PostPeople({ post }: Props) {
 								)}
 							</div>
 						</div>
-					</Link>
+					</li>
 				))}
 			</ul>
 		</>
