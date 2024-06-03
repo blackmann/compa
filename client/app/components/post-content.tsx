@@ -1,7 +1,7 @@
-import { Media, Prisma } from "@prisma/client";
+import type { Media, Prisma } from "@prisma/client";
 import { Link } from "@remix-run/react";
 import React from "react";
-import { Jsonify } from "type-fest";
+import type { Jsonify } from "type-fest";
 import { Avatar } from "./avatar";
 import { Content } from "./content";
 import { MediaItem } from "./media-item";
@@ -32,7 +32,9 @@ function PostContent({ post }: Props) {
 			<div className="flex gap-2">
 				<div className="flex flex-col items-center">
 					<div className="mb-2">
-						<Avatar name={post.user.username} />
+						<Link to={`/p/${post.user.username}`}>
+							<Avatar name={post.user.username} />
+						</Link>
 					</div>
 
 					<Votes post={post} />
