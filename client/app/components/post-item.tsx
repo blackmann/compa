@@ -117,7 +117,9 @@ function PostContent({ full, post, active, level, limit }: PostContentProps) {
 			<div className="flex flex-col items-center">
 				{full && (
 					<div className="mb-2">
-						<Avatar name={post.user.username} />
+                        <Link to={`/p/${post.user.username}`}>
+						    <Avatar name={post.user.username} />
+                        </Link>
 					</div>
 				)}
 

@@ -6,7 +6,7 @@ import {
 	type LoaderFunctionArgs,
 	type MetaFunction,
 } from "@remix-run/node";
-import { useLoaderData, useRouteLoaderData } from "@remix-run/react";
+import { Link, useLoaderData, useRouteLoaderData } from "@remix-run/react";
 import React from "react";
 import { Avatar } from "~/components/avatar";
 import { LoginComment } from "~/components/login-comment";
@@ -144,8 +144,10 @@ export default function Discussion() {
 
 					<div className="flex gap-2 mt-4">
 						{user ? (
-							<>
-								<Avatar name={user?.username || ""} />
+							<> 
+                                <Link to={`/p/${user.username}`}>
+								    <Avatar name={user?.username || ""} />
+                                </Link>
 								<div className="flex-1">
 									<PostInput
 										parent={post as unknown as PostItemProps["post"]}
