@@ -59,15 +59,15 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 		};
 	}
 
-	Object.assign(query, tagsQuery);
+	const fullQuery = { AND: [query, ...tagsQuery] };
 
 	const repository = await prisma.repository.findMany({
-		where: query,
+		where: fullQuery,
 		include: { media: true, user: true },
 		orderBy: { createdAt: "desc" },
 	});
 
-	const count = await prisma.repository.count({ where: query });
+	const count = await prisma.repository.count({ where: fullQuery });
 
 	return { school: values.meta(), repository, count, queryParams };
 };
