@@ -1,9 +1,9 @@
 import {
-	ActionFunctionArgs,
-	LoaderFunctionArgs,
-	MetaFunction,
 	json,
 	redirect,
+	type ActionFunctionArgs,
+	type LoaderFunctionArgs,
+	type MetaFunction,
 } from "@remix-run/node";
 import {
 	Link,
@@ -13,7 +13,7 @@ import {
 	useSubmit,
 } from "@remix-run/react";
 import dayjs from "dayjs";
-import { FieldValues, useForm } from "react-hook-form";
+import { useForm, type FieldValues } from "react-hook-form";
 import { Button } from "~/components/button";
 import { Input } from "~/components/input";
 import { hash } from "~/lib/password.server";

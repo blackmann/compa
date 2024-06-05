@@ -33,6 +33,7 @@ const authRoutes = [
 	"/forgot-password",
 	"/reset-password",
 	"/account-created",
+	"/resend-verification",
 ];
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
