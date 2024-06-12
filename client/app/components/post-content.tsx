@@ -1,5 +1,6 @@
 import type { Media, Prisma } from "@prisma/client";
 import { Link } from "@remix-run/react";
+import clsx from "clsx";
 import React from "react";
 import type { Jsonify } from "type-fest";
 import { Avatar } from "./avatar";
@@ -52,7 +53,10 @@ function PostContent({ post }: Props) {
 						</div>
 					</header>
 
-					<Tags className="mb-4" tags={post.tags} />
+					<Tags
+						className={clsx({ "mb-4": post.tags.length })}
+						tags={post.tags}
+					/>
 
 					<div className="-mt-2">
 						<Content content={post.content} />
