@@ -1,4 +1,4 @@
-import { LoaderFunctionArgs, json } from "@remix-run/node";
+import { json, type LoaderFunctionArgs } from "@remix-run/node";
 import { prisma } from "~/lib/prisma.server";
 import { render } from "~/lib/render.server";
 

@@ -121,6 +121,14 @@ input {
   @apply font-medium;
 }
 
+.article ol {
+  @apply ms-8;
+}
+
+.article ol li {
+  @apply list-decimal;
+}
+
 .shiki {
   counter-reset: step;
   counter-increment: step 0;

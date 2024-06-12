@@ -10,38 +10,36 @@ async function createPostNotification(post: Post, author: User) {
 		where: { id: post.parentId },
 	})) as Post;
 
-	if (op.userId === author.id) {
-		return;
-	}
-
 	const summary = await renderStripped(op.content, 42);
 	const message = [`@${author?.username}`];
 
-	if (op.path) {
-		message.push("replied to your comment:");
-	} else {
-		message.push("commented on:");
+	if (op.userId !== author.id) {
+		if (op.path) {
+			message.push("replied to your comment:");
+		} else {
+			message.push("commented on:");
+		}
+
+		message.push(summary);
+
+		const data = {
+			message: message.join(" "),
+			actorId: author.id,
+			entityId: post.id,
+			entityType: "post",
+		};
+
+		const notification = await prisma.notification.create({
+			data,
+		});
+
+		await prisma.notificationSubscriber.create({
+			data: {
+				userId: op.userId,
+				notificationId: notification.id,
+			},
+		});
 	}
-
-	message.push(summary);
-
-	const data = {
-		message: message.join(" "),
-		actorId: author.id,
-		entityId: post.id,
-		entityType: "post",
-	};
-
-	const notification = await prisma.notification.create({
-		data,
-	});
-
-	await prisma.notificationSubscriber.create({
-		data: {
-			userId: op.userId,
-			notificationId: notification.id,
-		},
-	});
 
 	const usernames = post.content.match(MENTION_REGEX) || [];
 	const cleaned = usernames.map((u) => u.replace(/^@/, "").trim());
