@@ -1,4 +1,4 @@
-import { Post } from "@prisma/client";
+import type { Post } from "@prisma/client";
 import clsx from "clsx";
 import React from "react";
 
@@ -17,7 +17,7 @@ function Tags({ className, tags }: Props) {
 		});
 	}, [tags]);
 
-	if (!tags.length) {
+	if (!parsedTags.length) {
 		return null;
 	}
 
