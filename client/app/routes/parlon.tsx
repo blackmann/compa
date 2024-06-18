@@ -1,4 +1,8 @@
 import { json, type MetaFunction } from "@remix-run/node";
+import React from "react";
+import { Button } from "~/components/button";
+import { PeerVideoPanel } from "~/components/peer-video-panel";
+import { SelfVideoPanel } from "~/components/self-video-panel";
 import { values } from "~/lib/values.server";
 
 export const loader = async () => {
@@ -10,13 +14,21 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
 		{ title: `Parlon | ${data?.school.shortName} | compa` },
 		{
 			name: "description",
-			content:
-				"Make friends, find love, learn from random people on campus",
+			content: "Make friends, find love, learn from random people on campus",
 		},
 	];
 };
 
 export default function Parlon() {
+	const [stream, setStream] = React.useState<MediaStream | null>(null);
+
+	function onEnableCamera() {
+		navigator.mediaDevices
+			.getUserMedia({ video: true, audio: true })
+			.then((stream) => setStream(stream))
+			.catch(console.error);
+	}
+
 	return (
 		<div className="container min-h-[60vh]">
 			<header className="text-center mb-4">
@@ -26,61 +38,42 @@ export default function Parlon() {
 				</p>
 			</header>
 
-			<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-				<div className="grid-cols-1">
-					<div className="rounded-lg bg-zinc-200 aspect-[5/4] dark:bg-neutral-800 flex flex-col justify-between">
-						<header className="justify-between flex items-start p-2">
-							<div>
-								<div className="font-mono">@mufasa</div>
-							</div>
-							<div>
-								<span className="text-secondary">Reveal in</span>{" "}
-								<span className="font-mono">10</span>
-							</div>
-						</header>
-						<footer className="flex justify-end p-2">
-							<button
-								type="button"
-								className="px-2 py-1 rounded-full bg-red-500 flex items-center gap-2 font-medium"
-							>
-								<div className="i-lucide-phone-off" /> Hang up
-							</button>
-						</footer>
+			{stream ? (
+				<Panels stream={stream} />
+			) : (
+				<div className="rounded-lg max-w-[30rem] aspect-[5/4] flex items-center justify-center flex-col mx-auto">
+					<div className="text-center">
+						<Button type="button" onClick={onEnableCamera}>
+							<div className="i-lucide-camera" /> Enable Camera
+						</Button>
 					</div>
+					<p className="text-secondary text-sm text-center mx-8">
+						Your camera is not shown immediately to the other person unless you
+						turn off <span className="font-medium">Shy mode</span>
+					</p>
 				</div>
+			)}
+		</div>
+	);
+}
 
-				<div className="grid-cols-1">
-					<div className="rounded-lg bg-zinc-200 aspect-[5/4] dark:bg-neutral-800">
-						<header className="justify-between flex items-start p-2">
-							<div>
-								<div className="font-mono">
-									@notgr<span className="text-secondary">&bull;you</span>
-								</div>
-								<p className="text-sm text-secondary">You're muted</p>
-							</div>
+interface PanelsProps {
+	stream: MediaStream;
+}
 
-							<div className="flex gap-2 items-center">
-								<button
-									className="flex gap-2 items-center rounded-full px-2 py-1 bg-neutral-700"
-									type="button"
-								>
-									<div>🙈</div> Shy mode off
-								</button>
+function Panels({ stream }: PanelsProps) {
+	return (
+		<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+			<div className="grid-cols-1">
+				<PeerVideoPanel  />
+			</div>
 
-								<button
-									className="aspect-square rounded-full p-2 bg-blue-500 text-xl"
-									type="button"
-								>
-									<div className="i-lucide-mic" />
-								</button>
-							</div>
-						</header>
-					</div>
-					<div className="mx-2 text-sm text-secondary leading-tight mt-1">
-						Enabling Shy mode will hide your video from the other person for 10
-						seconds when connected. You can use the voice channel to introduce
-						yourselves before you're revealed.
-					</div>
+			<div className="grid-cols-1">
+				<SelfVideoPanel stream={stream} />
+				<div className="mx-2 text-sm text-secondary leading-tight mt-1">
+					Enabling Shy mode will hide your video from the other person for 10
+					seconds when connected. You can use the voice channel to introduce
+					yourselves before you're revealed.
 				</div>
 			</div>
 		</div>
