@@ -42,6 +42,11 @@ const links = [
 		icon: "i-lucide-shopping-bag",
 	},
 	{
+		title: "Parlon",
+		href: "/parlon",
+		icon: "i-lucide-video text-pink-500",
+	},
+	{
 		title: "Games",
 		href: "/games",
 		icon: "i-lucide-gamepad-2",
@@ -119,6 +124,7 @@ function BottomNav() {
 	const [showMore, setShowMore] = React.useState(false);
 	const location = useLocation();
 
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	React.useEffect(() => {
 		setShowMore(false);
 	}, [location.pathname]);
@@ -127,7 +133,7 @@ function BottomNav() {
 		<div className="fixed left-0 bottom-0 w-full lg:hidden">
 			<div
 				className={clsx(
-					"bg-zinc-50 dark:bg-neutral-900 p-4 border-t dark:border-neutral-700 container mx-auto h-[11rem] group overflow-hidden transition-[height] duration-200",
+					"bg-zinc-50 dark:bg-neutral-900 p-4 border-t dark:border-neutral-700 container mx-auto h-[15rem] group overflow-hidden transition-[height] duration-200",
 					{ "!h-0 !py-0 collapsed": !showMore },
 				)}
 			>
