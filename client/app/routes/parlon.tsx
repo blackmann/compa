@@ -1,5 +1,5 @@
 import { json, type MetaFunction } from "@remix-run/node";
-import { useRouteLoaderData } from "@remix-run/react";
+import { useLoaderData, useRouteLoaderData } from "@remix-run/react";
 import { Anchor } from "~/components/anchor";
 import { Button } from "~/components/button";
 import { PeerVideoPanel } from "~/components/peer-video-panel";
@@ -9,7 +9,10 @@ import { values } from "~/lib/values.server";
 import type { loader as rootLoader } from "~/root";
 
 export const loader = async () => {
-	return json({ school: values.meta() });
+	return json({
+		school: values.meta(),
+		available: values.get("id") === "knust",
+	});
 };
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
@@ -23,6 +26,16 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
 };
 
 export default function Parlon() {
+	const { available } = useLoaderData<typeof loader>();
+
+	if (!available) {
+		return (
+			<div className="container">
+				Parlon is not available in your school yet. Please check back later.
+			</div>
+		);
+	}
+
 	return (
 		<ParlonProvider>
 			<ParlonContent />
