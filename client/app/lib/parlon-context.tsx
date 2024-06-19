@@ -14,7 +14,6 @@ interface Peer {
 const ParlonContext = React.createContext({
 	call: () => {},
 	peerStream: null as MediaStream | null,
-	revealTimeout: null as number | null,
 	selfStream: null as MediaStream | null,
 	setShyMode: (shyMode: boolean) => {},
 	shyMode: true,
@@ -22,6 +21,8 @@ const ParlonContext = React.createContext({
 	requestCamera: () => {},
 	peer: null as Peer | null,
 	end: () => {},
+	muted: false,
+	setMuted: (muted: boolean) => {},
 });
 
 function ParlonProvider({ children }: React.PropsWithChildren) {
@@ -29,13 +30,19 @@ function ParlonProvider({ children }: React.PropsWithChildren) {
 	const [selfStream, setSelfStream] = React.useState<MediaStream | null>(null);
 	const [peerStream, setPeerStream] = React.useState<MediaStream | null>(null);
 
-	const [revealTimeout, setRevealTimeout] = React.useState<number | null>(null);
 	const [shyMode, setShyMode] = React.useState(true);
+	const [muted, setMuted] = React.useState(false);
 	const [status, setStatus] = React.useState<Status>("idle");
 
 	const [peer, setPeer] = React.useState<Peer | null>(null);
 
 	const boat = React.useRef<BoatClient | null>(null);
+
+	const reset = React.useCallback(() => {
+		setStatus("idle");
+		setPeer(null);
+		setPeerStream(null);
+	}, []);
 
 	const requestCamera = React.useCallback(() => {
 		navigator.mediaDevices
@@ -54,9 +61,8 @@ function ParlonProvider({ children }: React.PropsWithChildren) {
 		const { roomId } = await res.json();
 
 		const base = import.meta.env.VITE_BOAT_SIGNAL;
-		const suffix = Math.random().toString(36).slice(2);
-		const endpoint = [base, "join", roomId, user.username + suffix].join("/");
-		console.log("[endpoint]", endpoint);
+		const prefix = shyMode ? "shy:" : "";
+		const endpoint = [base, "join", roomId, prefix + user.username].join("/");
 		const conn = new BoatClient(endpoint);
 
 		conn.on("join", (peer) => {
@@ -67,9 +73,9 @@ function ParlonProvider({ children }: React.PropsWithChildren) {
 		});
 
 		conn.on("leave", () => {
-			setStatus("idle");
-			setPeer(null);
-			setPeerStream(null);
+			reset();
+			boat.current?.disconnect();
+			boat.current = null;
 		});
 
 		await conn.connect({ stream: selfStream });
@@ -81,30 +87,36 @@ function ParlonProvider({ children }: React.PropsWithChildren) {
 		setTimeout(() => {
 			if (!conn.peers.length) {
 				conn.disconnect().then(() => {
+					reset();
 					boat.current = null;
-					setStatus("idle");
 				});
 			}
 		}, WAIT_TIME);
-	}, [user, selfStream]);
+	}, [user, selfStream, shyMode, reset]);
 
 	const end = React.useCallback(() => {
 		boat.current?.disconnect();
-		setStatus("idle");
-		boat.current = null;
-	}, []);
+		reset();
+	}, [reset]);
+
+	React.useEffect(() => {
+		for (const track of selfStream?.getAudioTracks() || []) {
+			track.enabled = !muted;
+		}
+	}, [muted, selfStream]);
 
 	const providerValue = {
 		call,
 		peer,
 		peerStream,
 		requestCamera,
-		revealTimeout,
 		selfStream,
 		setShyMode,
 		shyMode,
 		status,
 		end,
+		muted,
+		setMuted,
 	};
 
 	return (

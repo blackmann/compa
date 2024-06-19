@@ -1,15 +1,43 @@
+import clsx from "clsx";
 import React from "react";
 import { useParlon } from "~/lib/parlon-context";
+import useCountdown from "~/lib/use-countdown";
 
 function PeerVideoPanel() {
 	const { peerStream, peer, status, call, end } = useParlon();
 	const videoRef = React.useRef<HTMLVideoElement>(null);
+	const ding = React.useRef<HTMLAudioElement>(null);
+
+	const { time, start, stop } = useCountdown(10);
+
+	const [shy, peerNickname] = React.useMemo(() => {
+		if (!peer) return [false, null];
+
+		if (peer.id.startsWith("shy:")) {
+			return [true, peer.id.slice(4)];
+		}
+
+		return [false, peer.id];
+	}, [peer]);
 
 	React.useEffect(() => {
 		if (!videoRef.current || !peerStream) return;
+		ding.current?.play();
 
-		videoRef.current.srcObject = peerStream;
-	}, [peerStream]);
+		if (shy) start();
+
+		const id = setTimeout(
+			() => {
+				(videoRef.current as HTMLVideoElement).srcObject = peerStream;
+			},
+			shy ? 10_000 : 0,
+		);
+
+		return () => {
+			clearTimeout(id);
+			stop();
+		};
+	}, [peerStream, shy, start, stop]);
 
 	if (status !== "connected") {
 		return (
@@ -39,7 +67,12 @@ function PeerVideoPanel() {
 	}
 
 	return (
-		<div className="rounded-lg bg-zinc-200 aspect-[5/4] dark:bg-neutral-800 flex flex-col justify-between relative">
+		<div
+			className={clsx(
+				"rounded-lg bg-zinc-200 aspect-[5/4] dark:bg-neutral-800 flex flex-col justify-between relative",
+				{ "!bg-neutral-800": shy },
+			)}
+		>
 			{/* biome-ignore lint/a11y/useMediaCaption: <explanation> */}
 			<video
 				ref={videoRef}
@@ -57,13 +90,15 @@ function PeerVideoPanel() {
 				}}
 			>
 				<div>
-					<div className="font-mono">@{peer?.id}</div>
+					<div className="font-mono text-white">@{peerNickname}</div>
 				</div>
 
-				<div>
-					<span className="text-secondary">Reveal in</span>{" "}
-					<span className="font-mono">10</span>
-				</div>
+				{shy && time > 0 && (
+					<div>
+						<span className="text-secondary">Reveal in</span>{" "}
+						<span className="font-mono text-white">{time}</span>
+					</div>
+				)}
 			</header>
 
 			<footer className="flex justify-end p-2 absolute bottom-0 left-0 w-full rounded-b-lg">
@@ -75,6 +110,8 @@ function PeerVideoPanel() {
 					<div className="i-lucide-phone-off" /> Hang up
 				</button>
 			</footer>
+			{/* biome-ignore lint/a11y/useMediaCaption: <explanation> */}
+			<audio ref={ding} id="ding" src="/zasplat_connected_ding.mp3" />
 		</div>
 	);
 }

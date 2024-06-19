@@ -3,14 +3,20 @@ import React from "react";
 import { useParlon } from "~/lib/parlon-context";
 
 function SelfVideoPanel() {
-	const { selfStream: stream, shyMode, setShyMode } = useParlon();
-
-	const [muted, setMuted] = React.useState(false);
+	const {
+		muted,
+		setMuted,
+		selfStream: stream,
+		peerStream,
+		shyMode,
+		setShyMode,
+	} = useParlon();
 
 	const videoRef = React.useRef<HTMLVideoElement>(null);
 
 	React.useEffect(() => {
 		if (!videoRef.current || !stream) return;
+
 		const ms = new MediaStream();
 		ms.addTrack(stream.getVideoTracks()[0]);
 		videoRef.current.srcObject = ms;
@@ -50,6 +56,7 @@ function SelfVideoPanel() {
 							{ "!bg-green-500 text-white": shyMode },
 						)}
 						type="button"
+						disabled={peerStream !== null}
 						onClick={() => setShyMode(!shyMode)}
 					>
 						<div>🙈</div> Shy mode {shyMode ? "on" : "off"}

@@ -120,8 +120,6 @@ class BoatClient {
 	}
 
 	async admit(peerId: string) {
-		console.log('admitting peer', peerId)
-
 		const client = this.client;
 		if (!client) return;
 
