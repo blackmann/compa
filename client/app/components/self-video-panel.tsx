@@ -1,8 +1,12 @@
+import { useRouteLoaderData } from "@remix-run/react";
 import clsx from "clsx";
 import React from "react";
 import { useParlon } from "~/lib/parlon-context";
+import type { loader as rootLoader } from "~/root";
 
 function SelfVideoPanel() {
+	const { user } = useRouteLoaderData<typeof rootLoader>("root") || {};
+
 	const {
 		muted,
 		setMuted,
@@ -42,7 +46,8 @@ function SelfVideoPanel() {
 			>
 				<div>
 					<div className="font-mono font-medium text-white leading-none">
-						@notgr<span className="opacity-50">&bull;you</span>
+						@{user?.username}
+						<span className="opacity-50">&bull;you</span>
 					</div>
 					{muted && (
 						<p className="text-sm opacity-70 text-white">You're muted</p>

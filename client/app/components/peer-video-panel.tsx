@@ -8,7 +8,7 @@ function PeerVideoPanel() {
 	const videoRef = React.useRef<HTMLVideoElement>(null);
 	const ding = React.useRef<HTMLAudioElement>(null);
 
-	const { time, start, stop } = useCountdown(10);
+	const { time, start: startCountdown, stop } = useCountdown(10);
 
 	const [shy, peerNickname] = React.useMemo(() => {
 		if (!peer) return [false, null];
@@ -24,11 +24,15 @@ function PeerVideoPanel() {
 		if (!videoRef.current || !peerStream) return;
 		ding.current?.play();
 
-		if (shy) start();
+		if (shy) startCountdown();
+
+		const stream = new MediaStream();
+		stream.addTrack(peerStream.getAudioTracks()[0]);
+		(videoRef.current as HTMLVideoElement).srcObject = stream;
 
 		const id = setTimeout(
 			() => {
-				(videoRef.current as HTMLVideoElement).srcObject = peerStream;
+				stream.addTrack(peerStream.getVideoTracks()[0]);
 			},
 			shy ? 10_000 : 0,
 		);
@@ -37,7 +41,7 @@ function PeerVideoPanel() {
 			clearTimeout(id);
 			stop();
 		};
-	}, [peerStream, shy, start, stop]);
+	}, [peerStream, shy, startCountdown, stop]);
 
 	if (status !== "connected") {
 		return (
