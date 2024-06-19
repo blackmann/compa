@@ -84,14 +84,15 @@ function ParlonProvider({ children }: React.PropsWithChildren) {
 
 		// if this person created the room, and no one joined
 		// in WAIT_TIME seconds, then go back to idle
-		setTimeout(() => {
+		const id = setTimeout(() => {
 			if (!conn.peers.length) {
-				conn.disconnect().then(() => {
-					reset();
-					boat.current = null;
-				});
+				reset();
+				boat.current = null;
+				conn.disconnect();
 			}
 		}, WAIT_TIME);
+
+		return () => clearTimeout(id);
 	}, [user, selfStream, shyMode, reset]);
 
 	const end = React.useCallback(() => {

@@ -5,7 +5,6 @@ const waitQueue = new Queue<string>();
 const ENDPOINT = [import.meta.env.VITE_BOAT_URL, "rooms"].join("/");
 
 const queueHandle = queue(async (_, cb) => {
-	console.log("and this one eh");
 	const front = waitQueue.pop();
 	if (front) return front;
 

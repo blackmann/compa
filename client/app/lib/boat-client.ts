@@ -115,7 +115,6 @@ class BoatClient {
 
 	async disconnect() {
 		if (!this.client) return;
-
 		await this.client.request("disconnect");
 	}
 
