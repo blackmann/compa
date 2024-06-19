@@ -1,8 +1,8 @@
 import { json, type MetaFunction } from "@remix-run/node";
-import React from "react";
 import { Button } from "~/components/button";
 import { PeerVideoPanel } from "~/components/peer-video-panel";
 import { SelfVideoPanel } from "~/components/self-video-panel";
+import { ParlonProvider, useParlon } from "~/lib/parlon-context";
 import { values } from "~/lib/values.server";
 
 export const loader = async () => {
@@ -20,14 +20,15 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
 };
 
 export default function Parlon() {
-	const [stream, setStream] = React.useState<MediaStream | null>(null);
+	return (
+		<ParlonProvider>
+			<ParlonContent />
+		</ParlonProvider>
+	);
+}
 
-	function onEnableCamera() {
-		navigator.mediaDevices
-			.getUserMedia({ video: true, audio: true })
-			.then((stream) => setStream(stream))
-			.catch(console.error);
-	}
+function ParlonContent() {
+	const { selfStream: stream, requestCamera } = useParlon();
 
 	return (
 		<div className="container min-h-[60vh]">
@@ -39,11 +40,11 @@ export default function Parlon() {
 			</header>
 
 			{stream ? (
-				<Panels stream={stream} />
+				<Panels />
 			) : (
 				<div className="rounded-lg max-w-[30rem] aspect-[5/4] flex items-center justify-center flex-col mx-auto">
 					<div className="text-center">
-						<Button type="button" onClick={onEnableCamera}>
+						<Button type="button" onClick={requestCamera}>
 							<div className="i-lucide-camera" /> Enable Camera
 						</Button>
 					</div>
@@ -57,19 +58,16 @@ export default function Parlon() {
 	);
 }
 
-interface PanelsProps {
-	stream: MediaStream;
-}
-
-function Panels({ stream }: PanelsProps) {
+function Panels() {
 	return (
 		<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 			<div className="grid-cols-1">
-				<PeerVideoPanel  />
+				<PeerVideoPanel />
 			</div>
 
 			<div className="grid-cols-1">
-				<SelfVideoPanel stream={stream} />
+				<SelfVideoPanel />
+
 				<div className="mx-2 text-sm text-secondary leading-tight mt-1">
 					Enabling Shy mode will hide your video from the other person for 10
 					seconds when connected. You can use the voice channel to introduce

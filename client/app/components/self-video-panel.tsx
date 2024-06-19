@@ -1,35 +1,20 @@
-import { useRouteLoaderData } from "@remix-run/react";
 import clsx from "clsx";
 import React from "react";
-import type { loader as rootLoader } from "~/root";
+import { useParlon } from "~/lib/parlon-context";
 
-interface SelfVidePanelProps {
-	stream: MediaStream;
-}
+function SelfVideoPanel() {
+	const { selfStream: stream, shyMode, setShyMode } = useParlon();
 
-function SelfVideoPanel({ stream }: SelfVidePanelProps) {
-	const { user } = useRouteLoaderData<typeof rootLoader>("root") || {};
-	const [shyMode, setShyMode] = React.useState(true);
 	const [muted, setMuted] = React.useState(false);
 
 	const videoRef = React.useRef<HTMLVideoElement>(null);
 
-	const showStream = React.useMemo(() => {
+	React.useEffect(() => {
+		if (!videoRef.current || !stream) return;
 		const ms = new MediaStream();
 		ms.addTrack(stream.getVideoTracks()[0]);
-
-		return ms;
+		videoRef.current.srcObject = ms;
 	}, [stream]);
-
-	React.useEffect(() => {
-		if (!videoRef.current) return;
-		videoRef.current.srcObject = showStream;
-	}, [showStream]);
-
-	if (!user) {
-		// todo: we should show a button to say log in first
-		return null;
-	}
 
 	return (
 		<div className="rounded-lg bg-zinc-200 aspect-[5/4] dark:bg-neutral-800 relative">
@@ -39,6 +24,7 @@ function SelfVideoPanel({ stream }: SelfVidePanelProps) {
 				autoPlay
 				className="w-full h-full rounded-lg overflow-hidden object-cover"
 				style={{ transform: "scaleX(-1)" }}
+				playsInline
 			/>
 
 			<header
@@ -49,7 +35,7 @@ function SelfVideoPanel({ stream }: SelfVidePanelProps) {
 				}}
 			>
 				<div>
-					<div className="font-mono text-white leading-none">
+					<div className="font-mono font-medium text-white leading-none">
 						@notgr<span className="opacity-50">&bull;you</span>
 					</div>
 					{muted && (
@@ -61,7 +47,7 @@ function SelfVideoPanel({ stream }: SelfVidePanelProps) {
 					<button
 						className={clsx(
 							"flex gap-2 items-center rounded-full px-2 py-1 bg-zinc-300 dark:bg-neutral-700 font-medium duration-200",
-							{ "!bg-orange-500 text-white": shyMode },
+							{ "!bg-green-500 text-white": shyMode },
 						)}
 						type="button"
 						onClick={() => setShyMode(!shyMode)}
