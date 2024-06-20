@@ -2,6 +2,7 @@ import { json, type MetaFunction } from "@remix-run/node";
 import { useLoaderData, useRouteLoaderData } from "@remix-run/react";
 import { Anchor } from "~/components/anchor";
 import { Button } from "~/components/button";
+import { ParlonLogo } from "~/components/parlon-logo";
 import { PeerVideoPanel } from "~/components/peer-video-panel";
 import { SelfVideoPanel } from "~/components/self-video-panel";
 import { ParlonProvider, useParlon } from "~/lib/parlon-context";
@@ -49,7 +50,9 @@ function ParlonContent() {
 	return (
 		<div className="container min-h-[60vh]">
 			<header className="text-center mb-4">
-				<h1>Parlon</h1>
+				<h1 className="text-center">
+					<ParlonLogo />
+				</h1>
 				<p className="text-secondary leading-tight">
 					Make friends, find love, learn from random people on campus
 				</p>
