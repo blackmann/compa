@@ -139,7 +139,7 @@ function PostContent({ full, post, active, level, limit }: PostContentProps) {
 
 				<div className="-mt-3 post-content grid grid-cols-1 lg:grid-cols-4 gap-2">
 					{showThumbnail && (
-						<div className="col-span-1 lg:order-last">
+						<div className="col-span-1 lg:order-last max-lg:mt-2">
 							<div className="aspect-[3/2]">
 								<img
 									src={post.media[0].url}
