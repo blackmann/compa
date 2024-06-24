@@ -1,5 +1,6 @@
 import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
+import { KnustLoginDirection } from "~/components/knust-login-direction";
 import { values } from "~/lib/values.server";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
@@ -29,20 +30,7 @@ export default function AccountCreated() {
 					your account.
 				</p>
 
-				{school === "knust" && (
-					<div className="bg-red-50 dark:bg-red-700 dark:bg-opacity-10 p-2 rounded-lg mt-4">
-						To log into your email, go to{" "}
-						<a
-							className="underline text-red-500 dark:text-red-400"
-							target="_blank"
-							href="https://outlook.com"
-							rel="noreferrer"
-						>
-							outlook.com
-						</a>
-						, enter your school email and password to access your account.
-					</div>
-				)}
+				{school === "knust" && <KnustLoginDirection />}
 
 				<div className="mt-2 text-secondary">
 					<a

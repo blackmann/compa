@@ -4,6 +4,7 @@ import clsx from "clsx";
 import React from "react";
 import type { Jsonify } from "type-fest";
 import { PostTime } from "~/components/post-time";
+import { isImage } from "~/lib/is-image";
 import { useMounted } from "~/lib/use-mounted";
 import type { loader } from "~/root";
 import { Avatar } from "./avatar";
@@ -101,6 +102,11 @@ interface PostContentProps {
 }
 
 function PostContent({ full, post, active, level, limit }: PostContentProps) {
+	const showThumbnail =
+		level === 0 &&
+		post.media.length === 1 &&
+		isImage(post.media[0].contentType);
+
 	return (
 		<div
 			className={clsx(
@@ -131,9 +137,30 @@ function PostContent({ full, post, active, level, limit }: PostContentProps) {
 
 				{!post.parentId && <Tags className="mb-4" tags={post.tags} />}
 
-				<div className="-mt-3 post-content">
-					<Content content={post.content} />
-					{post.media?.length > 0 && (
+				<div className="-mt-3 post-content grid grid-cols-1 lg:grid-cols-4 gap-2">
+					{showThumbnail && (
+						<div className="col-span-1 lg:order-last max-lg:mt-2">
+							<div className="aspect-[3/2]">
+								<img
+									src={post.media[0].url}
+									alt=""
+									className="h-full w-full object-cover rounded-lg"
+								/>
+							</div>
+						</div>
+					)}
+
+					<div
+						className={clsx("col-span-1 lg:col-span-3", {
+							"lg:col-span-4": !showThumbnail,
+						})}
+					>
+						<Content content={post.content} />
+					</div>
+				</div>
+
+				<div>
+					{post.media?.length > 0 && !showThumbnail && (
 						<div className="grid xl:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-2 flex-wrap mt-2">
 							{post.media.map((media) => (
 								<div className="col-span-1" key={media.id}>

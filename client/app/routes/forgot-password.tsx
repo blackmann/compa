@@ -1,12 +1,18 @@
 import { json, type ActionFunctionArgs } from "@remix-run/node";
-import { useFetcher } from "@remix-run/react";
+import { useFetcher, useLoaderData } from "@remix-run/react";
 import dayjs from "dayjs";
 import { useForm, type FieldValues } from "react-hook-form";
 import { Button } from "~/components/button";
 import { Input } from "~/components/input";
+import { KnustLoginDirection } from "~/components/knust-login-direction";
 import { send } from "~/lib/mail.server";
 import { prisma } from "~/lib/prisma.server";
 import { randomStr } from "~/lib/random-str";
+import { values } from "~/lib/values.server";
+
+export const loader = async () => {
+	return { school: values.meta() };
+};
 
 export const action = async ({ request }: ActionFunctionArgs) => {
 	if (request.method !== "POST") {
@@ -63,11 +69,11 @@ export const meta = () => {
 };
 
 export default function ForgotPassword() {
+	const { school } = useLoaderData<typeof loader>();
 	const { handleSubmit, register } = useForm();
 	const fetcher = useFetcher();
 
 	async function sendRequest(data: FieldValues) {
-		console.log("sending again...");
 		fetcher.submit(JSON.stringify(data), {
 			encType: "application/json",
 			method: "POST",
@@ -88,9 +94,13 @@ export default function ForgotPassword() {
 						</h1>
 
 						{fetcher.data ? (
-							<div className="mt-2">
-								Reset link has been sent to your email.
-							</div>
+							<>
+								<div className="mt-2">
+									Reset link has been sent to your email.
+								</div>
+
+								{school.id === "knust" && <KnustLoginDirection />}
+							</>
 						) : (
 							<>
 								<label className="block mt-2">

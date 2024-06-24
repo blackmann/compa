@@ -1,7 +1,7 @@
-import { Prisma } from "@prisma/client";
+import type { Prisma } from "@prisma/client";
+import type { Jsonify } from "type-fest";
 import { useComments } from "~/lib/use-comments";
 import { PostItem } from "./post-item";
-import { Jsonify } from "type-fest";
 
 type Post = Prisma.PostGetPayload<{ include: { user: true; media: true } }>;
 

@@ -1,18 +1,14 @@
 import {
-	ActionFunctionArgs,
-	LoaderFunctionArgs,
-	MetaFunction,
 	redirect,
+	type ActionFunctionArgs,
+	type LoaderFunctionArgs,
+	type MetaFunction,
 } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { ProductForm } from "~/components/product-form";
 import { checkAuth } from "~/lib/check-auth";
 import { prisma } from "~/lib/prisma.server";
-import {
-	forbidden,
-	methodNotAllowed,
-	notFound
-} from "~/lib/responses";
+import { forbidden, methodNotAllowed, notFound } from "~/lib/responses";
 import { values } from "~/lib/values.server";
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
@@ -60,7 +56,6 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 };
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
-	// [ ] Add og image
 	return [
 		{ title: `Edit ${data?.product.name} | ${data?.school.shortName} ✽ compa` },
 		{

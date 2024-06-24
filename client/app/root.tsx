@@ -1,6 +1,6 @@
-import "virtual:uno.css";
-
 import "@unocss/reset/tailwind.css";
+
+import "virtual:uno.css";
 import "./style.css";
 
 import type { User } from "@prisma/client";
@@ -33,6 +33,7 @@ const authRoutes = [
 	"/forgot-password",
 	"/reset-password",
 	"/account-created",
+	"/resend-verification",
 ];
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {

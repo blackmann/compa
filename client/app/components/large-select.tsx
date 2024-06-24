@@ -51,7 +51,7 @@ function LargeSelect({
 	return (
 		<>
 			<button
-				className="!bg-zinc-200 !dark:bg-neutral-800 px-2 py-1 rounded-lg font-medium flex-1 text-start flex items-center w-full"
+				className="bg-zinc-200 dark:bg-neutral-800 px-2 py-1 rounded-lg font-medium flex-1 text-start flex items-center w-full"
 				type="button"
 				onClick={() => onToggle(true)}
 			>
