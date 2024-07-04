@@ -14,55 +14,75 @@ import type { loader as rootLoader } from '~/root'
 
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  let user: User | null = null
+  let user: User | null = null;
 
   try {
-    const userId = await checkAuth(request)
-    user = await prisma.user.findFirst({ where: { id: userId } })
+    const userId = await checkAuth(request);
+    user = await prisma.user.findFirst({ where: { id: userId } });
   } catch {
-    //
+    // 
   }
 
   const sellerProfile = user
-    ? await prisma.sellerProfile.findFirst({ 
-      where: { userId: user.id }
-    })
-    : null
+    ? await prisma.sellerProfile.findFirst({
+        where: { userId: user.id },
+      })
+    : null;
 
-  const products = await prisma.product.findMany({
-    where: { status: 'available' },
-    include: { category: true },
-    orderBy: { createdAt: 'desc' }
-  })
+  const url = new URL(request.url);
+  const category = url.searchParams.get('category');
+  const searchQuery = url.searchParams.get('query') || '';
 
-  const categories = await prisma.category.findMany()
-
-  return json({ categories, school: values.meta(), products, sellerProfile })
-}
-
-export const action = async ({ request }: LoaderFunctionArgs) => {
-  const formData = await request.formData()
-  const searchQuery = formData.get('query') as string || ''
+  const categoryFilter = category && category !== 'all' ? { categoryId: parseInt(category, 10) } : {};
 
   const products = await prisma.product.findMany({
     where: {
       status: 'available',
       ...(searchQuery
         ? {
-          OR: [
-            { name: { contains: searchQuery } },
-            { description: { contains: searchQuery } }
-          ]
-        }
-        : {})
+            OR: [
+              { name: { contains: searchQuery } },
+              { description: { contains: searchQuery } },
+            ],
+          }
+        : {}),
+      ...categoryFilter,
     },
     include: { category: true },
-    orderBy: { createdAt: 'desc' }
-  })
+    orderBy: { createdAt: 'desc' },
+  });
 
+  const categories = await prisma.category.findMany();
 
-  return json(products)
-}
+  return json({ categories, school: values.meta(), products, sellerProfile });
+};
+
+export const action = async ({ request }: LoaderFunctionArgs) => {
+  const formData = await request.formData();
+  const searchQuery = formData.get('query') as string || '';
+  const category = formData.get('category') as string || undefined;
+
+  const categoryFilter = category && category !== 'all' ? { categoryId: parseInt(category, 10) } : {};
+
+  const products = await prisma.product.findMany({
+    where: {
+      status: 'available',
+      ...(searchQuery
+        ? {
+            OR: [
+              { name: { contains: searchQuery } },
+              { description: { contains: searchQuery } },
+            ],
+          }
+        : {}),
+      ...categoryFilter,
+    },
+    include: { category: true },
+    orderBy: { createdAt: 'desc' },
+  });
+
+  return json(products);
+};
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
   return [
@@ -76,44 +96,57 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
 
 
 export default function Market() {
-  const { categories, products: initialProducts, sellerProfile } = useLoaderData<typeof loader>()
-  const { user } = useRouteLoaderData<typeof rootLoader>('root') || {}
-  const [products, setProducts] = useState(initialProducts)
-  const [params] = useSearchParams()
-  const fetcher = useFetcher()
-  const [searchQuery, setSearchQuery] = useState(params.get('query') || '')
+  const { categories, products: initialProducts, sellerProfile } = useLoaderData<typeof loader>();
+  const { user } = useRouteLoaderData<typeof rootLoader>('root') || {};
+  const [products, setProducts] = useState(initialProducts);
+  const [params] = useSearchParams();
+  const fetcher = useFetcher();
+  const [searchQuery, setSearchQuery] = useState(params.get('query') || '');
+  const [selectedCategory, setSelectedCategory] = useState(params.get('category') || 'all');
   const [searchPerformed, setSearchPerformed] = useState<boolean>(false);
 
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = event.target;
 
-  const handleSearch = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-    const formData = new FormData(event.currentTarget)
-    fetcher.submit(formData, { method: 'post' })
-    setSearchQuery(formData.get('query') as string || '')
-    setSearchPerformed(true)
-  }
+    if (name === 'query') {
+      setSearchQuery(value);
+    } else if (name === 'category') {
+      setSelectedCategory(value);
+    }
+  };
+
+  useEffect(() => {
+    const formData = new FormData();
+    formData.set('query', searchQuery);
+    formData.set('category', selectedCategory);
+    fetcher.submit(formData, { method: 'post' });
+    setSearchPerformed(true);
+  }, [searchQuery, selectedCategory]);
 
   useEffect(() => {
     if (fetcher.data) {
-
-      setProducts(fetcher.data as typeof initialProducts)
+      setProducts(Array.isArray(fetcher.data) ? fetcher.data : initialProducts);
     }
-  }, [fetcher.data, initialProducts])
+  }, [fetcher.data, initialProducts]);
 
   return (
     <div className="container min-h-[60vh]">
       <header className="mb-2">
         <h1 className="font-bold text-xl">Marketplace</h1>
 
-        <fetcher.Form onSubmit={handleSearch} className="flex items-start gap-2">
+        <fetcher.Form className="flex items-start gap-2">
           <Input
             name="query"
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={handleSearchChange}
             type="search"
             placeholder="Search product"
           />
-          <Select>
+          <Select
+            name="category"
+            value={selectedCategory}
+            onChange={handleSearchChange}
+          >
             <option value="all">All Categories</option>
             {categories.map((category) => (
               <option key={category.id} value={category.id}>
@@ -159,7 +192,7 @@ export default function Market() {
 
       {products.length === 0 && searchPerformed ? (
         <div className="text-center text-secondary">
-          No items match "{searchQuery}"
+          No items match "{searchQuery}" {selectedCategory !== 'all' && `in this category`}
         </div>
       ) : (
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
@@ -170,6 +203,12 @@ export default function Market() {
           ))}
         </div>
       )}
+
+      {products.length === 0 && selectedCategory !== 'all' && !searchPerformed && (
+        <div className="text-center text-secondary">
+          No items in this category
+        </div>
+      )}
     </div>
-  )
+  );
 }
