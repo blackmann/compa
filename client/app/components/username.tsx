@@ -14,7 +14,7 @@ function Username({ showVerfied, user }: Props) {
 				<div className="inline-block i-lucide-verified text-green-500" />
 			)}
 			{/* This should be head */}
-			{user.username === "notgr" && (
+			{user.username === "notgr" || "lasagna" && (
 				<div className="inline-block i-lucide-crown text-amber-500" />
 			)}
 		</span>
