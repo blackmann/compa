@@ -1,21 +1,20 @@
 import type { User } from "@prisma/client";
 import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
-import { json } from "@remix-run/node";
 import { prisma } from "~/lib/prisma.server";
 import { checkAuth } from "~/lib/check-auth";
 import { values } from "~/lib/values.server";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
 	useLoaderData,
 	useRouteLoaderData,
-	useFetcher,
-	useSearchParams,
+	useNavigate,
 } from "@remix-run/react";
 import { Anchor } from "~/components/anchor";
 import { Input } from "~/components/input";
 import { ProductItem } from "~/components/product-item";
 import { Select } from "~/components/select";
 import type { loader as rootLoader } from "~/root";
+import qs from "qs";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
 	let user: User | null = null;
@@ -23,75 +22,43 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 	try {
 		const userId = await checkAuth(request);
 		user = await prisma.user.findFirst({ where: { id: userId } });
-	} catch {
-		//
-	}
+	} catch {}
 
 	const sellerProfile = user
 		? await prisma.sellerProfile.findFirst({
-				where: { userId: user.id },
+				where: { userId: user?.id },
 			})
 		: null;
 
-	const url = new URL(request.url);
-	const category = url.searchParams.get("category");
-	const searchQuery = url.searchParams.get("query") || "";
+	const searchParams = new URL(request.url).searchParams;
+	const { q, category } = qs.parse(searchParams.toString(), {
+		ignoreQueryPrefix: true,
+	});
 
-	const categoryFilter =
-		category && category !== "all"
-			? { categoryId: Number.parseInt(category, 10) }
-			: {};
+	const whereClause: any = {
+		status: "available",
+	};
+
+	if (q) {
+		whereClause.OR = [
+			{ name: { contains: q.toString(), lte: "insensitive" } },
+			{ description: { contains: q.toString(), lte: "insensitive" } },
+		];
+	}
+
+	if (category && category !== "all") {
+		whereClause.category = { title: category.toString() };
+	}
 
 	const products = await prisma.product.findMany({
-		where: {
-			status: "available",
-			...(searchQuery
-				? {
-						OR: [
-							{ name: { contains: searchQuery } },
-							{ description: { contains: searchQuery } },
-						],
-					}
-				: {}),
-			...categoryFilter,
-		},
+		where: whereClause,
 		include: { category: true },
 		orderBy: { createdAt: "desc" },
 	});
 
 	const categories = await prisma.category.findMany();
 
-	return json({ categories, school: values.meta(), products, sellerProfile });
-};
-
-export const action = async ({ request }: LoaderFunctionArgs) => {
-	const formData = await request.formData();
-	const searchQuery = (formData.get("query") as string) || "";
-	const category = (formData.get("category") as string) || undefined;
-
-	const categoryFilter =
-		category && category !== "all"
-			? { categoryId: Number.parseInt(category, 10) }
-			: {};
-
-	const products = await prisma.product.findMany({
-		where: {
-			status: "available",
-			...(searchQuery
-				? {
-						OR: [
-							{ name: { contains: searchQuery } },
-							{ description: { contains: searchQuery } },
-						],
-					}
-				: {}),
-			...categoryFilter,
-		},
-		include: { category: true },
-		orderBy: { createdAt: "desc" },
-	});
-
-	return json(products);
+	return { categories, school: values.meta(), products, sellerProfile };
 };
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
@@ -105,73 +72,51 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
 };
 
 export default function Market() {
-	const {
-		categories,
-		products: initialProducts,
-		sellerProfile,
-	} = useLoaderData<typeof loader>();
+	const { categories, products, sellerProfile } =
+		useLoaderData<typeof loader>();
 	const { user } = useRouteLoaderData<typeof rootLoader>("root") || {};
-	const [products, setProducts] = useState(initialProducts);
-	const [params] = useSearchParams();
-	const fetcher = useFetcher();
-	const [searchQuery, setSearchQuery] = useState(params.get("query") || "");
-	const [selectedCategory, setSelectedCategory] = useState(
-		params.get("category") || "all",
-	);
-	const [searchPerformed, setSearchPerformed] = useState<boolean>(false);
+	const navigate = useNavigate();
 
-	const handleSearchChange = (
-		event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
-	) => {
-		const { name, value } = event.target;
+	const [searchQuery, setSearchQuery] = useState<string>("");
+	const [selectedCategory, setSelectedCategory] = useState<string>("all");
 
-		if (name === "query") {
-			setSearchQuery(value);
-		} else if (name === "category") {
-			setSelectedCategory(value);
-		}
+	const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const value = e.target.value;
+		setSearchQuery(value);
+		navigate(
+			`/market?q=${encodeURIComponent(value)}&category=${encodeURIComponent(selectedCategory)}`, // Encode category name
+		);
 	};
 
-	useEffect(() => {
-		const formData = new FormData();
-		formData.set("query", searchQuery);
-		formData.set("category", selectedCategory);
-		fetcher.submit(formData, { method: "post" });
-		setSearchPerformed(true);
-	}, [searchQuery, selectedCategory]);
-
-	useEffect(() => {
-		if (fetcher.data) {
-			setProducts(Array.isArray(fetcher.data) ? fetcher.data : initialProducts);
-		}
-	}, [fetcher.data, initialProducts]);
+	const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+		const value = e.target.value;
+		setSelectedCategory(value);
+		navigate(
+			`/market?q=${encodeURIComponent(searchQuery)}&category=${encodeURIComponent(value)}`,
+		);
+	};
 
 	return (
 		<div className="container min-h-[60vh]">
 			<header className="mb-2">
 				<h1 className="font-bold text-xl">Marketplace</h1>
 
-				<fetcher.Form className="flex items-start gap-2">
+				<div className="flex items-start gap-2">
 					<Input
-						name="query"
-						value={searchQuery}
-						onChange={handleSearchChange}
 						type="search"
 						placeholder="Search product"
+						value={searchQuery}
+						onChange={handleSearchInputChange}
 					/>
-					<Select
-						name="category"
-						value={selectedCategory}
-						onChange={handleSearchChange}
-					>
+					<Select value={selectedCategory} onChange={handleCategoryChange}>
 						<option value="all">All Categories</option>
 						{categories.map((category) => (
-							<option key={category.id} value={category.id}>
+							<option key={category.id} value={category.title}>
 								{category.title}
 							</option>
 						))}
 					</Select>
-				</fetcher.Form>
+				</div>
 			</header>
 
 			{sellerProfile && (
@@ -208,28 +153,18 @@ export default function Market() {
 				</div>
 			)}
 
-			{products.length === 0 && searchPerformed ? (
-				<div className="text-center text-secondary">
-					No items match "{searchQuery}"{" "}
-					{selectedCategory !== "all" && "in this category"}
-				</div>
-			) : (
-				<div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-					{products.map((product) => (
-						<div className="col-span-1" key={product.id}>
-							<ProductItem product={product} />
-						</div>
-					))}
+			<div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+				{products.map((product) => (
+					<div className="col-span-1" key={product.id}>
+						<ProductItem product={product} />
+					</div>
+				))}
+			</div>
+			{products.length === 0 && (
+				<div className="font-mono text-center text-secondary">
+					<div className="i-lucide-land-plot inline-block" /> Nothing here!
 				</div>
 			)}
-
-			{products.length === 0 &&
-				selectedCategory !== "all" &&
-				!searchPerformed && (
-					<div className="text-center text-secondary">
-						No items in this category
-					</div>
-				)}
 		</div>
 	);
 }
