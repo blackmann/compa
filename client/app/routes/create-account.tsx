@@ -43,7 +43,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 				{
 					type: "conflict",
 					field: "username",
-					message: "Username is not allowed.",
+					message: "Username already exists.",
 				},
 				{ status: 403 },
 			);
