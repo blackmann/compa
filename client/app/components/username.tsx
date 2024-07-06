@@ -18,7 +18,7 @@ function Username({ showVerfied, user }: Props) {
 				<div className="inline-block i-lucide-crown text-amber-500" />
 			)}
 			{/* This should be for moderators */}
-			{user.role === "moderator" && user.username !== "notgr" && (
+			{user.role === "moderator" && (
 				<div className="inline-block i-lucide-zap text-red-500" />
 			)}
 		</span>
