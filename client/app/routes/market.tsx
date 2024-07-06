@@ -41,15 +41,15 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
 	if (q) {
 		whereClause.OR = [
-			{ name: { contains: q.toString(), lte: "insensitive" } },
-			{ description: { contains: q.toString(), lte: "insensitive" } },
+			{ name: { contains: q.toString() } },
+			{ description: { contains: q.toString() } },
 		];
 	}
 
 	if (category !== "all") {
-		whereClause.category = { title: category.toString() };
+		whereClause.category = { title: category?.toString() };
 	}
-
+	
 	const products = await prisma.product.findMany({
 		where: whereClause,
 		include: { category: true },
@@ -76,25 +76,51 @@ export default function Market() {
 		useLoaderData<typeof loader>();
 	const { user } = useRouteLoaderData<typeof rootLoader>("root") || {};
 	const navigate = useNavigate();
+	const location = useLocation();
 
-	const [searchQuery, setSearchQuery] = useState<string>("");
-	const [selectedCategory, setSelectedCategory] = useState<string>("all");
+	const searchParams = new URLSearchParams(location.search);
+	const initialQuery = searchParams.get("q") || "";
+	const initialCategory = searchParams.get("category") || "all";
 
-	const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		const value = e.target.value;
-		setSearchQuery(value);
-		navigate(
-			`/market?q=${encodeURIComponent(value)}&category=${encodeURIComponent(selectedCategory)}`, // Encode category name
-		);
-	};
+	const [searchQuery, setSearchQuery] = useState<string>(initialQuery);
+	const [selectedCategory, setSelectedCategory] =
+		useState<string>(initialCategory);
 
-	const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-		const value = e.target.value;
-		setSelectedCategory(value);
-		navigate(
-			`/market?q=${encodeURIComponent(searchQuery)}&category=${encodeURIComponent(value)}`,
-		);
-	};
+	useEffect(() => {
+		const params = new URLSearchParams(location.search);
+		const previousParams = params.toString();
+
+		if (searchQuery) {
+			params.set("q", searchQuery);
+		} else {
+			params.delete("q");
+		}
+
+		if (selectedCategory && selectedCategory !== "all") {
+			params.set("category", selectedCategory);
+		} else {
+			params.delete("category");
+		}
+
+		const from = `${location.pathname}?${previousParams}`.replace(/\?$/, "");
+		const to = `${location.pathname}?${params.toString()}`.replace(/\?$/, "");
+
+		if (to === from) {
+			return;
+		}
+
+		const timeout = setTimeout(() => {
+			navigate(to);
+		}, 600);
+
+		return () => clearTimeout(timeout);
+	}, [
+		location.search,
+		location.pathname,
+		navigate,
+		searchQuery,
+		selectedCategory,
+	]);
 
 	return (
 		<div className="container min-h-[60vh]">
