@@ -46,7 +46,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 		];
 	}
 
-	if (category && category !== "all") {
+	if (category !== "all") {
 		whereClause.category = { title: category.toString() };
 	}
 
