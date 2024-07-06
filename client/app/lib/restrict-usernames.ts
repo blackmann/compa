@@ -1,5 +1,4 @@
 export const restrictedUsernames = [
-	"gr",
 	"notgr",
 	"compa",
 	"compa.so",
@@ -10,4 +9,5 @@ export const restrictedUsernames = [
 	"user",
 	"welcome",
 	"moderator",
+	"hello",
 ];
