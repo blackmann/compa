@@ -19,7 +19,7 @@ function Username({ showVerfied, user }: Props) {
 			)}
 			{/* This should be for moderators */}
 			{user.role === "moderator" && user.username !== "notgr" && (
-				<div className="inline-block i-lucide-gem text-amber-500" />
+				<div className="inline-block i-lucide-zap text-red-500" />
 			)}
 		</span>
 	);
