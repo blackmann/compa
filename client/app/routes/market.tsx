@@ -3,11 +3,12 @@ import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
 import { prisma } from "~/lib/prisma.server";
 import { checkAuth } from "~/lib/check-auth";
 import { values } from "~/lib/values.server";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
 	useLoaderData,
 	useRouteLoaderData,
 	useNavigate,
+	useLocation,
 } from "@remix-run/react";
 import { Anchor } from "~/components/anchor";
 import { Input } from "~/components/input";
@@ -49,7 +50,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 	if (category !== "all") {
 		whereClause.category = { title: category?.toString() };
 	}
-	
+
 	const products = await prisma.product.findMany({
 		where: whereClause,
 		include: { category: true },
@@ -122,6 +123,14 @@ export default function Market() {
 		selectedCategory,
 	]);
 
+	const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		setSearchQuery(e.target.value);
+	};
+
+	const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+		setSelectedCategory(e.target.value);
+	};
+
 	return (
 		<div className="container min-h-[60vh]">
 			<header className="mb-2">
@@ -137,7 +146,7 @@ export default function Market() {
 					<Select value={selectedCategory} onChange={handleCategoryChange}>
 						<option value="all">All Categories</option>
 						{categories.map((category) => (
-							<option key={category.id} value={category.title}>
+							<option key={category.id} value={category.id}>
 								{category.title}
 							</option>
 						))}
