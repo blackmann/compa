@@ -21,6 +21,7 @@ import { prisma } from "~/lib/prisma.server";
 import { sendEmailVerification } from "~/lib/send-email-verification";
 import { USERNAME_REGEX } from "~/lib/username-regex";
 import { values } from "~/lib/values.server";
+import { restrictedUsernames } from "~/lib/restrict-usernames";
 
 export const loader = async () => {
 	const school = values.get("shortName");
@@ -35,6 +36,19 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 	}
 
 	const { password, email, username } = await request.json();
+
+	for (const restrictedUsername of restrictedUsernames) {
+		if (username === restrictedUsername) {
+			return json(
+				{
+					type: "conflict",
+					field: "username",
+					message: "Username already exists.",
+				},
+				{ status: 403 },
+			);
+		}
+	}
 
 	const emailExtensions = values.get("emailExtensions") as string[];
 	if (!emailExtensions.some((ext) => email.endsWith(ext))) {
