@@ -50,7 +50,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 	if (category !== "all") {
 		const categoryId = Number(category);
 		if (!Number.isNaN(categoryId)) {
-			whereClause.category = { id: categoryId };
+			whereClause.categoryId = categoryId
 		}
 	}
 
