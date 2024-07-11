@@ -3,7 +3,7 @@ import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
 import { prisma } from "~/lib/prisma.server";
 import { checkAuth } from "~/lib/check-auth";
 import { values } from "~/lib/values.server";
-import { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
 	useLoaderData,
 	useRouteLoaderData,
@@ -48,7 +48,10 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 	}
 
 	if (category !== "all") {
-		whereClause.category = { title: category?.toString() };
+		const categoryId = Number(category);
+		if (!Number.isNaN(categoryId)) {
+			whereClause.category = { id: categoryId };
+		}
 	}
 
 	const products = await prisma.product.findMany({
@@ -87,7 +90,7 @@ export default function Market() {
 	const [selectedCategory, setSelectedCategory] =
 		useState<string>(initialCategory);
 
-	useEffect(() => {
+	React.useEffect(() => {
 		const params = new URLSearchParams(location.search);
 		const previousParams = params.toString();
 
