@@ -1,14 +1,21 @@
 import type { User } from "@prisma/client";
 import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
-import { useLoaderData, useRouteLoaderData } from "@remix-run/react";
+import { prisma } from "~/lib/prisma.server";
+import { checkAuth } from "~/lib/check-auth";
+import { values } from "~/lib/values.server";
+import React, { useState } from "react";
+import {
+	useLoaderData,
+	useRouteLoaderData,
+	useNavigate,
+	useLocation,
+} from "@remix-run/react";
 import { Anchor } from "~/components/anchor";
 import { Input } from "~/components/input";
 import { ProductItem } from "~/components/product-item";
 import { Select } from "~/components/select";
-import { checkAuth } from "~/lib/check-auth";
-import { prisma } from "~/lib/prisma.server";
-import { values } from "~/lib/values.server";
 import type { loader as rootLoader } from "~/root";
+import qs from "qs";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
 	let user: User | null = null;
@@ -20,12 +27,35 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
 	const sellerProfile = user
 		? await prisma.sellerProfile.findFirst({
-				where: { userId: user.id },
+				where: { userId: user?.id },
 			})
 		: null;
 
+	const searchParams = new URL(request.url).searchParams;
+	const { q, category } = qs.parse(searchParams.toString(), {
+		ignoreQueryPrefix: true,
+	});
+
+	const whereClause: any = {
+		status: "available",
+	};
+
+	if (q) {
+		whereClause.OR = [
+			{ name: { contains: q.toString() } },
+			{ description: { contains: q.toString() } },
+		];
+	}
+
+	if (category !== "all") {
+		const categoryId = Number(category);
+		if (!Number.isNaN(categoryId)) {
+			whereClause.categoryId = categoryId
+		}
+	}
+
 	const products = await prisma.product.findMany({
-		where: { status: "available" },
+		where: whereClause,
 		include: { category: true },
 		orderBy: { createdAt: "desc" },
 	});
@@ -49,6 +79,60 @@ export default function Market() {
 	const { categories, products, sellerProfile } =
 		useLoaderData<typeof loader>();
 	const { user } = useRouteLoaderData<typeof rootLoader>("root") || {};
+	const navigate = useNavigate();
+	const location = useLocation();
+
+	const searchParams = new URLSearchParams(location.search);
+	const initialQuery = searchParams.get("q") || "";
+	const initialCategory = searchParams.get("category") || "all";
+
+	const [searchQuery, setSearchQuery] = useState<string>(initialQuery);
+	const [selectedCategory, setSelectedCategory] =
+		useState<string>(initialCategory);
+
+	React.useEffect(() => {
+		const params = new URLSearchParams(location.search);
+		const previousParams = params.toString();
+
+		if (searchQuery) {
+			params.set("q", searchQuery);
+		} else {
+			params.delete("q");
+		}
+
+		if (selectedCategory && selectedCategory !== "all") {
+			params.set("category", selectedCategory);
+		} else {
+			params.delete("category");
+		}
+
+		const from = `${location.pathname}?${previousParams}`.replace(/\?$/, "");
+		const to = `${location.pathname}?${params.toString()}`.replace(/\?$/, "");
+
+		if (to === from) {
+			return;
+		}
+
+		const timeout = setTimeout(() => {
+			navigate(to);
+		}, 600);
+
+		return () => clearTimeout(timeout);
+	}, [
+		location.search,
+		location.pathname,
+		navigate,
+		searchQuery,
+		selectedCategory,
+	]);
+
+	const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		setSearchQuery(e.target.value);
+	};
+
+	const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+		setSelectedCategory(e.target.value);
+	};
 
 	return (
 		<div className="container min-h-[60vh]">
@@ -56,8 +140,13 @@ export default function Market() {
 				<h1 className="font-bold text-xl">Marketplace</h1>
 
 				<div className="flex items-start gap-2">
-					<Input type="search" placeholder="Search product" />
-					<Select>
+					<Input
+						type="search"
+						placeholder="Search product"
+						value={searchQuery}
+						onChange={handleSearchInputChange}
+					/>
+					<Select value={selectedCategory} onChange={handleCategoryChange}>
 						<option value="all">All Categories</option>
 						{categories.map((category) => (
 							<option key={category.id} value={category.id}>
@@ -103,16 +192,17 @@ export default function Market() {
 			)}
 
 			<div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-				{products.map((product) => {
-					// [ ] Empty state for products
-
-					return (
-						<div className="col-span-1" key={product.id}>
-							<ProductItem product={product} />
-						</div>
-					);
-				})}
+				{products.map((product) => (
+					<div className="col-span-1" key={product.id}>
+						<ProductItem product={product} />
+					</div>
+				))}
 			</div>
+			{products.length === 0 && (
+				<div className="font-mono text-center text-secondary">
+					<div className="i-lucide-land-plot inline-block" /> Nothing here!
+				</div>
+			)}
 		</div>
 	);
 }
