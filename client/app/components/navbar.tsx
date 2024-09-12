@@ -128,7 +128,7 @@ function BottomNav() {
 	const [showMore, setShowMore] = React.useState(false);
 	const [isDialogOpen, setIsDialogOpen] = React.useState(false);
 	const location = useLocation();
-	// Reset the "More" dropdown when navigating
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	React.useEffect(() => {
 		setShowMore(false);
 	}, [location.pathname]);
