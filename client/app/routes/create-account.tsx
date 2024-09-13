@@ -1,6 +1,7 @@
 import { Prisma, type User } from "@prisma/client";
 import {
 	json,
+	LoaderFunctionArgs,
 	redirect,
 	type ActionFunctionArgs,
 	type MetaFunction,
@@ -22,8 +23,16 @@ import { sendEmailVerification } from "~/lib/send-email-verification";
 import { USERNAME_REGEX } from "~/lib/username-regex";
 import { values } from "~/lib/values.server";
 import { restrictedUsernames } from "~/lib/restrict-usernames";
+import { checkAuth } from "~/lib/check-auth";
 
-export const loader = async () => {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
+	try {
+		await checkAuth(request);
+		return redirect("/discussions");
+	} catch (error) {
+		//
+	}
+
 	const school = values.get("shortName");
 	const emailExtensions = values.get("emailExtensions") as string[];
 
