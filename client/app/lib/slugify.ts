@@ -13,7 +13,7 @@ function slugify(
 		.replace(/--+/g, "-");
 
 	if (mangle) {
-		slug += "-" + Math.random().toString(36).substring(2, 7);
+		slug += `-${Math.random().toString(36).substring(2, 7)}`;
 	}
 
 	return slug;

@@ -17,5 +17,11 @@
 		"start:client": "yarn workspace client start",
 		"fix-sharp": "yarn workspace client add sharp --ignore-engines"
 	},
-	"workspaces": ["client", "website"]
+	"workspaces": [
+		"client",
+		"website"
+	],
+	"devDependencies": {
+		"@biomejs/biome": "^1.9.2"
+	}
 }
