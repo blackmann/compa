@@ -1,5 +1,4 @@
 import {
-	Form,
 	Link,
 	NavLink,
 	useLocation,
@@ -10,8 +9,7 @@ import React from "react";
 import type { loader } from "~/root";
 import { Avatar } from "./avatar";
 import { Username } from "./username";
-import { Dialog } from "./dialog";
-import { Button } from "./button";
+import { LogoutModal } from "./logout-modal";
 
 const links = [
 	{
@@ -160,7 +158,8 @@ function BottomNav() {
 				{Boolean(user) && (
 					<>
 						<div className="px-2 flex mb-8 items-end py-1  font-medium text-secondary">
-							<div
+							<button
+								type="button"
 								className="flex items-center gap-4"
 								onClick={handleLogoutClick}
 							>
@@ -169,37 +168,14 @@ function BottomNav() {
 								<span className="text-secondary hover:text-dark !dark:hover:text-white">
 									Logout
 								</span>
-							</div>
+							</button>
 						</div>
 
-						<Dialog open={isDialogOpen} onClose={handleCancelLogout}>
-							<div className="p-4">
-								<h2 className="text-base font-semibold flex items-center gap-1">
-									Logout
-								</h2>
-								<p className="mt-2">Are you sure you want to log out?</p>
-								<div className="flex justify-end mt-4 gap-2">
-									<Button
-										className="!text-black px-2 py-1 text-sm bg-gray-200 dark:bg-neutral-800 text-gray-800 !dark:text-white"
-										onClick={handleCancelLogout}
-									>
-										Cancel
-									</Button>
-									<Form
-										action="logout"
-										method="post"
-										className="transition-[background] duration-200 group cursor-pointer"
-									>
-										<Button
-											onClick={handleConfirmLogout}
-											className="text-white text-sm !bg-red-500"
-										>
-											Continue
-										</Button>
-									</Form>
-								</div>
-							</div>
-						</Dialog>
+						<LogoutModal
+							isOpen={isDialogOpen}
+							onCancel={handleCancelLogout}
+							onConfirm={handleConfirmLogout}
+						/>
 					</>
 				)}
 				<ul className="flex flex-col items-end">
@@ -307,44 +283,21 @@ function SideNav() {
 			</ul>
 			{Boolean(user) && (
 				<>
-					<div
-						className="px-2 py-1 hover:bg-zinc-100 dark:hover:bg-neutral-800 rounded-full font-medium flex items-center gap-2 transition-[background] duration-200 group cursor-pointer"
+					<button
+						type="button"
+						className="hover:bg-zinc-100 dark:hover:bg-neutral-800 rounded-full font-medium flex items-center gap-2 transition-[background] duration-200 group cursor-pointer"
 						onClick={handleLogoutClick}
 					>
 						<div className="i-lucide-arrow-left-circle bg-red-600 opacity-70 " />
 						<span className="text-secondary group-hover:text-dark !dark:group-hover:text-white">
 							Logout
 						</span>
-					</div>
-
-					<Dialog open={isDialogOpen} onClose={handleCancelLogout}>
-						<div className="p-4">
-							<h2 className="text-base font-semibold flex items-center gap-1">
-								Logout{" "}
-							</h2>
-							<p className="mt-2">Are you sure you want to log out?</p>
-							<div className="flex justify-end mt-4 gap-2">
-								<Button
-									className=" !text-black px-2 py-1 text-sm bg-gray-200 dark:bg-neutral-800 text-gray-800 !dark:text-white"
-									onClick={handleCancelLogout}
-								>
-									Cancel
-								</Button>
-								<Form
-									action="logout"
-									method="post"
-									className=" transition-[background] duration-200 group cursor-pointer"
-								>
-									<Button
-										onClick={handleConfirmLogout}
-										className="text-white text-sm !bg-red-500"
-									>
-										Continue
-									</Button>
-								</Form>
-							</div>
-						</div>
-					</Dialog>
+					</button>
+					<LogoutModal
+						isOpen={isDialogOpen}
+						onCancel={handleCancelLogout}
+						onConfirm={handleConfirmLogout}
+					/>
 				</>
 			)}
 		</div>
