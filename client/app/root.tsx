@@ -123,7 +123,7 @@ export default function App() {
 								hidden: hideNav,
 							})}
 						>
-							<div className="max-w-[15rem] sticky top-[4rem]">
+							<div className="max-w-[15rem] sticky top-[4rem] h-[calc(95vh-4rem)]">
 								<SideNav />
 							</div>
 						</div>

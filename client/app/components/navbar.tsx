@@ -9,6 +9,7 @@ import React from "react";
 import type { loader } from "~/root";
 import { Avatar } from "./avatar";
 import { Username } from "./username";
+import { LogoutModal } from "./logout-modal";
 
 const links = [
 	{
@@ -121,22 +122,62 @@ function Navbar() {
 }
 
 function BottomNav() {
+	const { user } = useRouteLoaderData<typeof loader>("root") || {};
 	const [showMore, setShowMore] = React.useState(false);
+	const [isDialogOpen, setIsDialogOpen] = React.useState(false);
 	const location = useLocation();
-
 	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	React.useEffect(() => {
 		setShowMore(false);
 	}, [location.pathname]);
 
+	const handleLogoutClick = (e: React.MouseEvent) => {
+		e.preventDefault();
+		setIsDialogOpen(true);
+	};
+
+	const handleCancelLogout = () => {
+		setIsDialogOpen(false);
+	};
+	const handleConfirmLogout = () => {
+		setIsDialogOpen(false);
+	};
+
 	return (
 		<div className="fixed left-0 bottom-0 w-full lg:hidden">
 			<div
 				className={clsx(
-					"bg-zinc-50 dark:bg-neutral-900 p-4 border-t dark:border-neutral-700 container mx-auto h-[15rem] group overflow-hidden transition-[height] duration-200",
-					{ "!h-0 !py-0 collapsed": !showMore },
+					"bg-zinc-50 dark:bg-neutral-900 p-4 border-t dark:border-neutral-700 container mx-auto h-[15rem] overflow-hidden transition-[height] duration-200",
+					{
+						"!h-0 !py-0 collapsed": !showMore,
+						"grid grid-cols-2": Boolean(user),
+						"flex justify-end": !user,
+					},
 				)}
 			>
+				{Boolean(user) && (
+					<>
+						<div className="px-2 flex mb-8 items-end py-1  font-medium text-secondary">
+							<button
+								type="button"
+								className="flex items-center gap-4"
+								onClick={handleLogoutClick}
+							>
+								{" "}
+								<div className="i-lucide-arrow-left-circle bg-red-500 opacity-70 text-xl" />
+								<span className="text-secondary hover:text-dark !dark:hover:text-white">
+									Logout
+								</span>
+							</button>
+						</div>
+
+						<LogoutModal
+							isOpen={isDialogOpen}
+							onCancel={handleCancelLogout}
+							onConfirm={handleConfirmLogout}
+						/>
+					</>
+				)}
 				<ul className="flex flex-col items-end">
 					{links.slice(3).map((link) => (
 						<li key={link.href}>
@@ -150,7 +191,6 @@ function BottomNav() {
 								to={link.href}
 							>
 								<div>{link.title}</div>
-
 								<div className="text-secondary group-[.is-active]:!bg-blue-600 group-[.is-active]:!text-white text-xl py-1 rounded-full">
 									<div className={link.icon} />
 								</div>
@@ -160,7 +200,7 @@ function BottomNav() {
 				</ul>
 			</div>
 			<nav
-				className=" border-zinc-200 dark:border-neutral-800 bg-zinc-50 dark:bg-zinc-900 static z-10"
+				className="border-zinc-200 dark:border-neutral-800 bg-zinc-50 dark:bg-zinc-900 static z-10"
 				style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
 			>
 				<ul className="flex p-2 justify-around">
@@ -184,7 +224,6 @@ function BottomNav() {
 							</NavLink>
 						</li>
 					))}
-
 					<li>
 						<button
 							type="button"
@@ -194,7 +233,6 @@ function BottomNav() {
 							<div className="text-secondary group-[.is-active]:!bg-amber-600 group-[.is-active]:!text-white text-xl px-4 py-1 rounded-full">
 								<div className="i-lucide-menu" />
 							</div>
-
 							<span className="text-xs text-secondary">More</span>
 						</button>
 					</li>
@@ -205,27 +243,64 @@ function BottomNav() {
 }
 
 function SideNav() {
+	const { user } = useRouteLoaderData<typeof loader>("root") || {};
+	const [isDialogOpen, setIsDialogOpen] = React.useState(false);
+
+	const handleLogoutClick = (e: React.MouseEvent) => {
+		e.preventDefault();
+		setIsDialogOpen(true);
+	};
+
+	const handleConfirmLogout = () => {
+		setIsDialogOpen(false);
+	};
+
+	const handleCancelLogout = () => {
+		setIsDialogOpen(false);
+	};
+
 	return (
-		<ul className="">
-			{links.map((link) => (
-				<li key={link.href}>
-					<NavLink
-						to={link.href}
-						className={({ isActive }) =>
-							clsx(
-								"px-2 py-1 hover:bg-zinc-100 dark:hover:bg-neutral-800 rounded-full font-medium flex items-center gap-2 transition-[background] duration-200",
-								{
-									"!bg-zinc-200 !dark:bg-neutral-800": isActive,
-									"text-secondary": !isActive,
-								},
-							)
-						}
+		<div className="flex flex-col h-full justify-between">
+			<ul className="flex-grow">
+				{links.map((link) => (
+					<li key={link.href}>
+						<NavLink
+							to={link.href}
+							className={({ isActive }) =>
+								clsx(
+									"px-2 py-1 hover:bg-zinc-100 dark:hover:bg-neutral-800 rounded-full font-medium flex items-center gap-2 transition-[background] duration-200",
+									{
+										"!bg-zinc-200 !dark:bg-neutral-800": isActive,
+										"text-secondary": !isActive,
+									},
+								)
+							}
+						>
+							<div className={clsx("opacity-70", link.icon)} /> {link.title}
+						</NavLink>
+					</li>
+				))}
+			</ul>
+			{Boolean(user) && (
+				<>
+					<button
+						type="button"
+						className="hover:bg-zinc-100 dark:hover:bg-neutral-800 rounded-full font-medium flex items-center gap-2 transition-[background] duration-200 group cursor-pointer"
+						onClick={handleLogoutClick}
 					>
-						<div className={clsx("opacity-70", link.icon)} /> {link.title}
-					</NavLink>
-				</li>
-			))}
-		</ul>
+						<div className="i-lucide-arrow-left-circle bg-red-600 opacity-70 " />
+						<span className="text-secondary group-hover:text-dark !dark:group-hover:text-white">
+							Logout
+						</span>
+					</button>
+					<LogoutModal
+						isOpen={isDialogOpen}
+						onCancel={handleCancelLogout}
+						onConfirm={handleConfirmLogout}
+					/>
+				</>
+			)}
+		</div>
 	);
 }
 
