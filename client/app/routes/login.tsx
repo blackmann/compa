@@ -1,5 +1,7 @@
 import {
 	json,
+	LoaderFunctionArgs,
+	redirect,
 	type ActionFunctionArgs,
 	type MetaFunction,
 } from "@remix-run/node";
@@ -12,13 +14,21 @@ import {
 import { useForm, type FieldValues } from "react-hook-form";
 import { Button } from "~/components/button";
 import { Input } from "~/components/input";
+import { checkAuth } from "~/lib/check-auth";
 import { authCookie } from "~/lib/cookies.server";
 import { signUser } from "~/lib/jwt.server";
 import { compare } from "~/lib/password.server";
 import { prisma } from "~/lib/prisma.server";
 import { values } from "~/lib/values.server";
 
-export const loader = async () => {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
+	try {
+		await checkAuth(request);
+		return redirect("/discussions");
+	} catch (error) {
+		//
+	}
+
 	const school = values.get("shortName");
 
 	return { school };
@@ -118,8 +128,8 @@ export default function Login() {
 						<h1 className="font-bold text-2xl mb-2">Login</h1>
 
 						<div className="rounded-lg p-2 bg-blue-50 text-blue-500 my-2 dark:bg-blue-700 dark:bg-opacity-10 dark:text-blue-400">
-							<i className="i-lucide-hand inline-block" /> If this is your first time here, you might need to create an
-							account.
+							<i className="i-lucide-hand inline-block" /> If this is your first
+							time here, you might need to create an account.
 						</div>
 
 						{actionData && (
